@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 
 const Loader = ({ className }: { className?: string }) => (
-  <div role="status" className={cn("flex justify-center", className)}>
+  <div role="status" className={cn("flex justify-center mt-4 mb-12", className)}>
     <svg
       aria-hidden="true"
       className="w-8 h-8 dark:text-gray-600 fill-teal-500 animate-spin"
