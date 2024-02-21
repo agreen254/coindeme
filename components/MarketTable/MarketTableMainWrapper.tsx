@@ -1,26 +1,20 @@
 "use client";
 
+import type { MarketQueryResult } from "@/utils/types";
+
 import { useMarketTableMode } from "@/hooks/useMarketTable";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import { ErrorBoundary } from "react-error-boundary";
 import MarketTableInfiniteWrapper from "./MarketTableInfiniteWrapper";
 import MarketTablePaginatedWrapper from "./MarketTablePaginatedWrapper";
 import MarketTableSwapMode from "./MarketTableSwapMode";
 
-const MarketTableMainWrapper = () => {
+type Props = {
+  queryResult: MarketQueryResult;
+};
+
+const MarketTableMainWrapper = ({ queryResult }: Props) => {
   const tableMode = useMarketTableMode();
-
-  // TODO: get the three fields below from url search params
-  const currency = "usd";
-  const marketFetchParam = "market_cap";
-  const marketFetchOrder = "desc";
-
-  const queryResult = useMarketQuery(
-    currency,
-    marketFetchParam,
-    marketFetchOrder
-  );
 
   return (
     <div>

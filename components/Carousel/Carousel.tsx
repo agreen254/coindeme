@@ -1,16 +1,20 @@
 "use client";
 
+import type { MarketQueryResult } from "@/utils/types";
+
 import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 import CarouselCard from "./CarouselCard";
-import { MarketElementNoIdx } from "@/utils/types";
+import { flatMarketRes } from "@/utils/flatMarketRes";
 
 type Props = {
-  marketData: MarketElementNoIdx[];
+  marketData: MarketQueryResult;
 };
 
-const Carousel = ({ marketData }: Props) => {
+const Carousel = ({ marketData: { data } }: Props) => {
+  const tableData = flatMarketRes(data?.pages);
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "y",
     loop: false,
@@ -32,7 +36,7 @@ const Carousel = ({ marketData }: Props) => {
       </button>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex flex-col h-48">
-          {marketData.map((coin) => (
+          {tableData?.map((coin) => (
             <CarouselCard key={name + "carousel"}>{coin.name}</CarouselCard>
           ))}
         </div>
