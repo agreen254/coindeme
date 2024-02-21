@@ -1,9 +1,9 @@
-import type { MarketEleWithIdx, MarketTableSortField } from "./types";
+import type { MarketElementWithIdx, MarketTableSortField } from "./types";
 
 import { sort } from "fast-sort";
 
 export function marketTableSort(
-  data: MarketEleWithIdx[] | undefined,
+  data: MarketElementWithIdx[] | undefined,
   sortBy: MarketTableSortField,
   order: "asc" | "desc"
 ) {

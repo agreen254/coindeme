@@ -20,7 +20,7 @@ export const marketRequest = z.object({
   fetchOrder: z.union([z.literal("asc"), z.literal("desc")]),
 });
 
-export const marketEleNoIdxSchema = z.object({
+export const marketElementNoIdxSchema = z.object({
   id: z.string(),
   symbol: z.string(),
   name: z.string(),
@@ -64,11 +64,11 @@ export const marketEleNoIdxSchema = z.object({
   price_change_percentage_7d_in_currency: z.number().nullable(),
 });
 
-export const marketEleWithIdxSchema = marketEleNoIdxSchema.extend({
+export const marketElementWithIdxSchema = marketElementNoIdxSchema.extend({
   called_index: z.number(),
 });
 
-export const marketSchema = z.array(marketEleNoIdxSchema);
+export const marketSchema = z.array(marketElementNoIdxSchema);
 export const marketResponseSchema = z.object({
   market: marketSchema,
   nextPage: z.number(),

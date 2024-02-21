@@ -1,4 +1,4 @@
-import type { Currency, MarketEleWithIdx } from "@/utils/types";
+import type { Currency, MarketElementWithIdx } from "@/utils/types";
 
 import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 
@@ -9,7 +9,7 @@ import MarketTableSparkline from "./MarketTableSparkline";
 import { default as TD } from "./MarketTableBodyCell";
 
 type Props = {
-  data: MarketEleWithIdx[];
+  data: MarketElementWithIdx[];
   currency?: Currency;
   initialIdx?: number;
 };

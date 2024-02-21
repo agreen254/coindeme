@@ -1,10 +1,10 @@
-import type { Currency, MarketEleWithIdx } from "@/utils/types";
+import type { Currency, MarketElementWithIdx } from "@/utils/types";
 
 import MarketTableBody from "./MarketTableBody";
 import MarketTableHeader from "./MarketTableHeader";
 
 type Props = {
-  data: MarketEleWithIdx[];
+  data: MarketElementWithIdx[];
 
   currency?: Currency;
   initialIdx?: number;

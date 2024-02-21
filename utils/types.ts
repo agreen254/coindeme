@@ -7,8 +7,8 @@ import {
   marketSchema,
   marketResponseSchema,
   marketRequest,
-  marketEleNoIdxSchema,
-  marketEleWithIdxSchema,
+  marketElementNoIdxSchema,
+  marketElementWithIdxSchema,
   marketFetchParamSchema,
 } from "@/validation/schema";
 import { z } from "zod";
@@ -17,8 +17,8 @@ const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
 
 export type Market = z.infer<typeof marketSchema>;
-export type MarketEleNoIdx = z.infer<typeof marketEleNoIdxSchema>;
-export type MarketEleWithIdx = z.infer<typeof marketEleWithIdxSchema>;
+export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
+export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
 export type MarketFetchParam = z.infer<typeof marketFetchParamSchema>;
 export type MarketTableMode = "infinite" | "paginated";
 export type MarketResponse = z.infer<typeof marketResponseSchema>;

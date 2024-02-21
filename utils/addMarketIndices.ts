@@ -1,4 +1,4 @@
-import type { MarketEleNoIdx, MarketEleWithIdx } from "./types";
+import type { MarketElementNoIdx, MarketElementWithIdx } from "./types";
 
 /**
  * Incorporate the originally fetched index into the data rendered by the table.
@@ -10,9 +10,9 @@ import type { MarketEleNoIdx, MarketEleWithIdx } from "./types";
  * This method allows for the index shown to the left of the name to still be preserved as #1.
  * The added property is displayed in the '#' column of the table.
  */
-export function addMarketIndices(data: MarketEleNoIdx[]) {
-  return data.reduce((extended: MarketEleWithIdx[], ele, idx) => {
-    const extendedEle = { ...ele, called_index: idx };
-    return [...extended, extendedEle];
+export function addMarketIndices(marketData: MarketElementNoIdx[]) {
+  return marketData.reduce((extendedData: MarketElementWithIdx[], element, idx) => {
+    const elementWithIdx = { ...element, called_index: idx };
+    return [...extendedData, elementWithIdx];
   }, []);
 }
