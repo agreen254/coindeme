@@ -4,12 +4,13 @@ import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 import CarouselCard from "./CarouselCard";
+import { MarketElementNoIdx } from "@/utils/types";
 
 type Props = {
-  coins: string[];
+  marketData: MarketElementNoIdx[];
 };
 
-const Carousel = ({ coins }: Props) => {
+const Carousel = ({ marketData }: Props) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "y",
     loop: false,
@@ -31,8 +32,8 @@ const Carousel = ({ coins }: Props) => {
       </button>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex flex-col h-48">
-          {coins.map((name) => (
-            <CarouselCard key={name + "carousel"}>{name}</CarouselCard>
+          {marketData.map((coin) => (
+            <CarouselCard key={name + "carousel"}>{coin.name}</CarouselCard>
           ))}
         </div>
       </div>
