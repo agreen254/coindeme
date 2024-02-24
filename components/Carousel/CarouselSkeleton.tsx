@@ -1,0 +1,14 @@
+import { arrayOfSize } from "@/utils/arrayHelpers";
+
+const CarouselSkeleton = () => {
+  const numSkeletonElements = arrayOfSize(5);
+
+  return numSkeletonElements.map((_, idx) => (
+    <div
+      key={"carouselSkeleton" + idx}
+      className="flex-[0_0_auto] min-h-0 h-[78px] mb-4 py-4 flex-col justify-center w-[15rem] border bg-teal-900/80 rounded-md animate-pulse"
+    ></div>
+  ));
+};
+
+export default CarouselSkeleton;
