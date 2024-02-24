@@ -25,7 +25,7 @@ const CarouselElement = ({ coinData }: Props) => {
               {symbol}
             </span>
           </span>
-          <span className="flex w-full space-x-4 text-sm ">
+          <span className="flex w-full space-x-4 text-sm">
             <span>
               {"$" + Intl.NumberFormat("en-US", {
                 notation: "compact",
