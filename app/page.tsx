@@ -19,11 +19,12 @@ export default function Home() {
 
   return (
     <main>
-      <div className="mt-8"></div>
-      <Carousel marketData={queryResult} />
       <div className="mt-8">
-        <MarketTableMainWrapper queryResult={queryResult} />
+        <Carousel queryResult={queryResult} />
       </div>
+      {/* <div className="mt-8">
+        <MarketTableMainWrapper queryResult={queryResult} />
+      </div> */}
     </main>
   );
 }

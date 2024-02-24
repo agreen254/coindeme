@@ -2,17 +2,22 @@
 
 import type { MarketQueryResult } from "@/utils/types";
 
+import { flatMarketRes } from "@/utils/flatMarketRes";
 import { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
-import CarouselCard from "./CarouselCard";
-import { flatMarketRes } from "@/utils/flatMarketRes";
+import CarouselElement from "./CarouselCard";
+import {
+  ChevronDown as ChevronDownIcon,
+  ChevronUp as ChevronUpIcon,
+} from "lucide-react";
 
 type Props = {
-  marketData: MarketQueryResult;
+  queryResult: MarketQueryResult;
 };
 
-const Carousel = ({ marketData: { data } }: Props) => {
+const Carousel = ({ queryResult: { data } }: Props) => {
+  // show all the fetched coins in the carousel
   const tableData = flatMarketRes(data?.pages);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -30,19 +35,27 @@ const Carousel = ({ marketData: { data } }: Props) => {
   }, [emblaApi]);
 
   return (
-    <div>
-      <button className="px-3 py-3 rounded-full" onClick={scrollPrev}>
-        Previous
+    <div className="flex flex-col items-center">
+      <button
+        className="px-2 py-2 rounded-full border-2 border-carousel-selected-border-from"
+        onClick={scrollPrev}
+      >
+        <ChevronUpIcon className="w-5 h-5" strokeWidth="3px" />
       </button>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex flex-col h-48">
+        <div className="flex flex-col h-[20rem]">
           {tableData?.map((coin) => (
-            <CarouselCard key={name + "carousel"}>{coin.name}</CarouselCard>
+            <CarouselElement key={coin.name + "carousel"}>
+              {coin.name}
+            </CarouselElement>
           ))}
         </div>
       </div>
-      <button className="px-3 py-3 rounded-full" onClick={scrollNext}>
-        Next
+      <button
+        className="px-2 py-2 rounded-full border-2 border-carousel-selected-border-from"
+        onClick={scrollNext}
+      >
+        <ChevronDownIcon className="w-5 h-5" strokeWidth="3px" />
       </button>
     </div>
   );
