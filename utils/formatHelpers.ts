@@ -1,14 +1,19 @@
 /**
  * Shortens very long coin names that will cause styling issues in the market table.
  */
-export function formatLongName(name: string) {
-  const maxLen = 18;
-
+export function formatLongName(name: string, maxLen: number = 18) {
   if (name.length >= maxLen) {
     return name.slice(0, 14).trim() + "...";
   } else {
     return name;
   }
+}
+
+/**
+ * Formats the price change percentage, ensure it will only have two digits after the decimal.
+ */
+export function formatPriceChange(price: number) {
+  return padTwoDecimals(roundDigits(price, 2).toString());
 }
 
 /**

@@ -43,11 +43,9 @@ const Carousel = ({ queryResult: { data } }: Props) => {
         <ChevronUpIcon className="w-5 h-5" strokeWidth="3px" />
       </button>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex flex-col h-[20rem]">
-          {tableData?.map((coin) => (
-            <CarouselElement key={coin.name + "carousel"}>
-              {coin.name}
-            </CarouselElement>
+        <div className="flex flex-col h-[470px]">
+          {tableData?.map((coinData) => (
+            <CarouselElement key={coinData.id + "carousel"} coinData={coinData} />
           ))}
         </div>
       </div>
