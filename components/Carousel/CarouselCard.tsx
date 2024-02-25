@@ -1,7 +1,7 @@
 import type { MarketElementNoIdx } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
-import { formatLongName } from "@/utils/formatHelpers";
+import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 import {
   useCarouselActions,
   useCarouselCardIsSelected,
@@ -36,7 +36,7 @@ const CarouselElement = ({ coinData }: Props) => {
         !hasMaxSelected &&
           "hover:bg-gradient-to-b hover:from-carousel-focus hover:to-carousel-focus/10",
         isSelected &&
-          "border-carousel-selected-to bg-gradient-to-b from-carousel-selected-darker to-carousel-selected-darker/20 shadow-md shadow-sky-800/30"
+          "border-carousel-selected-to bg-gradient-to-b from-carousel-selected to-carousel-selected/20 shadow-md shadow-sky-800/30"
       )}
       disabled={hasMaxSelected && !isSelected}
       onClick={() => handleSelect(id)}
@@ -59,11 +59,13 @@ const CarouselElement = ({ coinData }: Props) => {
           </span>
           <span className="flex w-full space-x-4 text-sm">
             <span>
-              {"$" +
-                Intl.NumberFormat("en-US", {
-                  notation: "compact",
-                  maximumFractionDigits: 1,
-                }).format(current_price)}
+              $
+              {current_price < 0.01
+                ? formatSmallNum(current_price)
+                : Intl.NumberFormat("en-US", {
+                    notation: "compact",
+                    maximumFractionDigits: 2,
+                  }).format(current_price)}
             </span>
             <span className="font-semibold">
               <PricePercentageChange change={price_change_percentage_24h} />

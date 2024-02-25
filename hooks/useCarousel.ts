@@ -9,6 +9,7 @@ type CarouselState = {
 
 type CarouselAction = {
   handleSelect: (id: string) => void;
+  clearAll: () => void;
 };
 
 const useCarouselStore = create<CarouselState>((set) => ({
@@ -27,6 +28,7 @@ const useCarouselStore = create<CarouselState>((set) => ({
             : { selectedElements: [...state.selectedElements, id] };
         }
       }),
+    clearAll: () => set(() => ({ selectedElements: [] })),
   },
 }));
 
@@ -38,12 +40,12 @@ export const useCarouselActions = () => {
 };
 
 // additional helper hooks
+export const useCarouselCardIsSelected = (id: string): boolean => {
+  return useCarouselStore((state) => state.selectedElements).includes(id);
+};
 export const useCarouselHasMaxSelected = (): boolean => {
   return (
     useCarouselStore((state) => state.selectedElements).length ===
     MAX_NUM_SELECTED
   );
-};
-export const useCarouselCardIsSelected = (id: string): boolean => {
-  return useCarouselStore((state) => state.selectedElements).includes(id);
 };

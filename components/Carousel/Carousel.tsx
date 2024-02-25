@@ -59,7 +59,7 @@ const Carousel = ({ queryResult: { data } }: Props) => {
     <div className="flex flex-col items-center">
       <div className="mb-2">
         <button
-          className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900/20 transition-colors disabled:cursor-not-allowed"
+          className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-zinc-800/50 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >
@@ -68,7 +68,7 @@ const Carousel = ({ queryResult: { data } }: Props) => {
       </div>
       <div className="flex flex-col items-center">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex flex-col h-[456px]">
+          <div className="flex flex-col h-[450px]">
             {carouselData ? (
               carouselData.map((coinData) => (
                 <CarouselCard
@@ -84,7 +84,7 @@ const Carousel = ({ queryResult: { data } }: Props) => {
       </div>
       <div className="mt-2">
         <button
-          className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900/20 transition-colors disabled:cursor-not-allowed"
+          className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-zinc-800/50 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
         >

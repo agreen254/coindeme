@@ -21,7 +21,7 @@ export function formatPriceChange(price: number) {
  * e.g. 0.000001 -> 1e-6
  */
 export function formatSmallNum(n: number): string {
-  return n < 0.001 ? n.toExponential(2) : n.toString();
+  return n < 0.01 ? n.toExponential(2) : n.toString();
 }
 
 /**
