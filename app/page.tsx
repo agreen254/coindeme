@@ -2,7 +2,7 @@
 
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
-import Carousel from "@/components/Carousel/Carousel";
+import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
 
 export default function Home() {
   // TODO: get the three fields below from url search params
@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <main>
       <div className="mt-8">
-        <Carousel queryResult={queryResult} />
+        <CarouselWrapper queryResult={queryResult} />
       </div>
     </main>
   );
