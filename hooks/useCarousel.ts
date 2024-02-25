@@ -8,23 +8,23 @@ type CarouselState = {
 };
 
 type CarouselAction = {
-  handleSelect: (element: string) => void;
+  handleSelect: (id: string) => void;
 };
 
 const useCarouselStore = create<CarouselState>((set) => ({
   selectedElements: ["bitcoin"],
   actions: {
-    handleSelect: (element) =>
+    handleSelect: (id) =>
       set((state) => {
-        if (state.selectedElements.includes(element)) {
+        if (state.selectedElements.includes(id)) {
           const newElements = state.selectedElements.filter(
-            (selected) => selected !== element
+            (selected) => selected !== id
           );
           return { selectedElements: newElements };
         } else {
           return state.selectedElements.length === MAX_NUM_SELECTED
             ? { selectedElements: state.selectedElements }
-            : { selectedElements: [...state.selectedElements, element] };
+            : { selectedElements: [...state.selectedElements, id] };
         }
       }),
   },
@@ -37,10 +37,13 @@ export const useCarouselActions = () => {
   return useCarouselStore((state) => state.actions);
 };
 
-// define additional hook to check if carousel is full
-export const useCarouselHasMaxSelected = () => {
+// additional helper hooks
+export const useCarouselHasMaxSelected = (): boolean => {
   return (
     useCarouselStore((state) => state.selectedElements).length ===
     MAX_NUM_SELECTED
   );
+};
+export const useCarouselCardIsSelected = (id: string): boolean => {
+  return useCarouselStore((state) => state.selectedElements).includes(id);
 };
