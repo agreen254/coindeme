@@ -43,7 +43,13 @@ const CarouselElement = ({ coinData }: Props) => {
     >
       <div className="flex justify-start items-center">
         <div className="ml-4">
-          <Image src={image} alt={`${name} logo`} width={40} height={40} />
+          <Image
+            src={image}
+            alt={`${name} logo`}
+            width={40}
+            height={40}
+            priority
+          />
         </div>
         <div className="flex flex-col w-full ml-3 items-start">
           <span>
