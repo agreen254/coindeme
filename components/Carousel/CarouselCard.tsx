@@ -25,9 +25,12 @@ const CarouselElement = ({ coinData }: Props) => {
     price_change_percentage_24h,
   } = coinData;
 
+  const currency = "$";
+
   const { handleSelect } = useCarouselActions();
   const hasMaxSelected = useCarouselHasMaxSelected();
   const isSelected = useCarouselCardIsSelected(id);
+  const cannotBeSelected = hasMaxSelected && !isSelected;
 
   return (
     <button
@@ -36,7 +39,8 @@ const CarouselElement = ({ coinData }: Props) => {
         !hasMaxSelected &&
           "hover:bg-gradient-to-b hover:from-carousel-focus hover:to-carousel-focus/10",
         isSelected &&
-          "border-carousel-selected-to bg-gradient-to-b from-carousel-selected to-carousel-selected/20 shadow-md shadow-sky-800/30"
+          "border-carousel-selected-to bg-gradient-to-b from-carousel-selected to-carousel-selected/20 shadow-md shadow-sky-600/70",
+        cannotBeSelected && "hover:bg-teal-900/50"
       )}
       disabled={hasMaxSelected && !isSelected}
       onClick={() => handleSelect(id)}
@@ -56,7 +60,8 @@ const CarouselElement = ({ coinData }: Props) => {
             <span>{formatLongName(name, 12)}</span>
             <span
               className={cn(
-                "ml-1 group-hover:text-gray-300 text-gray-400 text-sm uppercase font-semibold",
+                "ml-1 text-gray-400 text-sm uppercase font-semibold",
+                !hasMaxSelected && "group-hover:text-gray-300",
                 isSelected && "text-gray-300"
               )}
             >
@@ -65,7 +70,7 @@ const CarouselElement = ({ coinData }: Props) => {
           </span>
           <span className="flex w-full space-x-4 text-sm">
             <span>
-              $
+              {currency}
               {current_price < 0.01
                 ? formatSmallNum(current_price)
                 : Intl.NumberFormat("en-US", {
