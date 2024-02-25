@@ -15,6 +15,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "@/components/Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
+import MarketTableSwapMode from "./MarketTableSwapMode";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -43,6 +44,7 @@ const MarketTableInfiniteWrapper = ({
   return (
     <div>
       <div className="flex flex-col items-center">
+        <MarketTableSwapMode />
         <MarketTableCaption />
         <InfiniteScroll
           dataLength={tableData?.length || 0}

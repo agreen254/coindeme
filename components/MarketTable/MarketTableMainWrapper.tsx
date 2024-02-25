@@ -6,7 +6,6 @@ import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { ErrorBoundary } from "react-error-boundary";
 import MarketTableInfiniteWrapper from "./MarketTableInfiniteWrapper";
 import MarketTablePaginatedWrapper from "./MarketTablePaginatedWrapper";
-import MarketTableSwapMode from "./MarketTableSwapMode";
 
 const MarketTableMainWrapper = () => {
   const tableMode = useMarketTableMode();
@@ -24,7 +23,6 @@ const MarketTableMainWrapper = () => {
 
   return (
     <div>
-      <MarketTableSwapMode />
       <ErrorBoundary
         fallback={
           <h2 className="text-center text-2xl text-destructive">
