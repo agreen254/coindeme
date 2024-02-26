@@ -8,6 +8,15 @@ export const validCurrenciesSchema = z.union([
   z.literal("eth"),
 ]);
 
+// 1 day from current time = 5 minute interval data
+// 2 - 90 days from current time = hourly data
+// above 90 days from current time = daily data (00:00 UTC)
+export const comparisonChartRequestSchema = z.object({
+  id: z.string(),
+  currency: validCurrenciesSchema,
+  days: z.number(),
+});
+
 export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),

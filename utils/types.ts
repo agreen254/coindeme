@@ -4,6 +4,7 @@ import type {
 } from "@tanstack/react-query";
 
 import {
+  comparisonChartRequestSchema,
   marketSchema,
   marketResponseSchema,
   marketRequest,
@@ -15,6 +16,10 @@ import { z } from "zod";
 
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
+
+export type ComparisonChartRequest = z.infer<
+  typeof comparisonChartRequestSchema
+>;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
