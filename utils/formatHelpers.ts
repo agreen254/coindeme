@@ -1,9 +1,7 @@
 /**
  * Shortens very long coin names that will cause styling issues in the market table.
  */
-export function formatLongName(name: string) {
-  const maxLen = 18;
-
+export function formatLongName(name: string, maxLen: number = 18) {
   if (name.length >= maxLen) {
     return name.slice(0, 14).trim() + "...";
   } else {
@@ -12,11 +10,18 @@ export function formatLongName(name: string) {
 }
 
 /**
+ * Formats the price change percentage, ensure it will only have two digits after the decimal.
+ */
+export function formatPriceChange(price: number) {
+  return padTwoDecimals(roundDigits(price, 2).toString());
+}
+
+/**
  * Saves table space by using scientific notation for very small numbers.
  * e.g. 0.000001 -> 1e-6
  */
 export function formatSmallNum(n: number): string {
-  return n < 0.001 ? n.toExponential(2) : n.toString();
+  return n < 0.01 ? n.toExponential(2) : n.toString();
 }
 
 /**

@@ -61,6 +61,8 @@ const config = {
         "market-red": "#D14E85",
         "market-up": "#43FFDD",
         "market-down": "#F23F8A",
+        "carousel-focus": "#5B9ACA",
+        "carousel-selected": "#487AA1",
       },
       borderRadius: {
         lg: "var(--radius)",
