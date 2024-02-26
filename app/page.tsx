@@ -1,10 +1,25 @@
-import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
+"use client";
+
+import { useMarketQuery } from "@/hooks/useMarketQuery";
+
+import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
 
 export default function Home() {
+  // TODO: get the three fields below from url search params
+  const currency = "usd";
+  const marketFetchParam = "market_cap";
+  const marketFetchOrder = "desc";
+
+  const queryResult = useMarketQuery(
+    currency,
+    marketFetchParam,
+    marketFetchOrder
+  );
+
   return (
     <main>
       <div className="mt-8">
-        <MarketTableMainWrapper />
+        <CarouselWrapper queryResult={queryResult} />
       </div>
     </main>
   );

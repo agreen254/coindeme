@@ -3,7 +3,7 @@ import type { Currency, MarketElementWithIdx } from "@/utils/types";
 import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 
 import Image from "next/image";
-import MarketTablePriceChange from "./MarketTablePriceChange";
+import PricePercentageChange from "../PricePercentageChange";
 import MarketTableProgressWidget from "./MarketTableProgressWidget";
 import MarketTableSparkline from "./MarketTableSparkline";
 import { default as TD } from "./MarketTableBodyCell";
@@ -60,14 +60,14 @@ const MarketTableBody = ({ data, currency, initialIdx }: Props) => {
                 ? formatSmallNum(current_price)
                 : current_price.toLocaleString("en-US")}
             </TD>
-            <TD>
-              <MarketTablePriceChange change={change_1h} />
+            <TD className="font-mono">
+              <PricePercentageChange change={change_1h} />
             </TD>
-            <TD>
-              <MarketTablePriceChange change={change_24h} />
+            <TD className="font-mono">
+              <PricePercentageChange change={change_24h} />
             </TD>
-            <TD>
-              <MarketTablePriceChange change={change_7d} />
+            <TD className="font-mono">
+              <PricePercentageChange change={change_7d} />
             </TD>
             <TD>
               <MarketTableProgressWidget
