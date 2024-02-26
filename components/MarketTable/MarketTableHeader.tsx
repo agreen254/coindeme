@@ -33,7 +33,7 @@ const MarketTableHeader = () => {
 
   return (
     <thead>
-      <tr className="w-[1467px]">
+      <tr className="w-table-xl">
         <TH className="min-w-16 w-16 text-center rounded-bl-xl border-l">
           <button
             className={cn(isPaginated && "hover:dark:text-white")}
@@ -97,7 +97,9 @@ const MarketTableHeader = () => {
         </TH>
         <TH className="min-w-64 indent-2">24h Vol / Market Cap</TH>
         <TH className="min-w-64 indent-2">Circulating / Total Supply</TH>
-        <TH className="min-w-[218px] rounded-br-xl border-r indent-2">Last 7d</TH>
+        <TH className="min-w-[218px] rounded-br-xl border-r indent-2">
+          Last 7d
+        </TH>
       </tr>
     </thead>
   );
