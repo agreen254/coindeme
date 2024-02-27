@@ -1,4 +1,7 @@
-import type { ComparisonChartRequest, ComparisonChartResponse } from "@/utils/types";
+import type {
+  ComparisonChartRequest,
+  ComparisonChartResponse,
+} from "@/utils/types";
 
 import {
   comparisonChartRequestSchema,
@@ -44,8 +47,6 @@ export async function POST(req: NextRequest) {
   if (!comparisonDataValidation.success) {
     throw new Error("Failed to validate comparison chart data.");
   }
-  
-  return NextResponse.json({
-    comparisonData: comparisonData as ComparisonChartResponse,
-  });
+
+  return NextResponse.json(comparisonData as ComparisonChartResponse);
 }

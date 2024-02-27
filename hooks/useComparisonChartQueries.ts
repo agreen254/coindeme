@@ -4,7 +4,7 @@ import type {
   ComparisonChartResponse,
 } from "@/utils/types";
 
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 
 export const useComparisonChartQueries = ({
   ids,
