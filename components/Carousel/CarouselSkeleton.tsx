@@ -1,7 +1,7 @@
 import { arrayOfSize } from "@/utils/arrayHelpers";
 
 const CarouselSkeleton = () => {
-  const numSkeletonElements = 5;
+  const numSkeletonElements = 6;
   const dummyArray = arrayOfSize(numSkeletonElements);
 
   return dummyArray.map((_, idx) => (

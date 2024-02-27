@@ -47,7 +47,7 @@ const MarketTableCaption = ({
   };
 
   return (
-    <div className="flex justify-between w-[1467px] pt-4 -mb-1 gap-x-2 rounded-t-xl dark:bg-zinc-900/70 dark:border-zinc-900/70 opacity-90 shadow-[0_-1px_2px_0_#404040]">
+    <div className="flex justify-between w-table-xl pt-4 -mb-1 gap-x-2 rounded-t-xl dark:bg-zinc-900/70 dark:border-zinc-900/70 opacity-90 shadow-[0_-1px_2px_0_#404040]">
       <div className="ml-6">
         <span>
           <CoinsIcon className="w-6 h-6 mr-2 -translate-y-1 inline" />

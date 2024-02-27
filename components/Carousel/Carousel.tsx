@@ -35,7 +35,7 @@ const Carousel = ({
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "y",
     loop: false,
-    slidesToScroll: 5,
+    slidesToScroll: 6,
   });
 
   const scrollPrev = useCallback(() => {
@@ -76,7 +76,7 @@ const Carousel = ({
       </div>
       <div className="flex flex-col items-center">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex flex-col h-[450px]">
+          <div className="flex flex-col h-[536px]">
             {isPending ? (
               <CarouselSkeleton />
             ) : (

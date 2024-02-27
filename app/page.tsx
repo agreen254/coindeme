@@ -19,8 +19,8 @@ export default function Home() {
   );
 
   return (
-    <main>
-      <div className="mt-8">
+    <main className="flex flex-col items-center gap-y-8">
+      <div className="flex justify-between w-table-xl">
         <CarouselWrapper queryResult={queryResult} />
         <PriceComparisonChartWrapper />
       </div>
