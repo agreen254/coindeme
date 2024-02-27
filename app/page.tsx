@@ -3,6 +3,7 @@
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
+import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
 
 export default function Home() {
   // TODO: get the three fields below from url search params
@@ -17,9 +18,12 @@ export default function Home() {
   );
 
   return (
-    <main>
-      <div className="mt-8">
+    <main className="flex flex-col items-center gap-y-8">
+      <div className="flex justify-between w-table-xl">
         <CarouselWrapper queryResult={queryResult} />
+      </div>
+      <div>
+        <MarketTableMainWrapper queryResult={queryResult} />
       </div>
     </main>
   );
