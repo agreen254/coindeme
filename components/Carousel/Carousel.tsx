@@ -58,7 +58,7 @@ const Carousel = ({
       // make sure callback will be updated whenever scrolling occurs
       emblaApi.on("slidesInView", handleScroll);
     }
-  }, [emblaApi]);
+  }, [emblaApi, handleScroll]);
 
   return (
     <div className="flex flex-col items-center w-[240px]">

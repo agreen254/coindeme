@@ -1,4 +1,4 @@
-import type { ChartData } from "chart.js";
+import type { ChartData, ChartOptions } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import {
@@ -20,6 +20,17 @@ const PriceComparisonChart = ({ data }: Props) => {
   const x = data.prices.map((price) => price[0]); // time
   const y = data.prices.map((price) => price[1]); // price
 
+  const options: ChartOptions<"line"> = {
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 0,
+      },
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+  };
+
   const chartData: ChartData<"line"> = {
     labels: x,
     datasets: [
@@ -32,17 +43,15 @@ const PriceComparisonChart = ({ data }: Props) => {
   };
 
   return (
-    <div className="w-[1000px]">
-      <ErrorBoundary
-        fallback={
-          <p className="text-sm text-center text-destructive">
-            Failed to render comparison chart for bitcoin.
-          </p>
-        }
-      >
-        <Line data={chartData} />
-      </ErrorBoundary>
-    </div>
+    <ErrorBoundary
+      fallback={
+        <p className="text-sm text-center text-destructive">
+          Failed to render comparison chart for bitcoin.
+        </p>
+      }
+    >
+      <Line data={chartData} options={options} />
+    </ErrorBoundary>
   );
 };
 
