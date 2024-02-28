@@ -15,7 +15,7 @@ const ComparisonChartsTimeSelector = () => {
         <button
           key={sendToApiTime}
           className={cn(
-            "px-3 py-2 mr-1 rounded-md hover:bg-teal-900/80 text-stone-300 transition-colors",
+            "min-w-[60px] px-3 py-2 mr-1 rounded-md hover:bg-teal-900/80 text-stone-300 transition-colors",
             isSelected(sendToApiTime) && "hover:bg-teal-800 bg-teal-900/80"
           )}
           onClick={() => handleSelect(sendToApiTime)}

@@ -1,4 +1,4 @@
-import type { ChartData, ChartOptions } from "chart.js";
+import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import {
@@ -7,10 +7,8 @@ import {
   LineElement,
   PointElement,
 } from "chart.js/auto";
-import {
-  handleTicksXAxis,
-  handleTicksYAxis,
-} from "@/utils/comparisonChartHelpers";
+import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePrice";
+import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePrice";
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Line } from "react-chartjs-2";
@@ -25,39 +23,17 @@ const PriceComparisonChart = ({ chartData }: Props) => {
   const x = chartData.prices.map((price) => price[0]); // UNIX time
   const y = chartData.prices.map((price) => price[1]); // price
 
-  const options: ChartOptions<"line"> = {
-    elements: {
-      point: {
-        radius: 0,
-        hoverRadius: 0,
-      },
-    },
-    scales: {
-      x: {
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
-        },
-      },
-      y: {
-        ticks: {
-          callback: function (val, idx) {
-            return handleTicksYAxis(val as number, idx);
-          },
-        },
-      },
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-  };
-
   const priceChartData: ChartData<"line"> = {
     labels: x,
     datasets: [
       {
-        label: "btc",
+        label: "Bitcoin",
+
+        // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
+        backgroundColor: function (context) {
+          return priceComparisonGradient(context);
+        },
+        borderColor: "rgba(52, 211, 153, 0.8)",
         data: y,
         fill: true,
       },
@@ -72,7 +48,7 @@ const PriceComparisonChart = ({ chartData }: Props) => {
         </p>
       }
     >
-      <Line data={priceChartData} options={options} />
+      <Line data={priceChartData} options={priceComparisonOptions} />
     </ErrorBoundary>
   );
 };

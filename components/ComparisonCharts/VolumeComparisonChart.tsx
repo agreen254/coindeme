@@ -1,21 +1,33 @@
-import type { ChartData, ChartOptions } from "chart.js";
+import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import {
+  BarElement,
+  CategoryScale,
   Chart as ChartJS,
-  Filler,
+  Legend,
+  LinearScale,
   LineElement,
   PointElement,
+  Title,
+  Tooltip,
 } from "chart.js/auto";
-import {
-  handleTicksXAxis,
-  handleTicksYAxis,
-} from "@/utils/comparisonChartHelpers";
+import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolume";
+import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolume";
 
+import { Bar } from "react-chartjs-2";
 import { ErrorBoundary } from "react-error-boundary";
-import { Line } from "react-chartjs-2";
 
-ChartJS.register(Filler, LineElement, PointElement);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
+);
 
 type Props = {
   chartData: ComparisonChartResponse;
@@ -25,41 +37,17 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
   const x = chartData.total_volumes.map((volume) => volume[0]); // UNIX time
   const y = chartData.total_volumes.map((volume) => volume[1]); // volume
 
-  const options: ChartOptions<"line"> = {
-    elements: {
-      point: {
-        radius: 0,
-        hoverRadius: 0,
-      },
-    },
-    scales: {
-      x: {
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
-        },
-      },
-      y: {
-        ticks: {
-          callback: function (val, idx) {
-            return handleTicksYAxis(val as number, idx);
-          },
-        },
-      },
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-  };
-
-  const priceChartData: ChartData<"line"> = {
+  const volumeChartData: ChartData<"bar"> = {
     labels: x,
     datasets: [
       {
-        label: "btc",
+        label: "Bitcoin",
+
+        // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
+        backgroundColor: function (context) {
+          return volumeComparisonGradient(context);
+        },
         data: y,
-        fill: true,
       },
     ],
   };
@@ -72,7 +60,7 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
         </p>
       }
     >
-      <Line data={priceChartData} options={options} />
+      <Bar data={volumeChartData} options={volumeComparisonOptions} />
     </ErrorBoundary>
   );
 };
