@@ -18,12 +18,12 @@ import { Line } from "react-chartjs-2";
 ChartJS.register(Filler, LineElement, PointElement);
 
 type Props = {
-  data: ComparisonChartResponse;
+  chartData: ComparisonChartResponse;
 };
 
-const PriceComparisonChart = ({ data }: Props) => {
-  const x = data.prices.map((price) => price[0]); // UNIX time
-  const y = data.prices.map((price) => price[1]); // price
+const PriceComparisonChart = ({ chartData }: Props) => {
+  const x = chartData.prices.map((price) => price[0]); // UNIX time
+  const y = chartData.prices.map((price) => price[1]); // price
 
   const options: ChartOptions<"line"> = {
     elements: {
@@ -53,7 +53,7 @@ const PriceComparisonChart = ({ data }: Props) => {
     responsive: true,
   };
 
-  const chartData: ChartData<"line"> = {
+  const priceChartData: ChartData<"line"> = {
     labels: x,
     datasets: [
       {
@@ -72,7 +72,7 @@ const PriceComparisonChart = ({ data }: Props) => {
         </p>
       }
     >
-      <Line data={chartData} options={options} />
+      <Line data={priceChartData} options={options} />
     </ErrorBoundary>
   );
 };

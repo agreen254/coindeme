@@ -1,30 +1,17 @@
 "use client";
 
-import type { ComparisonChartQueries } from "@/utils/types";
-
-import { useCarouselSelectedElements } from "@/hooks/useCarousel";
-import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
+import type { ComparisonChartResponse } from "@/utils/types";
 
 import PriceComparisonChart from "./PriceComparisonChart";
 
-const PriceComparisonChartWrapper = () => {
-  useCarouselSelectedElements();
+type Props = {
+  chartData: ComparisonChartResponse;
+};
 
-  const queryRequest: ComparisonChartQueries = {
-    ids: ["bitcoin"],
-    currency: "usd",
-    days: "180",
-  };
-
-  const chartData = useComparisonChartQueries(queryRequest);
-
+const PriceComparisonChartWrapper = ({ chartData }: Props) => {
   return (
     <div className="w-full h-full p-4">
-      {chartData[0]?.data ? (
-        <PriceComparisonChart data={chartData[0].data} />
-      ) : (
-        <div className="w-full h-full animate-pulse"></div>
-      )}
+      <PriceComparisonChart chartData={chartData} />
     </div>
   );
 };
