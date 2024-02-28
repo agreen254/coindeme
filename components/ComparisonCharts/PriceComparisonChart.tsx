@@ -7,6 +7,11 @@ import {
   LineElement,
   PointElement,
 } from "chart.js/auto";
+import {
+  handleTicksXAxis,
+  handleTicksYAxis,
+} from "@/utils/comparisonChartHelpers";
+
 import { ErrorBoundary } from "react-error-boundary";
 import { Line } from "react-chartjs-2";
 
@@ -17,7 +22,7 @@ type Props = {
 };
 
 const PriceComparisonChart = ({ data }: Props) => {
-  const x = data.prices.map((price) => price[0]); // time
+  const x = data.prices.map((price) => price[0]); // UNIX time
   const y = data.prices.map((price) => price[1]); // price
 
   const options: ChartOptions<"line"> = {
@@ -25,6 +30,23 @@ const PriceComparisonChart = ({ data }: Props) => {
       point: {
         radius: 0,
         hoverRadius: 0,
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          callback: function (val, idx) {
+            const label = this.getLabelForValue(val as number);
+            return handleTicksXAxis(label, idx);
+          },
+        },
+      },
+      y: {
+        ticks: {
+          callback: function (val, idx) {
+            return handleTicksYAxis(val as number, idx);
+          },
+        },
       },
     },
     maintainAspectRatio: false,

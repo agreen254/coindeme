@@ -19,11 +19,13 @@ const PriceComparisonChartWrapper = () => {
   const chartData = useComparisonChartQueries(queryRequest);
 
   return (
-    chartData[0]?.data && (
-      <div className="w-full h-full">
+    <div className="w-full h-full p-4">
+      {chartData[0]?.data ? (
         <PriceComparisonChart data={chartData[0].data} />
-      </div>
-    )
+      ) : (
+        <div className="w-full h-full animate-pulse"></div>
+      )}
+    </div>
   );
 };
 
