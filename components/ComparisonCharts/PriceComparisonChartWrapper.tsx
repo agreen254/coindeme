@@ -13,7 +13,7 @@ const PriceComparisonChartWrapper = () => {
   const queryRequest: ComparisonChartQueries = {
     ids: ["bitcoin"],
     currency: "usd",
-    days: 180,
+    days: "180",
   };
 
   const chartData = useComparisonChartQueries(queryRequest);

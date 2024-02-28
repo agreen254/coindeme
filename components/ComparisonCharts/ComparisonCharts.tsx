@@ -1,14 +1,20 @@
+import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
 
 const ComparisonCharts = () => {
   return (
-    <div className="flex flex-col w-full justify-center gap-y-4">
-      <div className="bg-zinc-900/70 rounded-t-3xl rounded-b-lg h-[calc(50%-0.5rem)]">
-        <PriceComparisonChartWrapper />
+    <div className="w-full">
+      <div className="flex w-full h-[500px] justify-center gap-x-8">
+        <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl w-[calc(50%-0.5rem)]">
+          <PriceComparisonChartWrapper />
+        </div>
+        <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl w-[calc(50%-0.5rem)]">
+          <VolumeComparisonChartWrapper />
+        </div>
       </div>
-      <div className="bg-zinc-900/70 rounded-t-lg rounded-b-3xl h-[calc(50%-0.5rem)]">
-        <VolumeComparisonChartWrapper />
+      <div className="mt-4">
+        <ComparisonChartsTimeSelector />
       </div>
     </div>
   );

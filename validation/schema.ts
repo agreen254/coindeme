@@ -12,7 +12,7 @@ export const validCurrenciesSchema = z.union([
 export const comparisonChartQueriesSchema = z.object({
   ids: z.string().array(),
   currency: validCurrenciesSchema,
-  days: z.number(),
+  days: z.string(),
 });
 
 // queries are dispatched to the backend individually
