@@ -1,12 +1,14 @@
 import type { MarketQueryResult } from "@/utils/types";
 import { ErrorBoundary } from "react-error-boundary";
-import Carousel from "./Carousel";
+import CarouselVertical from "./CarouselVertical";
+import CarouselHorizontal from "./CarouselHorizontal";
 
 type Props = {
+  axis: "x" | "y";
   queryResult: MarketQueryResult;
 };
 
-const CarouselWrapper = ({ queryResult }: Props) => {
+const CarouselWrapper = ({ axis, queryResult }: Props) => {
   return (
     <div className="flex justify-center w-full">
       <ErrorBoundary
@@ -14,7 +16,11 @@ const CarouselWrapper = ({ queryResult }: Props) => {
           <p className="text-sm text-destructive">Failed to render carousel.</p>
         }
       >
-        <Carousel queryResult={queryResult} />
+        {axis === "x" ? (
+          <CarouselHorizontal queryResult={queryResult} />
+        ) : (
+          <CarouselVertical queryResult={queryResult} />
+        )}
       </ErrorBoundary>
     </div>
   );
