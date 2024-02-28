@@ -1,4 +1,4 @@
-import { formatPriceCompact } from "./formatHelpers";
+import { formatPriceChangeValue} from "./formatHelpers";
 
 export function handleTicksXAxis(label: string, index: number) {
   if (index % 3 !== 0) return "";
@@ -9,5 +9,5 @@ export function handleTicksXAxis(label: string, index: number) {
 }
 
 export function handleTicksYAxis(value: number, index: number) {
-  return formatPriceCompact(value);
+  return formatPriceChangeValue(value);
 }
