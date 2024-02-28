@@ -9,8 +9,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import CarouselCard from "./CarouselCard";
 import CarouselSkeleton from "./CarouselSkeleton";
 import {
-  ChevronDown as ChevronDownIcon,
-  ChevronUp as ChevronUpIcon,
+  ChevronRight as ChevronRightIcon,
+  ChevronLeft as ChevronLeftIcon,
 } from "lucide-react";
 import Loader from "../Loader";
 
@@ -22,7 +22,7 @@ type Props = {
  * Built using Embla:
  * https://www.embla-carousel.com/get-started/react/
  */
-const Carousel = ({
+const CarouselHorizontal = ({
   queryResult: { data, isPending, isFetching, error },
 }: Props) => {
   const isLoadingMoreData = data && isFetching;
@@ -33,9 +33,9 @@ const Carousel = ({
   const [canScrollNext, setCanScrollNext] = useState(true);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    axis: "y",
+    axis: "x",
     loop: false,
-    slidesToScroll: 6,
+    slidesToScroll: 5,
   });
 
   const scrollPrev = useCallback(() => {
@@ -61,22 +61,22 @@ const Carousel = ({
   }, [emblaApi, handleScroll]);
 
   return (
-    <div className="flex flex-col items-center w-[240px]">
-      <div className="mb-2">
+    <div className="flex justify-center w-table-xl">
+      <div className="flex items-center mr-4 mb-3">
         <button
           className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >
-          <ChevronUpIcon
+          <ChevronLeftIcon
             className="w-5 h-5 text-zinc-300"
             strokeWidth="2.5px"
           />
         </button>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex justify-center">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex flex-col h-[536px]">
+          <div className="flex w-[1270px] space-x-4">
             {isPending ? (
               <CarouselSkeleton />
             ) : (
@@ -93,13 +93,13 @@ const Carousel = ({
           </div>
         </div>
       </div>
-      <div className="mt-2">
+      <div className="flex items-center mb-3 ml-2">
         <button
           className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
         >
-          <ChevronDownIcon
+          <ChevronRightIcon
             className="w-5 h-5 text-zinc-300"
             strokeWidth="2.5px"
           />
@@ -114,4 +114,4 @@ const Carousel = ({
   );
 };
 
-export default Carousel;
+export default CarouselHorizontal;

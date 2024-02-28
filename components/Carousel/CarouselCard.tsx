@@ -35,7 +35,7 @@ const CarouselElement = ({ coinData }: Props) => {
   return (
     <button
       className={cn(
-        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-4 justify-center w-[15rem] rounded-md bg-teal-900/80 disabled:cursor-not-allowed",
+        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-3 justify-center w-[15rem] rounded-md bg-teal-900/80 disabled:cursor-not-allowed",
         !hasMaxSelected &&
           "hover:bg-gradient-to-b hover:from-carousel-focus hover:to-carousel-focus/10",
         isSelected &&

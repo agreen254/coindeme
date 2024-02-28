@@ -20,8 +20,8 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center gap-y-8">
+        <CarouselWrapper axis="x" queryResult={queryResult} />
       <div className="flex justify-between w-table-xl gap-x-12">
-        <CarouselWrapper queryResult={queryResult} />
         <ComparisonCharts />
       </div>
       <div className="mt-8">
