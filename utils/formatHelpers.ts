@@ -12,8 +12,26 @@ export function formatLongName(name: string, maxLen: number = 18) {
 /**
  * Formats the price change percentage, ensure it will only have two digits after the decimal.
  */
-export function formatPriceChange(price: number) {
+export function formatPriceChangePercentage(price: number) {
   return padTwoDecimals(roundDigits(price, 2).toString());
+}
+
+/**
+ * Succinctly formats prices.
+ * If the price is less than 1/100, it is shown in exponential notation.
+ * If the price is greater than 1/100, it can be prefixed.
+ *
+ * 0.0001 -> 1e-4
+ * 100_000 -> 100k
+ * 2_000_000 -> 2M
+ */
+export function formatPriceChangeValue(price: number) {
+  return price < 0.01
+    ? formatSmallNum(price)
+    : Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 2,
+      }).format(price);
 }
 
 /**

@@ -1,7 +1,10 @@
 import type { MarketElementNoIdx } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
-import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
+import {
+  formatLongName,
+  formatPriceChangeValue,
+} from "@/utils/formatHelpers";
 import {
   useCarouselActions,
   useCarouselCardIsSelected,
@@ -71,12 +74,7 @@ const CarouselElement = ({ coinData }: Props) => {
           <span className="flex w-full space-x-4 text-sm">
             <span>
               {currency}
-              {current_price < 0.01
-                ? formatSmallNum(current_price)
-                : Intl.NumberFormat("en-US", {
-                    notation: "compact",
-                    maximumFractionDigits: 2,
-                  }).format(current_price)}
+              {formatPriceChangeValue(current_price)}
             </span>
             <span className="font-semibold">
               <PricePercentageChange change={price_change_percentage_24h} />

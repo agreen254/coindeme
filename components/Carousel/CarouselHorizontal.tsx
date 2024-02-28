@@ -12,7 +12,6 @@ import {
   ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "lucide-react";
-import Loader from "../Loader";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -23,10 +22,8 @@ type Props = {
  * https://www.embla-carousel.com/get-started/react/
  */
 const CarouselHorizontal = ({
-  queryResult: { data, isPending, isFetching },
+  queryResult: { data, isPending },
 }: Props) => {
-  const isLoadingMoreData = data && isFetching;
-
   const carouselData = flatMarketRes(data?.pages);
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -86,9 +83,6 @@ const CarouselHorizontal = ({
                   coinData={coinData}
                 />
               ))
-            )}
-            {isLoadingMoreData && (
-              <Loader className="w-[15rem] h-[76px] mb-4 mt-0" />
             )}
           </div>
         </div>
