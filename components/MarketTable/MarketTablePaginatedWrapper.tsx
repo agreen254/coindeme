@@ -97,7 +97,11 @@ const MarketTablePaginatedWrapper = ({
           </div>
         )}
         {showLoader && <Loader />}
-        {error && <p>An unexpected error occurred: {error.message}</p>}
+        {error && (
+          <p className="mt-4 text-sm text-destructive">
+            An unexpected error occurred: {error.message}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ type Props = {
  * https://www.embla-carousel.com/get-started/react/
  */
 const CarouselHorizontal = ({
-  queryResult: { data, isPending, isFetching, error },
+  queryResult: { data, isPending, isFetching },
 }: Props) => {
   const isLoadingMoreData = data && isFetching;
 
@@ -105,11 +105,6 @@ const CarouselHorizontal = ({
           />
         </button>
       </div>
-      {error && (
-        <p className="mt-2 text-sm text-center text-destructive">
-          An unexpected error occurred: {error.message}
-        </p>
-      )}
     </div>
   );
 };

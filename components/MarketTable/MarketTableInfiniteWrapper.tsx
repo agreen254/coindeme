@@ -59,7 +59,9 @@ const MarketTableInfiniteWrapper = ({
         </InfiniteScroll>
         {showLoader && <Loader />}
         {error && (
-          <p className="mt-4">An unexpected error occurred: {error.message}</p>
+          <p className="mt-4 text-sm text-destructive">
+            An unexpected error occurred: {error.message}
+          </p>
         )}
       </div>
     </div>
