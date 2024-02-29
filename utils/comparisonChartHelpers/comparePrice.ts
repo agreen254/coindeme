@@ -67,6 +67,11 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
     title: {
       display: false,
     },
+    tooltip: {
+      caretPadding: 14,
+      xAlign: "center",
+      yAlign: "top",
+    },
   },
   interaction: {
     intersect: false,

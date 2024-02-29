@@ -66,7 +66,9 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       display: false,
     },
     tooltip: {
-      intersect: false,
+      caretPadding: 6,
+      xAlign: "center",
+      yAlign: "bottom",
     },
   },
   interaction: {
