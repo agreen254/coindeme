@@ -1,33 +1,11 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import {
-  BarElement,
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js/auto";
 import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolume";
 import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolume";
 
 import { Bar } from "react-chartjs-2";
 import { ErrorBoundary } from "react-error-boundary";
-
-ChartJS.register(
-  BarElement,
-  CategoryScale,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip
-);
 
 type Props = {
   chartData: ComparisonChartResponse;

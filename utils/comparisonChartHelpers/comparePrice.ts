@@ -31,7 +31,8 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
   elements: {
     point: {
       radius: 0,
-      hoverRadius: 0,
+      hoverRadius: 10,
+      hoverBorderWidth: 2,
     },
   },
   scales: {
@@ -49,7 +50,6 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
     },
     y: {
       grid: {
-        drawOnChartArea: false,
         color: "#27272a",
       },
       ticks: {

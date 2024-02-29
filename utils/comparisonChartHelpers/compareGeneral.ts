@@ -1,3 +1,28 @@
+import {
+  BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+} from "chart.js";
+
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  Filler,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
+);
+
 import { formatPriceChangeValue } from "../formatHelpers";
 
 export function handleTicksXAxis(label: string, index: number) {

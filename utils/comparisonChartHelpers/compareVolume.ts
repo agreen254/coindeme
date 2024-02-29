@@ -21,7 +21,7 @@ export function volumeComparisonGradient(context: ScriptableContext<"bar">) {
 
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
     gradient.addColorStop(1, "rgba(52, 211, 153, 1)");
-    gradient.addColorStop(0, "rgba(19, 78, 74, 0.8)");
+    gradient.addColorStop(0, "rgba(19, 78, 74, 1)");
   }
 
   return gradient;
@@ -29,13 +29,15 @@ export function volumeComparisonGradient(context: ScriptableContext<"bar">) {
 
 export const volumeComparisonOptions: ChartOptions<"bar"> = {
   elements: {
-    point: {
-      radius: 0,
-      hoverRadius: 0,
+    bar: {
+      hoverBackgroundColor: "#34D3D5",
     },
   },
   scales: {
     x: {
+      grid: {
+        drawOnChartArea: false,
+      },
       ticks: {
         callback: function (val, idx) {
           const label = this.getLabelForValue(val as number);
@@ -44,6 +46,10 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       },
     },
     y: {
+      grid: {
+        drawOnChartArea: true,
+        color: "#27272a",
+      },
       ticks: {
         callback: function (val, idx) {
           return handleTicksYAxis(val as number, idx);
@@ -58,6 +64,9 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
     },
     title: {
       display: false,
+    },
+    tooltip: {
+      intersect: false,
     },
   },
   interaction: {

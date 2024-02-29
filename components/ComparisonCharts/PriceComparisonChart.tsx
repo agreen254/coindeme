@@ -1,19 +1,11 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import {
-  Chart as ChartJS,
-  Filler,
-  LineElement,
-  PointElement,
-} from "chart.js/auto";
 import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePrice";
 import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePrice";
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Line } from "react-chartjs-2";
-
-ChartJS.register(Filler, LineElement, PointElement);
 
 type Props = {
   chartData: ComparisonChartResponse;

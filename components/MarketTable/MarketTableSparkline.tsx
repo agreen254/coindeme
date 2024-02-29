@@ -11,16 +11,8 @@ import {
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 
-import {
-  Chart as ChartJS,
-  Filler,
-  LineElement,
-  PointElement,
-} from "chart.js/auto";
 import { ErrorBoundary } from "react-error-boundary";
 import { Line } from "react-chartjs-2";
-
-ChartJS.register(Filler, LineElement, PointElement);
 
 type Props = {
   data: number[];
