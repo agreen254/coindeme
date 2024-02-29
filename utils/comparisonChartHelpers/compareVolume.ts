@@ -1,5 +1,6 @@
-import { ChartOptions, ScriptableContext } from "chart.js";
-import { handleTicksXAxis, handleTicksYAxis } from "../comparisonChartHelpers";
+import type { ChartOptions, ScriptableContext } from "chart.js";
+
+import { handleTicksXAxis, handleTicksYAxis } from "./compareGeneral";
 
 export function volumeComparisonGradient(context: ScriptableContext<"bar">) {
   const chart = context.chart;

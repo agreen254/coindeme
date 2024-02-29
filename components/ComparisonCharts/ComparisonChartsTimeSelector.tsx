@@ -5,7 +5,11 @@ import {
   useComparisonChartTimeIsSelected as isSelected,
 } from "@/hooks/useComparisonChartTime";
 
-const ComparisonChartsTimeSelector = () => {
+type Props = {
+  isPending: boolean;
+};
+
+const ComparisonChartsTimeSelector = ({ isPending }: Props) => {
   const { handleSelect } = useComparisonChartTimeActions();
   const times = Array.from(comparisonChartsTimeSelectorsMap);
 
@@ -16,9 +20,11 @@ const ComparisonChartsTimeSelector = () => {
           key={sendToApiTime}
           className={cn(
             "min-w-[60px] px-3 py-2 mr-1 rounded-md hover:bg-teal-900/80 text-stone-300 transition-colors",
-            isSelected(sendToApiTime) && "hover:bg-teal-800 bg-teal-900/80"
+            isSelected(sendToApiTime) && "hover:bg-teal-800 bg-teal-900/80",
+            isPending && "text-muted animate-pulse"
           )}
           onClick={() => handleSelect(sendToApiTime)}
+          disabled={isPending}
         >
           {displayTime}
         </button>

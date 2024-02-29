@@ -1,5 +1,6 @@
-import { ChartOptions, ScriptableContext } from "chart.js";
-import { handleTicksXAxis, handleTicksYAxis } from "../comparisonChartHelpers";
+import type { ChartOptions, ScriptableContext } from "chart.js";
+
+import { handleTicksXAxis, handleTicksYAxis } from "./compareGeneral";
 
 export function priceComparisonGradient(context: ScriptableContext<"line">) {
   const chart = context.chart;

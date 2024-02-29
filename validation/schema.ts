@@ -33,9 +33,9 @@ export const comparisonChartRequestSchema = comparisonChartQueriesSchema
  * value (currency)
  */
 export const comparisonChartResponseSchema = z.object({
-  prices: z.array(z.array(z.number()).length(2)),
-  market_caps: z.array(z.array(z.number()).length(2)),
-  total_volumes: z.array(z.array(z.number()).length(2)),
+  prices: z.array(z.array(z.number().nullable()).length(2)),
+  market_caps: z.array(z.array(z.number().nullable()).length(2)),
+  total_volumes: z.array(z.array(z.number().nullable()).length(2)),
 });
 
 export const marketFetchParamSchema = z.union([
