@@ -1,11 +1,10 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolume";
-import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolume";
+import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
+import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 
 import { Bar } from "react-chartjs-2";
-import { ErrorBoundary } from "react-error-boundary";
 
 type Props = {
   chartData: ComparisonChartResponse;
@@ -20,27 +19,16 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
     datasets: [
       {
         label: "Bitcoin",
-
-        // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
         backgroundColor: function (context) {
           return volumeComparisonGradient(context);
         },
         data: y,
+        hoverBackgroundColor: "#34D3D5",
       },
     ],
   };
 
-  return (
-    <ErrorBoundary
-      fallback={
-        <p className="text-sm text-center text-destructive">
-          Failed to render comparison chart for bitcoin.
-        </p>
-      }
-    >
-      <Bar data={volumeChartData} options={volumeComparisonOptions} />
-    </ErrorBoundary>
-  );
+  return <Bar data={volumeChartData} options={volumeComparisonOptions} />;
 };
 
 export default VolumeComparisonChart;

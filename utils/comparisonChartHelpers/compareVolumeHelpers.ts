@@ -1,8 +1,16 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
 
-import { handleTicksXAxis, handleTicksYAxis } from "./compareGeneral";
+import {
+  handleGradientColorStops,
+  handleTicksXAxis,
+  handleTicksYAxis,
+} from "./compareGeneralHelpers";
 
-export function volumeComparisonGradient(context: ScriptableContext<"bar">) {
+// https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
+export function volumeComparisonGradient(
+  context: ScriptableContext<"bar">,
+  chartIdx: number = 0
+) {
   const chart = context.chart;
   const { ctx, chartArea } = chart;
 
@@ -20,19 +28,40 @@ export function volumeComparisonGradient(context: ScriptableContext<"bar">) {
     height = chartHeight;
 
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(1, "rgba(52, 211, 153, 1)");
-    gradient.addColorStop(0, "rgba(19, 78, 74, 1)");
+
+    handleGradientColorStops(
+      { alphaStart: 1, alphaEnd: 1 },
+      gradient,
+      chartIdx
+    );
   }
 
   return gradient;
 }
 
 export const volumeComparisonOptions: ChartOptions<"bar"> = {
-  elements: {
-    bar: {
-      hoverBackgroundColor: "#34D3D5",
+  plugins: {
+    legend: {
+      position: "top",
+      align: "end",
+    },
+    title: {
+      display: false,
+    },
+    tooltip: {
+      backgroundColor: "rgba(12, 12, 12, 1)",
+      borderColor: "#D4D4D8",
+      borderWidth: 1,
+      caretPadding: 6,
+      yAlign: "bottom",
     },
   },
+  interaction: {
+    intersect: false,
+    mode: "index",
+  },
+  maintainAspectRatio: false,
+  responsive: true,
   scales: {
     x: {
       grid: {
@@ -44,6 +73,7 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
           return handleTicksXAxis(label, idx);
         },
       },
+      stacked: true,
     },
     y: {
       grid: {
@@ -55,26 +85,7 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
           return handleTicksYAxis(val as number, idx);
         },
       },
+      stacked: true,
     },
   },
-  plugins: {
-    legend: {
-      position: "top",
-      align: "end",
-    },
-    title: {
-      display: false,
-    },
-    tooltip: {
-      caretPadding: 6,
-      xAlign: "center",
-      yAlign: "bottom",
-    },
-  },
-  interaction: {
-    intersect: false,
-    mode: "index",
-  },
-  maintainAspectRatio: false,
-  responsive: true,
 };

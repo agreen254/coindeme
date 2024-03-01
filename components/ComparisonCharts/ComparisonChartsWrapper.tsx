@@ -14,7 +14,7 @@ import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
 
-const ComparisonCharts = () => {
+const ComparisonChartsWrapper = () => {
   const [recentData, setRecentData] = useState<ComparisonChartResponse>();
 
   const queryTime = useComparisonChartTime();
@@ -23,8 +23,9 @@ const ComparisonCharts = () => {
     currency: "usd",
     days: queryTime,
   };
-
   const chartRes = useComparisonChartQueries(queryRequest);
+
+  // assume only 1 dataset for now
   const hasChartData = chartRes[0]?.data;
 
   /**
@@ -59,7 +60,7 @@ const ComparisonCharts = () => {
             !recentData && "animate-pulse"
           )}
         >
-          {recentData && <PriceComparisonChartWrapper chartData={recentData} />}
+          <PriceComparisonChartWrapper chartData={recentData} />
         </div>
         <div
           className={cn(
@@ -67,7 +68,7 @@ const ComparisonCharts = () => {
             !recentData && "animate-pulse"
           )}
         >
-          {recentData && <VolumeComparisonChartWrapper chartData={recentData} />}
+          <VolumeComparisonChartWrapper chartData={recentData} />
         </div>
       </div>
       <div className="mt-4">
@@ -77,4 +78,4 @@ const ComparisonCharts = () => {
   );
 };
 
-export default ComparisonCharts;
+export default ComparisonChartsWrapper;

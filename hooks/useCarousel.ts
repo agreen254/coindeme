@@ -49,3 +49,6 @@ export const useCarouselHasMaxSelected = (): boolean => {
     MAX_NUM_SELECTED
   );
 };
+export const useCarouselHasNoneSelected = (): boolean => {
+  return useCarouselStore((state) => state.selectedElements).length === 0;
+};

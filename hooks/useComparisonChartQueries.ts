@@ -23,6 +23,7 @@ export const useComparisonChartQueries = ({
             days: days,
           }),
         }).then((res) => res.json()),
+      staleTime: Infinity,
     })),
   });
 };

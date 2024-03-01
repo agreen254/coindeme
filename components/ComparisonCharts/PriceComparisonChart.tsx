@@ -1,10 +1,9 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePrice";
-import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePrice";
+import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
+import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 
-import { ErrorBoundary } from "react-error-boundary";
 import { Line } from "react-chartjs-2";
 
 type Props = {
@@ -20,8 +19,6 @@ const PriceComparisonChart = ({ chartData }: Props) => {
     datasets: [
       {
         label: "Bitcoin",
-
-        // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
         backgroundColor: function (context) {
           return priceComparisonGradient(context);
         },
@@ -32,17 +29,7 @@ const PriceComparisonChart = ({ chartData }: Props) => {
     ],
   };
 
-  return (
-    <ErrorBoundary
-      fallback={
-        <p className="text-sm text-center text-destructive">
-          Failed to render comparison chart for bitcoin.
-        </p>
-      }
-    >
-      <Line data={priceChartData} options={priceComparisonOptions} />
-    </ErrorBoundary>
-  );
+  return <Line data={priceChartData} options={priceComparisonOptions} />;
 };
 
 export default PriceComparisonChart;
