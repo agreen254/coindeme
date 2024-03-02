@@ -19,7 +19,7 @@ const ComparisonChartsTimeSelector = ({ isPending }: Props) => {
         <button
           key={sendToApiTime}
           className={cn(
-            "min-w-[50px] px-3 py-2 rounded-md hover:bg-teal-900/80 text-stone-300 transition-colors",
+            "min-w-[50px] px-3 py-2 rounded-md hover:bg-teal-900/80 text-stone-300 transition-colors disabled:cursor-not-allowed",
             isSelected(sendToApiTime) && "hover:bg-teal-800 bg-teal-900/80",
             isPending && "text-muted animate-pulse"
           )}
