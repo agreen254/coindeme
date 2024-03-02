@@ -16,7 +16,7 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
 
   if (hasNoneSelected)
     return (
-      <p className="mt-4 text-center text-stone-400">No data to display.</p>
+      <p className="mt-4 text-center text-stone-400/50">No data to display.</p>
     );
 
   return (

@@ -24,7 +24,7 @@ export default function Home() {
       <div className="flex justify-between w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
       </div>
-      <div className="mt-8">
+      <div className="mt-2">
         <MarketTableMainWrapper queryResult={queryResult} />
       </div>
     </main>

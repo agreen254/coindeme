@@ -27,6 +27,14 @@ ChartJS.register(
 
 import { formatPriceChangeValue } from "../formatHelpers";
 
+/**
+ * Comparison charts will have a maximum number of points per dataset equivalent to this value.
+ *
+ * If the raw dataset has more points, data will be decimated (compressed) to meet the threshold
+ * before being drawn.
+ */
+export const decimationThreshold = 150;
+
 export function handleGradientColorStops(
   alphaValues: { alphaStart: number; alphaEnd: number },
   gradient: CanvasGradient | undefined,
@@ -131,10 +139,5 @@ export const chartColorSets: ChartColorSet[] = [
   // {
   //   start: "#D5CA54",
   //   end: "#D58A54",
-  // },
-  // {
-  //   // blue
-  //   start: "", // 52, 211, 213
-  //   end: "",
   // },
 ];

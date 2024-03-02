@@ -45,9 +45,6 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       position: "top",
       align: "end",
     },
-    title: {
-      display: false,
-    },
     tooltip: {
       backgroundColor: "rgba(12, 12, 12, 1)",
       borderColor: "#D4D4D8",
@@ -64,6 +61,9 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
   responsive: true,
   scales: {
     x: {
+      border: {
+        display: false,
+      },
       grid: {
         drawOnChartArea: false,
       },
@@ -76,6 +76,9 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       stacked: true,
     },
     y: {
+      border: {
+        display: false,
+      },
       grid: {
         drawOnChartArea: true,
         color: "#27272a",

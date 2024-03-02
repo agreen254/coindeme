@@ -44,6 +44,7 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
     point: {
       radius: 0,
       hoverRadius: 10,
+      hoverBorderColor: "#34D3D5",
       hoverBorderWidth: 2,
     },
   },
@@ -51,9 +52,6 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
     legend: {
       position: "top",
       align: "end",
-    },
-    title: {
-      display: false,
     },
     tooltip: {
       backgroundColor: "rgba(12, 12, 12, 1)",
@@ -71,9 +69,11 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
   responsive: true,
   scales: {
     x: {
+      border: {
+        display: false,
+      },
       grid: {
         drawOnChartArea: false,
-        color: "#27272a",
       },
       ticks: {
         callback: function (val, idx) {
@@ -83,6 +83,9 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
       },
     },
     y: {
+      border: {
+        display: false,
+      },
       grid: {
         color: "#27272a",
       },

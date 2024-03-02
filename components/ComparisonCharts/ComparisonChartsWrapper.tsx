@@ -53,7 +53,7 @@ const ComparisonChartsWrapper = () => {
 
   return (
     <div className="w-full">
-      <div className="flex w-full h-[500px] justify-center gap-x-4">
+      <div className="flex w-full h-[550px] justify-center gap-x-4">
         <div
           className={cn(
             "bg-zinc-900/70 border border-zinc-800 rounded-2xl w-1/2",
@@ -71,7 +71,19 @@ const ComparisonChartsWrapper = () => {
           <VolumeComparisonChartWrapper chartData={recentData} />
         </div>
       </div>
-      <div className="mt-4">
+      {chartRes.map(
+        (res, idx) =>
+          res.error && (
+            <p
+              key={queryRequest.ids[idx]}
+              className="text-destructive mt-1 ml-1"
+            >
+              An unexpected error occurred for fetch {queryRequest.ids[idx]}:{" "}
+              {res.error.message}
+            </p>
+          )
+      )}
+      <div className="mt-[14px]">
         <ComparisonChartsTimeSelector isPending={chartRes[0]?.isLoading} />
       </div>
     </div>
