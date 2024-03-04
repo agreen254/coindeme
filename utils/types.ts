@@ -19,6 +19,11 @@ import { z } from "zod";
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
 
+export type Dataset = {
+  x: number[];
+  y: number[];
+}
+
 type Color = {
   hex: string;
   rgb: {

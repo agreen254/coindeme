@@ -6,6 +6,7 @@ import type {
 } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
+import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useEffect, useState } from "react";
@@ -17,9 +18,11 @@ import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
 const ComparisonChartsWrapper = () => {
   const [recentData, setRecentData] = useState<ComparisonChartResponse>();
 
+  const selectedCoins = useCarouselSelectedElements();
+
   const queryTime = useComparisonChartTime();
   const queryRequest: ComparisonChartQueries = {
-    ids: ["bitcoin"],
+    ids: selectedCoins,
     currency: "usd",
     days: queryTime,
   };
@@ -75,7 +78,7 @@ const ComparisonChartsWrapper = () => {
         (res, idx) =>
           res.error && (
             <p
-              key={queryRequest.ids[idx]}
+              key={queryRequest.ids[idx] + "ChartErrorMessage"}
               className="text-destructive mt-1 ml-1"
             >
               An unexpected error occurred for fetch {queryRequest.ids[idx]}:{" "}

@@ -1,8 +1,7 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { decimationThreshold } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
-import { largestTriangleThreeBuckets } from "@/utils/comparisonChartHelpers/LTTB";
+import { prepareComparisonChartAxes } from "@/utils/comparisonChartHelpers/prepareComparisonChartAxes";
 import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 
@@ -13,13 +12,7 @@ type Props = {
 };
 
 const PriceComparisonChart = ({ chartData }: Props) => {
-  const decimatedData: number[][] =
-    chartData.prices.length > decimationThreshold
-      ? largestTriangleThreeBuckets(chartData.prices, decimationThreshold)
-      : chartData.prices;
-
-  const x = decimatedData.map((price) => price[0]); // UNIX time
-  const y = decimatedData.map((price) => price[1]); // price
+  const { x, y } = prepareComparisonChartAxes(chartData.prices);
 
   const priceChartData: ChartData<"line"> = {
     labels: x,

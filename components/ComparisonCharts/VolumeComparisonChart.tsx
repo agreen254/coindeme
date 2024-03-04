@@ -1,8 +1,7 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { decimationThreshold } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
-import { largestTriangleThreeBuckets } from "@/utils/comparisonChartHelpers/LTTB";
+import { prepareComparisonChartAxes } from "@/utils/comparisonChartHelpers/prepareComparisonChartAxes";
 import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 
@@ -13,13 +12,7 @@ type Props = {
 };
 
 const VolumeComparisonChart = ({ chartData }: Props) => {
-  const decimatedData: number[][] =
-    chartData.total_volumes.length > decimationThreshold
-      ? largestTriangleThreeBuckets(chartData.total_volumes, decimationThreshold)
-      : chartData.total_volumes;
-
-  const x = decimatedData.map((volume) => volume[0]); // UNIX time
-  const y = decimatedData.map((volume) => volume[1]); // volume
+  const { x, y } = prepareComparisonChartAxes(chartData.total_volumes);
 
   const volumeChartData: ChartData<"bar"> = {
     labels: x,

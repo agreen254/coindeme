@@ -1,9 +1,12 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
 
 import {
+  gridColor,
   handleGradientColorStops,
   handleTicksXAxis,
   handleTicksYAxis,
+  tooltipBackgroundColor,
+  tooltipBorderColor,
 } from "./compareGeneralHelpers";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
@@ -46,8 +49,8 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       align: "end",
     },
     tooltip: {
-      backgroundColor: "rgba(12, 12, 12, 1)",
-      borderColor: "#D4D4D8",
+      backgroundColor: tooltipBackgroundColor,
+      borderColor: tooltipBorderColor,
       borderWidth: 1,
       caretPadding: 6,
       yAlign: "bottom",
@@ -81,7 +84,7 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
       },
       grid: {
         drawOnChartArea: true,
-        color: "#27272a",
+        color: gridColor,
       },
       ticks: {
         callback: function (val, idx) {

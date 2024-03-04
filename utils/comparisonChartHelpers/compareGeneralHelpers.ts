@@ -35,6 +35,10 @@ import { formatPriceChangeValue } from "../formatHelpers";
  */
 export const decimationThreshold = 150;
 
+export const gridColor = "#2727A";
+export const tooltipBackgroundColor = "#121212";
+export const tooltipBorderColor = "#D4D4D8";
+
 export function handleGradientColorStops(
   alphaValues: { alphaStart: number; alphaEnd: number },
   gradient: CanvasGradient | undefined,
