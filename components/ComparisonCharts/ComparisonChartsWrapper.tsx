@@ -81,8 +81,8 @@ const ComparisonChartsWrapper = () => {
               key={queryRequest.ids[idx] + "ChartErrorMessage"}
               className="text-destructive mt-1 ml-1"
             >
-              An unexpected error occurred for fetch {queryRequest.ids[idx]}:{" "}
-              {res.error.message}
+              {`An unexpected error occurred for ${queryRequest.days} day
+              ${queryRequest.ids[idx]}: ${res.error.message}`}
             </p>
           )
       )}

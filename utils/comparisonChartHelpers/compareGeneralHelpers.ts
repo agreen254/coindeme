@@ -35,7 +35,7 @@ import { formatPriceChangeValue } from "../formatHelpers";
  */
 export const decimationThreshold = 150;
 
-export const gridColor = "#2727A";
+export const gridColor = "#27272A";
 export const tooltipBackgroundColor = "#121212";
 export const tooltipBorderColor = "#D4D4D8";
 
