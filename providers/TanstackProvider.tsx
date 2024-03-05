@@ -1,8 +1,7 @@
 "use client";
 
+import { toastError } from "@/utils/toastError";
 import { useState } from "react";
-
-import { toast } from "react-toastify";
 
 import {
   QueryCache,
@@ -15,9 +14,10 @@ const TanstackProvider = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        // https://tkdodo.eu/blog/breaking-react-querys-api-on-purpose#defining-on-demand-messages
         queryCache: new QueryCache({
           onError: (error, query) => {
-            console.log(`${error?.message} ${query?.meta?.errorMessage}`);
+            toastError(error, query);
           },
         }),
         defaultOptions: {

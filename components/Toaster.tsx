@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 
-import { ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -21,6 +21,8 @@ const Toaster = () => {
       position={"bottom-right"}
       pauseOnHover={true}
       theme={theme}
+      transition={Slide}
+      autoClose={10 * 1000}
     />
   );
 };

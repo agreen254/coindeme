@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
   const bodyValidation = comparisonChartRequestSchema.safeParse(body);
 
   if (!bodyValidation.success) {
-    throw new Error("Failed to validate the request.");
+    return NextResponse.json(
+      { message: "Failed to validate request." },
+      { status: 400 }
+    );
   }
 
   const { id, currency, days } = body;
@@ -24,28 +27,37 @@ export async function POST(req: NextRequest) {
   const fetchTail = `&x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}`;
   const fetchURL = [fetchHead, fetchBody, fetchTail].join("");
 
-  let error: string | undefined;
-  const comparisonRes = await fetch(fetchURL, {
-    method: "GET",
-  }).catch((e) => (error = e));
-
-  if (error) {
-    throw new Error(error);
-  }
+  const comparisonRes = await fetch(fetchURL);
   if (!comparisonRes.ok) {
-    throw new Error("The network response failed.");
+    return NextResponse.json(
+      {
+        message: [comparisonRes.status, comparisonRes.statusText].join(" "),
+      },
+      {
+        status: comparisonRes.status,
+      }
+    );
   }
 
   const comparisonData = await comparisonRes.json();
-
   if (comparisonData?.status?.error_message) {
-    throw new Error(comparisonData.status.error_message);
+    return NextResponse.json(
+      {
+        message: comparisonData.status.error_message,
+      },
+      { status: 500 }
+    );
   }
 
   const comparisonDataValidation =
     comparisonChartResponseSchema.safeParse(comparisonData);
   if (!comparisonDataValidation.success) {
-    throw new Error("Failed to validate comparison chart data.");
+    return NextResponse.json(
+      {
+        message: "Failed to validate chart data.",
+      },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json(comparisonData as ComparisonChartResponse);
