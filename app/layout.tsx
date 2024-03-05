@@ -5,7 +5,7 @@ import "./globals.css";
 
 import NavBar from "@/components/NavBar/NavBar";
 import ProvidersMaster from "@/providers/ProvidersMaster";
-import Toaster from "@/components/Toaster";
+import ToastContainer from "@/app/Toast/ToastContainer";
 
 const openSans = OpenSans({ subsets: ["latin", "greek"] });
 
@@ -26,7 +26,7 @@ export default function RootLayout({
       >
         <ProvidersMaster>
           <NavBar />
-          <Toaster />
+          <ToastContainer />
           {children}
         </ProvidersMaster>
       </body>
