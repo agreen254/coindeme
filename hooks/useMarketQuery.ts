@@ -19,8 +19,12 @@ export const useMarketQuery = (
     // all pages are refetched to avoid updates that can cause duplication issues
     staleTime: 300 * 1000,
 
-    queryFn: async ({ pageParam }): Promise<MarketResponse> =>
-      await fetch("http://localhost:3000/api/v1/table", {
+    /**
+     * Have to manually throw an error if the response is not okay since
+     * the fetch API does not do so for unsuccessfull HTTP calls.
+     */
+    queryFn: async ({ pageParam }): Promise<MarketResponse> => {
+      const response = await fetch("http://localhost:3000/api/v1/table", {
         method: "POST",
         body: JSON.stringify(<MarketRequest>{
           page: pageParam,
@@ -28,7 +32,17 @@ export const useMarketQuery = (
           fetchParam: fetchParam,
           fetchOrder: fetchOrder,
         }),
-      }).then((res) => res.json()),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err?.message);
+      }
+      return await response.json();
+    },
+    meta: {
+      errorMessage: "Failed to fetch market data.",
+    },
     initialPageParam: 1,
     getNextPageParam: (prev) => prev.nextPage,
   });

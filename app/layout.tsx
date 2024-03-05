@@ -5,6 +5,7 @@ import "./globals.css";
 
 import NavBar from "@/components/NavBar/NavBar";
 import ProvidersMaster from "@/providers/ProvidersMaster";
+import Toaster from "@/components/Toaster";
 
 const openSans = OpenSans({ subsets: ["latin", "greek"] });
 
@@ -20,9 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${openSans.className} dark:bg-grad-dark min-h-screen overflow-y-scroll`}>
+      <body
+        className={`${openSans.className} dark:bg-grad-dark min-h-screen overflow-y-scroll`}
+      >
         <ProvidersMaster>
           <NavBar />
+          <Toaster />
           {children}
         </ProvidersMaster>
       </body>
