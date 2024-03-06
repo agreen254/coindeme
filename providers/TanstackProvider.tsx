@@ -1,6 +1,6 @@
 "use client";
 
-import { toastError } from "@/utils/toastError";
+import { renderErrorToast } from "@/components/Toast/ErrorToast";
 import { useState } from "react";
 
 import {
@@ -17,7 +17,10 @@ const TanstackProvider = ({ children }: { children: React.ReactNode }) => {
         // https://tkdodo.eu/blog/breaking-react-querys-api-on-purpose#defining-on-demand-messages
         queryCache: new QueryCache({
           onError: (error, query) => {
-            toastError(error, query);
+            const message = [query?.meta?.errorMessage, error?.message].join(
+              " "
+            );
+            renderErrorToast(message);
           },
         }),
         defaultOptions: {

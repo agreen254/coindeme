@@ -5,7 +5,7 @@ import "./globals.css";
 
 import NavBar from "@/components/NavBar/NavBar";
 import ProvidersMaster from "@/providers/ProvidersMaster";
-import ToastContainer from "@/app/Toast/ToastContainer";
+import ToastContainer from "@/components/Toast/ToastContainer";
 
 const openSans = OpenSans({ subsets: ["latin", "greek"] });
 

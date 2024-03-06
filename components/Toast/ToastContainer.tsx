@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
  * It is wrapped within this client component so that it can be placed in the main layout file.
  */
 const ToastContainer = () => {
-  return <Toaster />;
+  return <Toaster position="bottom-right" />;
 };
 
 export default ToastContainer;
