@@ -17,6 +17,8 @@ const TanstackProvider = ({ children }: { children: React.ReactNode }) => {
         // https://tkdodo.eu/blog/breaking-react-querys-api-on-purpose#defining-on-demand-messages
         queryCache: new QueryCache({
           onError: (error, query) => {
+            // custom error message based on query: <status> <status message>
+            // e.g. failed to render data: 401 unauthorized
             const message = [query?.meta?.errorMessage, error?.message].join(
               " "
             );

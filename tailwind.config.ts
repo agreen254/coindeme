@@ -85,11 +85,21 @@ const config = {
           "0%": { transform: "scale(0.9)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
+        "slide-in-top": {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "slide-in-left": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         enter: "enter 200ms ease-out",
+        "slide-in-top": "slide-in-top 1.2s cubic-bezier(.41,.73,.51,1.02)",
+        "slide-in-left": "slide-in-left 1.2s cubic-bezier(0.41, 0.73, 0.51, 1.02)",
       },
     },
   },
