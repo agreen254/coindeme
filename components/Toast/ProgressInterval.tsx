@@ -23,14 +23,10 @@ const ProgressInterval = ({ duration, isPaused, refreshInterval }: Props) => {
   }, [progressRatio, isPaused]);
 
   return (
-    <div className="w-full flex rounded-b-md">
+    <div className="w-full flex rounded-b-lg">
       <div
-        className="bg-red-500 h-1 rounded-bl-md"
+        className="bg-red-500 h-1 rounded-bl-lg"
         style={{ width: `calc(${(1 - progressRatio) * 100}%)` }}
-      ></div>
-      <div
-        className="bg-zinc-700 h-1 rounded-br-md"
-        style={{ width: `${progressRatio * 100}%` }}
       ></div>
     </div>
   );

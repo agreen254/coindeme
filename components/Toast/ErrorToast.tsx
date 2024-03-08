@@ -12,10 +12,8 @@ type Props = {
 const ErrorToast = ({ t, message }: Props) => {
   const [isPaused, setIsPaused] = useState(false);
 
-  const toastDuration = 10 * 1000;
-  const toastEnterDuration = 1.2 * 1000;
-  const toastLeaveDuration = 0.3 * 1000;
-  const progressOffsetDuration = (toastEnterDuration + toastLeaveDuration) / 2;
+  const leaveAnimDuration = 0.3 * 1000;
+  const progressDuration = 5.6 * 1000;
 
   return (
     <div
@@ -38,7 +36,7 @@ const ErrorToast = ({ t, message }: Props) => {
           <button
             onClick={() => {
               toast.dismiss(t.id);
-              setTimeout(() => toast.remove(t.id), toastLeaveDuration);
+              setTimeout(() => toast.remove(t.id), leaveAnimDuration);
             }}
             className="w-full border-l-[0.5px] group-hover:border-red-500 p-4 flex items-center justify-center text-sm font-medium transition-colors"
           >
@@ -46,17 +44,16 @@ const ErrorToast = ({ t, message }: Props) => {
           </button>
         </div>
       </div>
-      <ProgressInterval
-        duration={toastDuration - progressOffsetDuration}
-        isPaused={isPaused}
-      />
+      <ProgressInterval duration={progressDuration} isPaused={isPaused} />
     </div>
   );
 };
 
 export function renderErrorToast(message: string) {
+  const toastDuration = 6 * 1000;
+
   toast.custom((t) => <ErrorToast t={t} message={message} />, {
-    duration: 10 * 1000,
+    duration: toastDuration,
     position: "bottom-right",
   });
 }
