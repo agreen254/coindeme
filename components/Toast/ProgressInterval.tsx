@@ -5,19 +5,18 @@ import { useEffect, useState } from "react";
 type Props = {
   duration: number;
   isPaused: boolean;
-  refreshInterval?: number;
 };
 
-const ProgressInterval = ({ duration, isPaused, refreshInterval }: Props) => {
-  const interval = refreshInterval ?? 25;
+const ProgressInterval = ({ duration, isPaused }: Props) => {
   const [progressRatio, setProgressRatio] = useState(0);
+  const refreshRate = 16; // ms
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (progressRatio < 1 && !isPaused) {
-        setProgressRatio((prev) => prev + interval / duration);
+        setProgressRatio(progressRatio + refreshRate / duration);
       }
-    }, interval);
+    }, refreshRate);
 
     return () => clearInterval(intervalId);
   }, [progressRatio, isPaused]);
