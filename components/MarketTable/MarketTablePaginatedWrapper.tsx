@@ -28,6 +28,7 @@ const MarketTablePaginatedWrapper = ({
   queryResult: {
     data,
     error,
+    isError,
     isPending,
     isFetching,
     isRefetching,
@@ -45,8 +46,9 @@ const MarketTablePaginatedWrapper = ({
 
   const showLoader = !error && (isPending || isFetching);
 
-  const disableNextPage = !isRefetching && (isPending || isFetching);
-  const disablePreviousPage = disableNextPage || currentPage === 0;
+  const disableNextPage =
+    (!isRefetching && (isPending || isFetching)) || isError;
+  const disablePreviousPage = disableNextPage || currentPage === 0 || isError;
 
   const handleNextPage = () => {
     if (data && data.pages.length <= currentPage + 1) {
@@ -97,11 +99,6 @@ const MarketTablePaginatedWrapper = ({
           </div>
         )}
         {showLoader && <Loader />}
-        {error && (
-          <p className="mt-4 text-sm text-destructive">
-            An unexpected error occurred: {error.message}
-          </p>
-        )}
       </div>
     </div>
   );

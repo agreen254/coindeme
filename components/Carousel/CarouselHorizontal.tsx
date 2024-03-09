@@ -22,7 +22,7 @@ type Props = {
  * https://www.embla-carousel.com/get-started/react/
  */
 const CarouselHorizontal = ({
-  queryResult: { data, isPending },
+  queryResult: { data, isError, isPending },
 }: Props) => {
   const carouselData = flatMarketRes(data?.pages);
 
@@ -57,6 +57,18 @@ const CarouselHorizontal = ({
     }
   }, [emblaApi, handleScroll]);
 
+  const handleCarouselRender = () => {
+    if (isPending) {
+      return <CarouselSkeleton pulse />;
+    } else if (!data && isError) {
+      return <CarouselSkeleton pulse={false} />;
+    } else {
+      return carouselData?.map((coinData) => (
+        <CarouselCard key={coinData.id + "carousel"} coinData={coinData} />
+      ));
+    }
+  };
+
   return (
     <div className="flex justify-center w-table-xl">
       <div className="flex items-center mr-4 mb-3">
@@ -74,16 +86,7 @@ const CarouselHorizontal = ({
       <div className="flex justify-center">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex w-[1270px] space-x-4">
-            {isPending ? (
-              <CarouselSkeleton />
-            ) : (
-              carouselData?.map((coinData) => (
-                <CarouselCard
-                  key={coinData.id + "carousel"}
-                  coinData={coinData}
-                />
-              ))
-            )}
+            {handleCarouselRender()}
           </div>
         </div>
       </div>
