@@ -27,6 +27,9 @@ const ComparisonChartsWrapper = () => {
 
   // assume only 1 dataset for now
   const hasChartData = chartRes[0]?.data;
+  const hasChartError = chartRes[0]?.isError;
+
+  const pulseChartBackground = !recentData && !hasChartError;
 
   /**
    * This useEffect enables displaying the previously fetched comparison data
@@ -57,7 +60,7 @@ const ComparisonChartsWrapper = () => {
         <div
           className={cn(
             "bg-zinc-900/70 border border-zinc-800 rounded-2xl w-1/2",
-            !recentData && "animate-pulse"
+            pulseChartBackground && "animate-pulse"
           )}
         >
           <PriceComparisonChartWrapper chartData={recentData} />
@@ -65,24 +68,12 @@ const ComparisonChartsWrapper = () => {
         <div
           className={cn(
             "bg-zinc-900/70 border border-zinc-800 rounded-2xl w-1/2",
-            !recentData && "animate-pulse"
+            pulseChartBackground && "animate-pulse"
           )}
         >
           <VolumeComparisonChartWrapper chartData={recentData} />
         </div>
       </div>
-      {chartRes.map(
-        (res, idx) =>
-          res.error && (
-            <p
-              key={queryRequest.ids[idx]}
-              className="text-destructive mt-1 ml-1"
-            >
-              An unexpected error occurred for fetch {queryRequest.ids[idx]}:{" "}
-              {res.error.message}
-            </p>
-          )
-      )}
       <div className="mt-[14px]">
         <ComparisonChartsTimeSelector isPending={chartRes[0]?.isLoading} />
       </div>

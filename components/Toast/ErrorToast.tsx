@@ -10,9 +10,9 @@ type Props = {
   message: string;
 };
 
-// animations cause toast duration and progress duration not to perfectly line up
-const toastDuration = 6 * 1000; 
-const progressDuration = 5.2 * 1000; 
+// not quite sure why but there is a lag between the progress bar and overall toast duration
+const toastDuration = 8 * 1000; 
+const progressDuration = 7.1 * 1000; 
 const leaveAnimDuration = 0.3 * 1000;
 
 const ErrorToast = ({ t, message }: Props) => {

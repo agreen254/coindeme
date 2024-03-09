@@ -17,8 +17,13 @@ const TanstackProvider = ({ children }: { children: React.ReactNode }) => {
         // https://tkdodo.eu/blog/breaking-react-querys-api-on-purpose#defining-on-demand-messages
         queryCache: new QueryCache({
           onError: (error, query) => {
-            // custom error message based on query: <status> <status message>
-            // e.g. failed to render data: 401 unauthorized
+            /**
+             * Each query has the meta prop where a custom error message can be passed in. The meta prop has access to useful information like
+             * the query key that helps for further customization.
+             * 
+             * Error text will be rendered like this:
+             * <custom generic error message>: <error status> <error status text>
+             */
             const message = [query?.meta?.errorMessage, error?.message].join(
               " "
             );
