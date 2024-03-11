@@ -138,19 +138,19 @@ export const chartColorSets: ChartColorSet[] = [
   {
     // yellow
     highlightColor: {
-      hex: "#F5980A",
+      hex: "#EAF47B",
       rgb: {
-        r: 245,
-        g: 152,
-        b: 10,
+        r: 234,
+        g: 244,
+        b: 123,
       },
     },
     startColor: {
-      hex: "#D5CA54",
+      hex: "#C37D1B",
       rgb: {
-        r: 213,
-        g: 202,
-        b: 84,
+        r: 195,
+        g: 125,
+        b: 27,
       },
     },
     endColor: {
@@ -162,8 +162,4 @@ export const chartColorSets: ChartColorSet[] = [
       },
     },
   },
-  // {
-  //   start: "#D5CA54",
-  //   end: "#D58A54",
-  // },
 ];

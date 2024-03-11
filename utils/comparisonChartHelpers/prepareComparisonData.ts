@@ -21,6 +21,10 @@ export function prepareComparisonData(
 
   const values = data.map((dataset) => prepareAxes(dataset[property]).y);
 
+  const logThreshold = 50;
+  const min = Math.min(...values.flat());
+  const max = Math.max(...values.flat());
+
   return <ComparisonData>{
     label: label,
     values: values,

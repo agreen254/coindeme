@@ -4,7 +4,7 @@ import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
-import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonChartAxes";
+import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";

@@ -1,7 +1,9 @@
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { prepareAxes } from "@/utils/comparisonChartHelpers/prepareComparisonChartAxes";
+import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
+import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
+import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 
@@ -12,20 +14,21 @@ type Props = {
 };
 
 const VolumeComparisonChart = ({ chartData }: Props) => {
-  const { x, y } = prepareAxes(chartData[0].total_volumes);
+  const selectedCoins = useCarouselSelectedElements();
+  const { label, values } = prepareComparisonData(chartData, "total_volumes");
 
   const volumeChartData: ChartData<"bar"> = {
-    labels: x,
-    datasets: [
-      {
-        label: "Bitcoin",
+    labels: label,
+    datasets: chartData.map((_, idx) => {
+      return {
         backgroundColor: function (context) {
-          return volumeComparisonGradient(context);
+          return volumeComparisonGradient(context, idx);
         },
-        data: y,
-        hoverBackgroundColor: "#34D3D5",
-      },
-    ],
+        data: values[idx],
+        label: selectedCoins[idx],
+        hoverBackgroundColor: chartColorSets[idx].highlightColor.hex,
+      };
+    }),
   };
 
   return <Bar data={volumeChartData} options={volumeComparisonOptions} />;
