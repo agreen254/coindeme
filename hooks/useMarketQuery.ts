@@ -13,14 +13,18 @@ export const useMarketQuery = (
   fetchOrder: "asc" | "desc"
 ) => {
   return useInfiniteQuery({
+    // do not retry because this will spam api requests if the first is not successful
+    retry: false,
+
     // unique keys will create independent caches so unrelated data is not mixed together
     queryKey: ["market", fetchParam, fetchOrder],
 
     // all pages are refetched to avoid updates that can cause duplication issues
+    // we want a large stale time so api request are more spaced out
     staleTime: 300 * 1000,
 
-    queryFn: async ({ pageParam }): Promise<MarketResponse> =>
-      await fetch("http://localhost:3000/api/v1/table", {
+    queryFn: async ({ pageParam }): Promise<MarketResponse> => {
+      const response = await fetch("http://localhost:3000/api/v1/table", {
         method: "POST",
         body: JSON.stringify(<MarketRequest>{
           page: pageParam,
@@ -28,7 +32,18 @@ export const useMarketQuery = (
           fetchParam: fetchParam,
           fetchOrder: fetchOrder,
         }),
-      }).then((res) => res.json()),
+      });
+
+      // https://tanstack.com/query/latest/docs/framework/react/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message);
+      }
+      return await response.json();
+    },
+    meta: {
+      errorMessage: "Failed to fetch market data:",
+    },
     initialPageParam: 1,
     getNextPageParam: (prev) => prev.nextPage,
   });

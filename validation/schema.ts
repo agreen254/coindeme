@@ -8,6 +8,36 @@ export const validCurrenciesSchema = z.union([
   z.literal("eth"),
 ]);
 
+// each id represents a selected carousel element
+export const comparisonChartQueriesSchema = z.object({
+  ids: z.string().array(),
+  currency: validCurrenciesSchema,
+  days: z.string(),
+});
+
+// queries are dispatched to the backend individually
+export const comparisonChartRequestSchema = comparisonChartQueriesSchema
+  .omit({ ids: true })
+  .extend({
+    id: z.string(),
+  });
+
+/**
+ * The coingecko API docs specify the following return intervals:
+ * 1 day from current time: 5 minute interval
+ * 2-90 days from current time: Hourly interval
+ * >90 days from current time: Daily interval (00:00 UTC)
+ *
+ * Each element follows the same format:
+ * time (UNIX)
+ * value (currency)
+ */
+export const comparisonChartResponseSchema = z.object({
+  prices: z.array(z.array(z.number().nullable()).length(2)),
+  market_caps: z.array(z.array(z.number().nullable()).length(2)),
+  total_volumes: z.array(z.array(z.number().nullable()).length(2)),
+});
+
 export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),

@@ -10,7 +10,10 @@ export async function POST(req: NextRequest) {
   const { page, currency, fetchParam, fetchOrder } = body;
 
   if (!bodyValidation.success) {
-    throw new Error("Failed to validate the request.");
+    return NextResponse.json(
+      { message: "Failed to validate request." },
+      { status: 400 }
+    );
   }
 
   const fetchHead = "https://api.coingecko.com/api/v3/coins/markets";
@@ -18,28 +21,39 @@ export async function POST(req: NextRequest) {
   const fetchTail = `&x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}`;
   const fetchURL = [fetchHead, fetchBody, fetchTail].join("");
 
-  let error: string | undefined;
-  const marketRes = await fetch(fetchURL, {
-    method: "GET",
-  }).catch((e) => (error = e));
-
-  if (error) {
-    throw new Error(error);
-  }
+  const marketRes = await fetch(fetchURL);
   if (!marketRes.ok) {
-    throw new Error("The network response failed.");
+    return NextResponse.json(
+      {
+        message: [marketRes.status, marketRes.statusText].join(" "),
+      },
+      {
+        status: marketRes.status,
+      }
+    );
   }
+
   const market = await marketRes.json();
 
   // the coingecko api will return errors with this response format
   // e.g. you are being throttled, the api key is invalid, etc.
   if (market?.status?.error_message) {
-    throw new Error(market.status.error_message);
+    return NextResponse.json(
+      {
+        message: market.status.error_message,
+      },
+      { status: 500 }
+    );
   }
 
   const marketValidation = marketSchema.safeParse(market);
   if (!marketValidation.success) {
-    throw new Error("Failed to validate the market data.");
+    return NextResponse.json(
+      {
+        message: "Failed to validate market data.",
+      },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({
