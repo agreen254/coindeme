@@ -8,13 +8,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import PriceComparisonChart from "./PriceComparisonChart";
 
 type Props = {
-  chartData: ComparisonChartResponse | undefined;
+  chartData: ComparisonChartResponse[];
 };
 
 const PriceComparisonChartWrapper = ({ chartData }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
+  const hasNoData = chartData.length === 0;
 
-  if (hasNoneSelected)
+  if (hasNoneSelected || hasNoData)
     return (
       <p className="mt-4 text-center text-stone-400/50">No data to display.</p>
     );
@@ -28,7 +29,7 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
           </p>
         }
       >
-        {chartData && <PriceComparisonChart chartData={chartData} />}
+        <PriceComparisonChart chartData={chartData[0]} />
       </ErrorBoundary>
     </div>
   );
