@@ -47,8 +47,11 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
     point: {
       radius: 0,
       hoverRadius: 10,
-      hoverBorderColor: "#34D3D5",
       hoverBorderWidth: 2,
+    },
+    line: {
+      fill: true,
+      tension: 0.1,
     },
   },
   plugins: {

@@ -48,8 +48,8 @@ export function handleGradientColorStops(
     r: rStart,
     g: gStart,
     b: bStart,
-  } = chartColorSets[chartIdx].start.rgb;
-  const { r: rEnd, g: gEnd, b: bEnd } = chartColorSets[chartIdx].end.rgb;
+  } = chartColorSets[chartIdx].startColor.rgb;
+  const { r: rEnd, g: gEnd, b: bEnd } = chartColorSets[chartIdx].endColor.rgb;
 
   gradient?.addColorStop(
     1,
@@ -83,7 +83,7 @@ export function handleTicksYAxis(value: number, index: number) {
 export const chartColorSets: ChartColorSet[] = [
   {
     // teal
-    barChartHighlight: {
+    highlightColor: {
       hex: "#34D3D5",
       rgb: {
         r: 52,
@@ -91,7 +91,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    start: {
+    startColor: {
       hex: "#14B8A6",
       rgb: {
         r: 52,
@@ -99,7 +99,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 153,
       },
     },
-    end: {
+    endColor: {
       hex: "#134E4A",
       rgb: {
         r: 19,
@@ -110,7 +110,7 @@ export const chartColorSets: ChartColorSet[] = [
   },
   {
     // purple
-    barChartHighlight: {
+    highlightColor: {
       hex: "#F57ED5",
       rgb: {
         r: 245,
@@ -118,7 +118,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    start: {
+    startColor: {
       hex: "#CA54D5",
       rgb: {
         r: 202,
@@ -126,7 +126,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    end: {
+    endColor: {
       hex: "#692570",
       rgb: {
         r: 105,
@@ -135,11 +135,33 @@ export const chartColorSets: ChartColorSet[] = [
       },
     },
   },
-  // {
-  //   // yellow
-  //   start: "#71DCD9",
-  //   end: "#568BC6",
-  // },
+  {
+    // yellow
+    highlightColor: {
+      hex: "#F5980A",
+      rgb: {
+        r: 245,
+        g: 152,
+        b: 10,
+      },
+    },
+    startColor: {
+      hex: "#D5CA54",
+      rgb: {
+        r: 213,
+        g: 202,
+        b: 84,
+      },
+    },
+    endColor: {
+      hex: "#D58A54",
+      rgb: {
+        r: 213,
+        g: 138,
+        b: 84,
+      },
+    },
+  },
   // {
   //   start: "#D5CA54",
   //   end: "#D58A54",

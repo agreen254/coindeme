@@ -29,7 +29,7 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
           </p>
         }
       >
-        <PriceComparisonChart chartData={chartData[0]} />
+        <PriceComparisonChart chartData={chartData} />
       </ErrorBoundary>
     </div>
   );

@@ -76,7 +76,6 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
           return handleTicksXAxis(label, idx);
         },
       },
-      stacked: true,
     },
     y: {
       border: {
