@@ -87,7 +87,7 @@ const CarouselHorizontal = ({
           </div>
         </div>
       </div>
-      <div className="flex items-center mb-3 ml-2">
+      <div className="flex items-center mb-3 ml-4">
         <button
           className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
