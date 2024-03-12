@@ -15,7 +15,7 @@ const GlobalData = () => {
 
   return (
     data && (
-      <div className="flex justify-center items-center h-12 gap-x-[2%] border-y border-white/10 text-sm">
+      <div className="flex justify-center items-center h-16 gap-x-[2%] border-y border-white/10 text-sm">
         <span>
           <HandCoinsIcon className="w-6 h-6 inline" />
           <span className="ml-1 mr-2 font-semibold text-muted-foreground">
@@ -23,7 +23,7 @@ const GlobalData = () => {
           </span>
           <span>{data.active_cryptocurrencies}</span>
         </span>
-        <span className="w-[1px] h-3 bg-white/10" />
+        <span className="w-[1px] h-6 bg-white/10" />
         <span>
           <span>
             <ExchangeIcon className="w-6 h-6 inline" />
@@ -33,11 +33,11 @@ const GlobalData = () => {
           </span>
           <span>{data.markets}</span>
         </span>
-        <span className="w-[1px] h-3 bg-white/10" />
+        <span className="w-[1px] h-6 bg-white/10" />
         <span>{formatPriceValue(data.total_market_cap.usd)}</span>
-        <span className="w-[1px] h-3 bg-white/10" />
+        <span className="w-[1px] h-6 bg-white/10" />
         <span>{formatPriceValue(data.total_volume.usd)}</span>
-        <span className="w-[1px] h-3 bg-white/10" />
+        <span className="w-[1px] h-6 bg-white/10" />
         <span className="flex">
           <Image
             width={25}
@@ -49,7 +49,7 @@ const GlobalData = () => {
           />
           {data.market_cap_percentage.btc}
         </span>
-        <span className="w-[1px] h-3 bg-white/10" />
+        <span className="w-[1px] h-6 bg-white/10" />
         <span className="flex">
           <Image
             width={25}
