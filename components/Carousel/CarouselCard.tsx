@@ -3,7 +3,7 @@ import type { MarketElementNoIdx } from "@/utils/types";
 import { cn } from "@/utils/cn";
 import {
   formatLongName,
-  formatPriceChangeValue,
+  formatPriceValue,
 } from "@/utils/formatHelpers";
 import {
   useCarouselActions,
@@ -74,7 +74,7 @@ const CarouselElement = ({ coinData }: Props) => {
           <span className="flex w-full space-x-4 text-sm">
             <span>
               {currency}
-              {formatPriceChangeValue(current_price)}
+              {formatPriceValue(current_price)}
             </span>
             <span className="font-semibold">
               <PricePercentageChange change={price_change_percentage_24h} />

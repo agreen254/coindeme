@@ -25,7 +25,7 @@ export function formatPriceChangePercentage(price: number) {
  * 100_000 -> 100k
  * 2_000_000 -> 2M
  */
-export function formatPriceChangeValue(price: number) {
+export function formatPriceValue(price: number) {
   return price < 0.01
     ? formatSmallNum(price)
     : Intl.NumberFormat("en-US", {
