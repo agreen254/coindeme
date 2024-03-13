@@ -50,7 +50,7 @@ const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
           coinLabels
         ),
 
-        data: overlapValues.map((ele) => ele[idx].volume),
+        data: overlapValues.map((value) => value[idx].volume),
         label: idx.toString(),
       };
     }),

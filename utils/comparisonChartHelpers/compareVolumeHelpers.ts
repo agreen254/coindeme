@@ -116,12 +116,14 @@ export function getOptionsOverlapped(
         position: "top",
         align: "end",
         labels: {
-          // need to customize legend labels because same datasets will have different colors
+          // Need to customize legend labels because the same dataset is going to have different colors if it's relative magnitude
+          // to the other datasets changes.
+          // So, the coloring has to be done via the corresponding name of the point in the dataset instead of the dataset itself.
           // https://www.chartjs.org/docs/latest/configuration/legend.html#legend-item-interface
           generateLabels: () =>
-            carouselSelected.map((ele, idx) => {
+            carouselSelected.map((coinName, idx) => {
               return {
-                text: ele,
+                text: coinName,
                 fontColor: legendFontColor,
                 fillStyle: chartColorSets[idx].startColor.hex,
                 hidden: false,
