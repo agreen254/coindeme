@@ -21,7 +21,7 @@ type Props = {
 const VolumeComparisonChart = ({ chartData }: Props) => {
   const selectedCoins = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "total_volumes");
-  const stacked = () => {
+  const stacked = (() => {
     switch (chartData.length) {
       default:
       case 1:
@@ -31,10 +31,10 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
       case 3:
         return stackThree(values, selectedCoins);
     }
-  };
+  })();
 
   const bg = (idx: number, context: ScriptableContext<"bar">) => {
-    return stacked().map((ele) => {
+    return stacked.map((ele) => {
       if (ele[idx].name === selectedCoins[0]) {
         return volumeComparisonGradient(context, 0);
       } else if (ele[idx].name === selectedCoins[1]) {
@@ -46,7 +46,7 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
   };
 
   const bgHover = (idx: number) => {
-    return stacked().map((ele) => {
+    return stacked.map((ele) => {
       if (ele[idx].name === selectedCoins[0]) {
         return chartColorSets[0].highlightColor.hex;
       } else if (ele[idx].name === selectedCoins[1]) {
@@ -75,7 +75,7 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
         backgroundColor: function (context) {
           return bg(idx, context);
         },
-        data: stacked().map((ele) => ele[idx].volume),
+        data: stacked.map((ele) => ele[idx].volume),
         label: idx.toString(),
         hoverBackgroundColor: bgHover(idx),
       };
