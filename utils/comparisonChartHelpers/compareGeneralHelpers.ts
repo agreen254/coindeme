@@ -36,8 +36,9 @@ import { formatPriceChangeValue } from "../formatHelpers";
 export const decimationThreshold = 150;
 
 export const gridColor = "#27272A";
+export const legendFontColor = "#A1A1AA";
 export const tooltipBackgroundColor = "#121212";
-export const tooltipBorderColor = "#D4D4D8";
+export const tooltipBorderColor = "#71717A";
 
 export function handleGradientColorStops(
   alphaValues: { alphaStart: number; alphaEnd: number },

@@ -64,7 +64,8 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
       borderColor: tooltipBorderColor,
       borderWidth: 1,
       caretPadding: 14,
-      yAlign: "top",
+      position: "nearest",
+      yAlign: "bottom",
     },
   },
   interaction: {

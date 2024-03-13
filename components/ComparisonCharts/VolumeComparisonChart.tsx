@@ -3,10 +3,10 @@ import type { ComparisonChartResponse } from "@/utils/types";
 
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import {
-  getStackedBackgroundColor,
-  getStackedHoverColor,
-  getVolumeChartOptions,
-  stackDataRelative,
+  getOptionsOverlapped,
+  getOverlapBackgroundColor,
+  getOverlapHoverColor,
+  overlapData,
 } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 
@@ -18,11 +18,11 @@ type Props = {
 
 const VolumeComparisonChart = ({ chartData }: Props) => {
   const coinLabels = useCarouselSelectedElements();
-  const { label, values } = prepareComparisonData(chartData, "total_volumes");
-  const stackedValues = stackDataRelative(values, coinLabels);
+  const { label: x, values } = prepareComparisonData(chartData, "total_volumes");
+  const overlapValues = overlapData(values, coinLabels);
 
   const volumeChartData: ChartData<"bar"> = {
-    labels: label,
+    labels: x,
 
     /**
      * The compiler will throw an error here even though the charts work without any issues.
@@ -37,27 +37,30 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
     datasets: chartData.map((_, idx) => {
       return {
         backgroundColor: function (context) {
-          return getStackedBackgroundColor(
+          return getOverlapBackgroundColor(
             idx,
             context,
-            stackedValues,
+            overlapValues,
             coinLabels
           );
         },
-        hoverBackgroundColor: getStackedHoverColor(
+        hoverBackgroundColor: getOverlapHoverColor(
           idx,
-          stackedValues,
+          overlapValues,
           coinLabels
         ),
 
-        data: stackedValues.map((ele) => ele[idx].volume),
+        data: overlapValues.map((ele) => ele[idx].volume),
         label: idx.toString(),
       };
     }),
   };
 
   return (
-    <Bar data={volumeChartData} options={getVolumeChartOptions(coinLabels)} />
+    <Bar
+      data={volumeChartData}
+      options={getOptionsOverlapped(overlapValues, x, coinLabels)}
+    />
   );
 };
 

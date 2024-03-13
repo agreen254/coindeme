@@ -1,4 +1,5 @@
 import type { ChartOptions, LegendItem, ScriptableContext } from "chart.js";
+import type { OverlappedVolumeData } from "../types";
 
 import { arrayOfNs } from "../arrayHelpers";
 import {
@@ -7,10 +8,12 @@ import {
   handleGradientColorStops,
   handleTicksXAxis,
   handleTicksYAxis,
+  legendFontColor,
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
 import { sort } from "fast-sort";
+import { formatPriceChangeValue } from "../formatHelpers";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function volumeComparisonGradient(
@@ -99,7 +102,12 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
   },
 };
 
-export function getVolumeChartOptions(
+/**
+ * The options object needs to be generated dynamically because of the callbacks depending on the chart data.
+ */
+export function getOptionsOverlapped(
+  overlapValues: OverlappedVolumeData[][],
+  xValues: number[],
   carouselSelected: string[]
 ): ChartOptions<"bar"> {
   return {
@@ -108,12 +116,13 @@ export function getVolumeChartOptions(
         position: "top",
         align: "end",
         labels: {
+          // need to customize legend labels because same datasets will have different colors
           // https://www.chartjs.org/docs/latest/configuration/legend.html#legend-item-interface
-          generateLabels: (): LegendItem[] =>
+          generateLabels: () =>
             carouselSelected.map((ele, idx) => {
               return {
                 text: ele,
-                fontColor: "#A1A1AA",
+                fontColor: legendFontColor,
                 fillStyle: chartColorSets[idx].startColor.hex,
                 hidden: false,
                 lineCap: "round",
@@ -127,8 +136,57 @@ export function getVolumeChartOptions(
         backgroundColor: tooltipBackgroundColor,
         borderColor: tooltipBorderColor,
         borderWidth: 1,
-        caretPadding: 6,
+        caretPadding: 10,
+        position: "nearest",
         yAlign: "bottom",
+
+        // sort tooltip order so that highest values will show first
+        itemSort: function (first, second) {
+          return second.datasetIndex - first.datasetIndex;
+        },
+
+        callbacks: {
+          // make sure the overlapped volume data still shows the correct absolute values
+          // https://www.chartjs.org/docs/latest/configuration/tooltip.html#label-callback
+          label: function (item) {
+            let label = item.dataset.label || "";
+
+            const dataIdx = item.dataIndex;
+            const datasetIdx = item.datasetIndex;
+
+            let sumVolume = overlapValues[dataIdx][0].volume;
+            if (datasetIdx !== 0) {
+              // add up all the previous values
+              sumVolume = overlapValues[dataIdx].reduce((acc, current, idx) => {
+                return idx <= datasetIdx ? acc + current.volume : acc;
+              }, 0);
+            }
+
+            if (label) {
+              label = `${
+                overlapValues[dataIdx][datasetIdx].name
+              }: ${formatPriceChangeValue(sumVolume)}`;
+            }
+
+            return label;
+          },
+
+          // customize title of tooltip so it doesn't just display the unix time returned from the API call
+          title: function (items) {
+            return items.map((item) => {
+              const unixTime = xValues[item.dataIndex];
+              const date = new Date(unixTime).toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+              });
+              return date;
+            })[0]; // will repeatedly display the title equal to the number of datasets if not specified
+          },
+        },
       },
     },
     interaction: {
@@ -172,155 +230,119 @@ export function getVolumeChartOptions(
   };
 }
 
-type StackedData = { name: string; volume: number };
+/**
+ * This function will __overlap__ the datasets as opposed to __stacking__ them.
+ *
+ * The difference is as follows:
+ *
+ * Stacked datasets will show the entire value of each set on top of each other.
+ * Overlapped datasets will preserve the overall scale, meaning that if a different colored bar
+ * is only 10% higher than the one below it, the total value of the higher bar is 10% __higher__ than the lower bar.
+ * In a stacked configuration, the value of the higher bar would be only 10% __total__ of the lower bar.
+ *
+ *              B                   B
+ *              B                   B
+ *              B                   B
+ *              A                   A
+ *              A                   A
+ *              A                   A
+ *              A                   A
+ *              A                   A
+ *
+ *      Stacked: A=5, B=3     Overlapped: A=5, B=5+3=8
+ *
+ * The idea here is that users can very clearly see when values have overtaken one another; these details are ambiguous
+ * on a traditionally stacked bar chart because they would both appear to be roughly the same size.
+ */
+export function overlapData(datasets: number[][], labels: string[]) {
+  // need arrays of correct length to map over: values inside are inconsequential
+  const nDatapointsArray = arrayOfNs(datasets[0].length);
+  const nDatasetsArray = arrayOfNs(datasets.length);
 
-export function stackOne(datasets: number[][], labels: string[]) {
-  let result: StackedData[][] = [];
-  for (let i = 0; i < datasets[0].length; i++) {
-    result.push([{ name: labels[0], volume: datasets[0][i] }]);
-  }
-
-  return result;
-}
-
-export function stackTwo(datasets: number[][], labels: string[]) {
-  let result: StackedData[][] = [];
-  for (let i = 0; i < datasets[0].length; i++) {
-    const dataPoint = [
-      {
-        name: labels[0],
-        volume: datasets[0][i],
+  return nDatapointsArray.map((_, mapIdx) => {
+    // take the original values and transform them into the OverlappedVolumeData structure
+    const dataPoints = nDatasetsArray.reduce(
+      (points: OverlappedVolumeData[], _, reduceIdx) => {
+        return [
+          ...points,
+          {
+            name: labels[reduceIdx],
+            volume: datasets[reduceIdx][mapIdx],
+          },
+        ];
       },
-      {
-        name: labels[1],
-        volume: datasets[1][i],
-      },
-    ];
-    const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
+      [] as OverlappedVolumeData[]
+    );
 
-    const correctedPoint: StackedData[] = [
-      {
-        name: sortedPoint[0].name,
-        volume: sortedPoint[0].volume,
-      },
-      {
-        name: sortedPoint[1].name,
-        volume: sortedPoint[1].volume - sortedPoint[0].volume,
-      },
-    ];
-
-    result.push(correctedPoint);
-  }
-
-  return result;
-}
-
-export function stackThree(datasets: number[][], labels: string[]) {
-  let result: StackedData[][] = [];
-  for (let i = 0; i < datasets[0].length; i++) {
-    const dataPoint = [
-      {
-        name: labels[0],
-        volume: datasets[0][i],
-      },
-      {
-        name: labels[1],
-        volume: datasets[1][i],
-      },
-      {
-        name: labels[2],
-        volume: datasets[2][i],
-      },
-    ];
-    const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
-
-    const correctedPoint: StackedData[] = [
-      {
-        name: sortedPoint[0].name,
-        volume: sortedPoint[0].volume,
-      },
-      {
-        name: sortedPoint[1].name,
-        volume: sortedPoint[1].volume - sortedPoint[0].volume,
-      },
-      {
-        name: sortedPoint[2].name,
-        volume: sortedPoint[2].volume - sortedPoint[1].volume,
-      },
-    ];
-
-    result.push(correctedPoint);
-  }
-
-  return result;
-}
-
-export function stackDataRelative(datasets: number[][], labels: string[]) {
-  let result: StackedData[][] = [];
-
-  // this will only work if all datasets are the same length
-  const nPoints = datasets[0].length;
-  const nDatasets = datasets.length;
-  const dummy = arrayOfNs(nDatasets);
-
-  for (let i = 0; i < nPoints; i++) {
-    const dataPoints = dummy.reduce((points: StackedData[], _, idx) => {
-      return [
-        ...points,
-        {
-          name: labels[idx],
-          volume: datasets[idx][i],
-        },
-      ];
-    }, [] as StackedData[]);
-
+    // sort the values to ensure we are going from smallest to largest when we render them in the chart
     const sortedPoints = sort(dataPoints).by([
       { asc: (label) => label.volume },
     ]);
 
-    const correctedPoints: StackedData[] = sortedPoints.reduce(
-      (points: StackedData[], _, idx) => {
+    // account for the error caused by stacking whole values by shaving off the value of the prior point as we go forward
+    const correctedPoints: OverlappedVolumeData[] = sortedPoints.reduce(
+      (points: OverlappedVolumeData[], _, reduceIdx) => {
         return [
           ...points,
           {
-            name: sortedPoints[idx].name,
+            name: sortedPoints[reduceIdx].name,
             volume:
-              idx === 0
+              reduceIdx === 0
                 ? sortedPoints[0].volume
-                : sortedPoints[idx].volume - sortedPoints[idx - 1].volume,
+                : sortedPoints[reduceIdx].volume -
+                  sortedPoints[reduceIdx - 1].volume,
           },
         ];
       },
       []
     );
 
-    result.push(correctedPoints);
-  }
-
-  return result;
+    return correctedPoints;
+  });
 }
 
-export function getStackedBackgroundColor(
+/**
+ * Returns the index that the name of the point corresponds to in the
+ * selected carousel elements. This determines what color the point should use.
+ */
+function getPointNameIdx(
+  points: OverlappedVolumeData[],
+  idx: number,
+  labels: string[]
+) {
+  return labels.findIndex((label) => label === points[idx].name);
+}
+
+/**
+ * Generates an array of backgroundColor values each dataset should use.
+ *
+ * Because the data is being overlapped, the same dataset needs to have different
+ * background colors depending on what the smallest value is for all the datasets.
+ *
+ * If a larger value is drawn over it; it will be overridden and unable to be seen.
+ */
+export function getOverlapBackgroundColor(
   idx: number,
   context: ScriptableContext<"bar">,
-  stackedValues: StackedData[][],
-  labels: string[],
+  overlapValues: OverlappedVolumeData[][],
+  labels: string[]
 ) {
-  return stackedValues.map((value) => {
-    const name = value[idx].name;
-    const nameIdx = labels.findIndex((label) => label === name);
+  return overlapValues.map((points) => {
+    const nameIdx = getPointNameIdx(points, idx, labels);
     return volumeComparisonGradient(context, nameIdx);
   });
 }
 
-export function getStackedHoverColor(
+/**
+ * Generates the array of hover colors each dataset should use.
+ */
+export function getOverlapHoverColor(
   idx: number,
-  stackedValues: StackedData[][],
+  overlapValues: OverlappedVolumeData[][],
   labels: string[]
 ) {
-  return stackedValues.map((value) => {
-    const name = value[idx].name;
-    const nameIdx = labels.findIndex((label) => label === name);
+  return overlapValues.map((points) => {
+    const nameIdx = getPointNameIdx(points, idx, labels);
     return chartColorSets[nameIdx].highlightColor.hex;
   });
 }
