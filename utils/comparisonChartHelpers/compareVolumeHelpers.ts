@@ -1,4 +1,4 @@
-import type { ChartOptions, LegendItem, ScriptableContext } from "chart.js";
+import type { ChartOptions, ScriptableContext } from "chart.js";
 import type { OverlappedVolumeData } from "../types";
 
 import { arrayOfNs } from "../arrayHelpers";
@@ -48,7 +48,7 @@ export function volumeComparisonGradient(
   return gradient;
 }
 
-export const volumeComparisonOptions: ChartOptions<"bar"> = {
+export const chartOptionsStacked: ChartOptions<"bar"> = {
   plugins: {
     legend: {
       position: "top",

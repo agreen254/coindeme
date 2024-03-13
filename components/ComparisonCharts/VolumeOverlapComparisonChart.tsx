@@ -16,7 +16,7 @@ type Props = {
   chartData: ComparisonChartResponse[];
 };
 
-const VolumeComparisonChart = ({ chartData }: Props) => {
+const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
   const coinLabels = useCarouselSelectedElements();
   const { label: x, values } = prepareComparisonData(chartData, "total_volumes");
   const overlapValues = overlapData(values, coinLabels);
@@ -64,4 +64,4 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
   );
 };
 
-export default VolumeComparisonChart;
+export default VolumeOverlapComparisonChart;
