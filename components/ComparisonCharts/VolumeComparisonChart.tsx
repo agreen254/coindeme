@@ -1,14 +1,14 @@
-import type { ChartData, ScriptableContext } from "chart.js";
+import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
-import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import {
+  getStackedBackgroundColor,
+  getStackedHoverColor,
   getVolumeChartOptions,
-  stackItUp,
+  stackDataRelative,
 } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
-import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 
 import { Bar } from "react-chartjs-2";
 
@@ -17,33 +17,9 @@ type Props = {
 };
 
 const VolumeComparisonChart = ({ chartData }: Props) => {
-  const selectedCoins = useCarouselSelectedElements();
+  const coinLabels = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "total_volumes");
-  const stackedValues = stackItUp(values, selectedCoins);
-
-  const bg = (idx: number, context: ScriptableContext<"bar">) => {
-    return stackedValues.map((ele) => {
-      if (ele[idx].name === selectedCoins[0]) {
-        return volumeComparisonGradient(context, 0);
-      } else if (ele[idx].name === selectedCoins[1]) {
-        return volumeComparisonGradient(context, 1);
-      } else {
-        return volumeComparisonGradient(context, 2);
-      }
-    });
-  };
-
-  const bgHover = (idx: number) => {
-    return stackedValues.map((ele) => {
-      if (ele[idx].name === selectedCoins[0]) {
-        return chartColorSets[0].highlightColor.hex;
-      } else if (ele[idx].name === selectedCoins[1]) {
-        return chartColorSets[1].highlightColor.hex;
-      } else {
-        return chartColorSets[2].highlightColor.hex;
-      }
-    });
-  };
+  const stackedValues = stackDataRelative(values, coinLabels);
 
   const volumeChartData: ChartData<"bar"> = {
     labels: label,
@@ -61,20 +37,27 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
     datasets: chartData.map((_, idx) => {
       return {
         backgroundColor: function (context) {
-          return bg(idx, context);
+          return getStackedBackgroundColor(
+            idx,
+            context,
+            stackedValues,
+            coinLabels
+          );
         },
+        hoverBackgroundColor: getStackedHoverColor(
+          idx,
+          stackedValues,
+          coinLabels
+        ),
+
         data: stackedValues.map((ele) => ele[idx].volume),
         label: idx.toString(),
-        hoverBackgroundColor: bgHover(idx),
       };
     }),
   };
 
   return (
-    <Bar
-      data={volumeChartData}
-      options={getVolumeChartOptions(selectedCoins)}
-    />
+    <Bar data={volumeChartData} options={getVolumeChartOptions(coinLabels)} />
   );
 };
 

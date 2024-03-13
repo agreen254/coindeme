@@ -255,7 +255,7 @@ export function stackThree(datasets: number[][], labels: string[]) {
   return result;
 }
 
-export function stackItUp(datasets: number[][], labels: string[]) {
+export function stackDataRelative(datasets: number[][], labels: string[]) {
   let result: StackedData[][] = [];
 
   // this will only work if all datasets are the same length
@@ -298,4 +298,29 @@ export function stackItUp(datasets: number[][], labels: string[]) {
   }
 
   return result;
+}
+
+export function getStackedBackgroundColor(
+  idx: number,
+  context: ScriptableContext<"bar">,
+  stackedValues: StackedData[][],
+  labels: string[],
+) {
+  return stackedValues.map((value) => {
+    const name = value[idx].name;
+    const nameIdx = labels.findIndex((label) => label === name);
+    return volumeComparisonGradient(context, nameIdx);
+  });
+}
+
+export function getStackedHoverColor(
+  idx: number,
+  stackedValues: StackedData[][],
+  labels: string[]
+) {
+  return stackedValues.map((value) => {
+    const name = value[idx].name;
+    const nameIdx = labels.findIndex((label) => label === name);
+    return chartColorSets[nameIdx].highlightColor.hex;
+  });
 }
