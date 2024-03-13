@@ -19,6 +19,11 @@ import { z } from "zod";
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
 
+export type Dataset = {
+  x: number[];
+  y: number[];
+};
+
 type Color = {
   hex: string;
   rgb: {
@@ -29,9 +34,9 @@ type Color = {
 };
 
 export type ChartColorSet = {
-  barChartHighlight: Color;
-  start: Color;
-  end: Color;
+  highlightColor: Color;
+  startColor: Color;
+  endColor: Color;
 };
 
 export type ComparisonChartQueries = z.infer<
@@ -43,6 +48,10 @@ export type ComparisonChartRequest = z.infer<
 export type ComparisonChartResponse = z.infer<
   typeof comparisonChartResponseSchema
 >;
+export type ComparisonData = {
+  label: number[];
+  values: number[][];
+};
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;

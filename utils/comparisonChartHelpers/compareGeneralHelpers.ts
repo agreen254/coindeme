@@ -35,6 +35,10 @@ import { formatPriceChangeValue } from "../formatHelpers";
  */
 export const decimationThreshold = 150;
 
+export const gridColor = "#27272A";
+export const tooltipBackgroundColor = "#121212";
+export const tooltipBorderColor = "#D4D4D8";
+
 export function handleGradientColorStops(
   alphaValues: { alphaStart: number; alphaEnd: number },
   gradient: CanvasGradient | undefined,
@@ -44,8 +48,8 @@ export function handleGradientColorStops(
     r: rStart,
     g: gStart,
     b: bStart,
-  } = chartColorSets[chartIdx].start.rgb;
-  const { r: rEnd, g: gEnd, b: bEnd } = chartColorSets[chartIdx].end.rgb;
+  } = chartColorSets[chartIdx].startColor.rgb;
+  const { r: rEnd, g: gEnd, b: bEnd } = chartColorSets[chartIdx].endColor.rgb;
 
   gradient?.addColorStop(
     1,
@@ -79,7 +83,7 @@ export function handleTicksYAxis(value: number, index: number) {
 export const chartColorSets: ChartColorSet[] = [
   {
     // teal
-    barChartHighlight: {
+    highlightColor: {
       hex: "#34D3D5",
       rgb: {
         r: 52,
@@ -87,7 +91,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    start: {
+    startColor: {
       hex: "#14B8A6",
       rgb: {
         r: 52,
@@ -95,7 +99,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 153,
       },
     },
-    end: {
+    endColor: {
       hex: "#134E4A",
       rgb: {
         r: 19,
@@ -106,7 +110,7 @@ export const chartColorSets: ChartColorSet[] = [
   },
   {
     // purple
-    barChartHighlight: {
+    highlightColor: {
       hex: "#F57ED5",
       rgb: {
         r: 245,
@@ -114,7 +118,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    start: {
+    startColor: {
       hex: "#CA54D5",
       rgb: {
         r: 202,
@@ -122,7 +126,7 @@ export const chartColorSets: ChartColorSet[] = [
         b: 213,
       },
     },
-    end: {
+    endColor: {
       hex: "#692570",
       rgb: {
         r: 105,
@@ -131,13 +135,31 @@ export const chartColorSets: ChartColorSet[] = [
       },
     },
   },
-  // {
-  //   // yellow
-  //   start: "#71DCD9",
-  //   end: "#568BC6",
-  // },
-  // {
-  //   start: "#D5CA54",
-  //   end: "#D58A54",
-  // },
+  {
+    // yellow
+    highlightColor: {
+      hex: "#EAF47B",
+      rgb: {
+        r: 234,
+        g: 244,
+        b: 123,
+      },
+    },
+    startColor: {
+      hex: "#C37D1B",
+      rgb: {
+        r: 195,
+        g: 125,
+        b: 27,
+      },
+    },
+    endColor: {
+      hex: "#D58A54",
+      rgb: {
+        r: 213,
+        g: 138,
+        b: 84,
+      },
+    },
+  },
 ];
