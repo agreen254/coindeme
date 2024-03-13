@@ -8,6 +8,7 @@ import {
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
+import { sort } from "fast-sort";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function volumeComparisonGradient(
@@ -95,3 +96,90 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
     },
   },
 };
+
+type ComparisonData = { name: string; volume: number };
+
+export function stackOne(datasets: number[][], labels: string[]) {
+  let result: ComparisonData[][] = [];
+  for (let i = 0; i < datasets[0].length; i++) {
+    result.push([{ name: labels[0], volume: datasets[0][i] }]);
+  }
+
+  return result;
+}
+
+export function stackTwo(datasets: number[][], labels: string[]) {
+  let result: ComparisonData[][] = [];
+  for (let i = 0; i < datasets[0].length; i++) {
+    const dataPoint = [
+      {
+        name: labels[0],
+        volume: datasets[0][i],
+      },
+      {
+        name: labels[1],
+        volume: datasets[1][i],
+      },
+    ];
+    const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
+
+    const correctedPoint: ComparisonData[] = [
+      {
+        name: sortedPoint[0].name,
+        volume: sortedPoint[0].volume,
+      },
+      {
+        name: sortedPoint[1].name,
+        volume: sortedPoint[1].volume - sortedPoint[0].volume,
+      },
+    ];
+
+    result.push(correctedPoint);
+  }
+
+  return result;
+}
+
+export function stackThree(datasets: number[][], labels: string[]) {
+  let result: ComparisonData[][] = [];
+  for (let i = 0; i < datasets[0].length; i++) {
+    const dataPoint = [
+      {
+        name: labels[0],
+        volume: datasets[0][i],
+      },
+      {
+        name: labels[1],
+        volume: datasets[1][i],
+      },
+      {
+        name: labels[2],
+        volume: datasets[2][i],
+      },
+    ];
+    const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
+
+    const correctedPoint: ComparisonData[] = [
+      {
+        name: sortedPoint[0].name,
+        volume: sortedPoint[0].volume,
+      },
+      {
+        name: sortedPoint[1].name,
+        volume: sortedPoint[1].volume - sortedPoint[0].volume,
+      },
+      {
+        name: sortedPoint[2].name,
+        volume: sortedPoint[2].volume - sortedPoint[1].volume,
+      },
+    ];
+
+    result.push(correctedPoint);
+  }
+
+  return result;
+}
+
+export function stackData(datasets: number[][], lables: string[]) {
+  
+}
