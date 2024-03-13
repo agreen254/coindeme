@@ -4,12 +4,10 @@ import type { ComparisonChartResponse } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import {
-  stackOne,
-  stackThree,
-  stackTwo,
+  getVolumeChartOptions,
+  stackItUp,
 } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
-import { volumeComparisonOptions } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { volumeComparisonGradient } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 
 import { Bar } from "react-chartjs-2";
@@ -21,20 +19,10 @@ type Props = {
 const VolumeComparisonChart = ({ chartData }: Props) => {
   const selectedCoins = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "total_volumes");
-  const stacked = (() => {
-    switch (chartData.length) {
-      default:
-      case 1:
-        return stackOne(values, selectedCoins);
-      case 2:
-        return stackTwo(values, selectedCoins);
-      case 3:
-        return stackThree(values, selectedCoins);
-    }
-  })();
+  const stackedValues = stackItUp(values, selectedCoins);
 
   const bg = (idx: number, context: ScriptableContext<"bar">) => {
-    return stacked.map((ele) => {
+    return stackedValues.map((ele) => {
       if (ele[idx].name === selectedCoins[0]) {
         return volumeComparisonGradient(context, 0);
       } else if (ele[idx].name === selectedCoins[1]) {
@@ -46,7 +34,7 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
   };
 
   const bgHover = (idx: number) => {
-    return stacked.map((ele) => {
+    return stackedValues.map((ele) => {
       if (ele[idx].name === selectedCoins[0]) {
         return chartColorSets[0].highlightColor.hex;
       } else if (ele[idx].name === selectedCoins[1]) {
@@ -75,14 +63,19 @@ const VolumeComparisonChart = ({ chartData }: Props) => {
         backgroundColor: function (context) {
           return bg(idx, context);
         },
-        data: stacked.map((ele) => ele[idx].volume),
+        data: stackedValues.map((ele) => ele[idx].volume),
         label: idx.toString(),
         hoverBackgroundColor: bgHover(idx),
       };
     }),
   };
 
-  return <Bar data={volumeChartData} options={volumeComparisonOptions} />;
+  return (
+    <Bar
+      data={volumeChartData}
+      options={getVolumeChartOptions(selectedCoins)}
+    />
+  );
 };
 
 export default VolumeComparisonChart;

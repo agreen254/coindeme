@@ -1,6 +1,8 @@
-import type { ChartOptions, ScriptableContext } from "chart.js";
+import type { ChartOptions, LegendItem, ScriptableContext } from "chart.js";
 
+import { arrayOfNs } from "../arrayHelpers";
 import {
+  chartColorSets,
   gridColor,
   handleGradientColorStops,
   handleTicksXAxis,
@@ -97,10 +99,83 @@ export const volumeComparisonOptions: ChartOptions<"bar"> = {
   },
 };
 
-type ComparisonData = { name: string; volume: number };
+export function getVolumeChartOptions(
+  carouselSelected: string[]
+): ChartOptions<"bar"> {
+  return {
+    plugins: {
+      legend: {
+        position: "top",
+        align: "end",
+        labels: {
+          // https://www.chartjs.org/docs/latest/configuration/legend.html#legend-item-interface
+          generateLabels: (): LegendItem[] =>
+            carouselSelected.map((ele, idx) => {
+              return {
+                text: ele,
+                fontColor: "#A1A1AA",
+                fillStyle: chartColorSets[idx].startColor.hex,
+                hidden: false,
+                lineCap: "round",
+                lineWidth: 2,
+                strokeStyle: chartColorSets[idx].startColor.hex,
+              };
+            }),
+        },
+      },
+      tooltip: {
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
+        borderWidth: 1,
+        caretPadding: 6,
+        yAlign: "bottom",
+      },
+    },
+    interaction: {
+      intersect: false,
+      mode: "index",
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        border: {
+          display: false,
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function (val, idx) {
+            const label = this.getLabelForValue(val as number);
+            return handleTicksXAxis(label, idx);
+          },
+        },
+        stacked: true,
+      },
+      y: {
+        border: {
+          display: false,
+        },
+        grid: {
+          drawOnChartArea: true,
+          color: gridColor,
+        },
+        ticks: {
+          callback: function (val, idx) {
+            return handleTicksYAxis(val as number, idx);
+          },
+        },
+        stacked: true,
+      },
+    },
+  };
+}
+
+type StackedData = { name: string; volume: number };
 
 export function stackOne(datasets: number[][], labels: string[]) {
-  let result: ComparisonData[][] = [];
+  let result: StackedData[][] = [];
   for (let i = 0; i < datasets[0].length; i++) {
     result.push([{ name: labels[0], volume: datasets[0][i] }]);
   }
@@ -109,7 +184,7 @@ export function stackOne(datasets: number[][], labels: string[]) {
 }
 
 export function stackTwo(datasets: number[][], labels: string[]) {
-  let result: ComparisonData[][] = [];
+  let result: StackedData[][] = [];
   for (let i = 0; i < datasets[0].length; i++) {
     const dataPoint = [
       {
@@ -123,7 +198,7 @@ export function stackTwo(datasets: number[][], labels: string[]) {
     ];
     const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
 
-    const correctedPoint: ComparisonData[] = [
+    const correctedPoint: StackedData[] = [
       {
         name: sortedPoint[0].name,
         volume: sortedPoint[0].volume,
@@ -141,7 +216,7 @@ export function stackTwo(datasets: number[][], labels: string[]) {
 }
 
 export function stackThree(datasets: number[][], labels: string[]) {
-  let result: ComparisonData[][] = [];
+  let result: StackedData[][] = [];
   for (let i = 0; i < datasets[0].length; i++) {
     const dataPoint = [
       {
@@ -159,7 +234,7 @@ export function stackThree(datasets: number[][], labels: string[]) {
     ];
     const sortedPoint = sort(dataPoint).by([{ asc: (label) => label.volume }]);
 
-    const correctedPoint: ComparisonData[] = [
+    const correctedPoint: StackedData[] = [
       {
         name: sortedPoint[0].name,
         volume: sortedPoint[0].volume,
@@ -180,6 +255,47 @@ export function stackThree(datasets: number[][], labels: string[]) {
   return result;
 }
 
-export function stackData(datasets: number[][], lables: string[]) {
-  
+export function stackItUp(datasets: number[][], labels: string[]) {
+  let result: StackedData[][] = [];
+
+  // this will only work if all datasets are the same length
+  const nPoints = datasets[0].length;
+  const nDatasets = datasets.length;
+  const dummy = arrayOfNs(nDatasets);
+
+  for (let i = 0; i < nPoints; i++) {
+    const dataPoints = dummy.reduce((points: StackedData[], _, idx) => {
+      return [
+        ...points,
+        {
+          name: labels[idx],
+          volume: datasets[idx][i],
+        },
+      ];
+    }, [] as StackedData[]);
+
+    const sortedPoints = sort(dataPoints).by([
+      { asc: (label) => label.volume },
+    ]);
+
+    const correctedPoints: StackedData[] = sortedPoints.reduce(
+      (points: StackedData[], _, idx) => {
+        return [
+          ...points,
+          {
+            name: sortedPoints[idx].name,
+            volume:
+              idx === 0
+                ? sortedPoints[0].volume
+                : sortedPoints[idx].volume - sortedPoints[idx - 1].volume,
+          },
+        ];
+      },
+      []
+    );
+
+    result.push(correctedPoints);
+  }
+
+  return result;
 }
