@@ -315,8 +315,8 @@ export function getOverlapBackgroundColor(
   overlapValues: OverlappedVolumeData[][],
   labels: string[]
 ) {
-  const name = overlapValues[context.dataIndex][idx].name;
-  const nameIdx = labels.findIndex((label) => label === name);
+  const coinName = overlapValues[context.dataIndex][idx].name;
+  const nameIdx = labels.findIndex((label) => label === coinName);
   return volumeComparisonGradient(context, nameIdx);
 }
 
@@ -329,7 +329,7 @@ export function getOverlapHoverColor(
   overlapValues: OverlappedVolumeData[][],
   labels: string[]
 ) {
-  const name = overlapValues[context.dataIndex][idx].name;
-  const nameIdx = labels.findIndex((label) => label === name);
+  const coinName = overlapValues[context.dataIndex][idx].name;
+  const nameIdx = labels.findIndex((label) => label === coinName);
   return chartColorSets[nameIdx].highlightColor.hex;
 }
