@@ -34,8 +34,6 @@ const GlobalData = () => {
     },
   } = data;
 
-  // const marketIsGaining = market_cap_change > 0;
-
   return (
     data && (
       <div className="flex justify-center items-center h-16 gap-x-[2%] border-y border-white/10 text-sm">
