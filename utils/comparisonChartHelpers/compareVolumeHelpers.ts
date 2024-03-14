@@ -304,24 +304,10 @@ export function overlapData(datasets: number[][], labels: string[]) {
 }
 
 /**
- * Returns the index that the name of the point corresponds to in the
- * selected carousel elements. This determines what color the point should use.
- */
-function getPointNameIdx(
-  points: OverlappedVolumeData[],
-  idx: number,
-  labels: string[]
-) {
-  return labels.findIndex((label) => label === points[idx].name);
-}
-
-/**
  * Generates an array of backgroundColor values each dataset should use.
  *
  * Because the data is being overlapped, the same dataset needs to have different
  * background colors depending on what the smallest value is for all the datasets.
- *
- * If a larger value is drawn over it; it will be overridden and unable to be seen.
  */
 export function getOverlapBackgroundColor(
   idx: number,
@@ -329,10 +315,9 @@ export function getOverlapBackgroundColor(
   overlapValues: OverlappedVolumeData[][],
   labels: string[]
 ) {
-  return overlapValues.map((points) => {
-    const nameIdx = getPointNameIdx(points, idx, labels);
-    return volumeComparisonGradient(context, nameIdx);
-  });
+  const name = overlapValues[context.dataIndex][idx].name;
+  const nameIdx = labels.findIndex((label) => label === name);
+  return volumeComparisonGradient(context, nameIdx);
 }
 
 /**
@@ -340,11 +325,11 @@ export function getOverlapBackgroundColor(
  */
 export function getOverlapHoverColor(
   idx: number,
+  context: ScriptableContext<"bar">,
   overlapValues: OverlappedVolumeData[][],
   labels: string[]
 ) {
-  return overlapValues.map((points) => {
-    const nameIdx = getPointNameIdx(points, idx, labels);
-    return chartColorSets[nameIdx].highlightColor.hex;
-  });
+  const name = overlapValues[context.dataIndex][idx].name;
+  const nameIdx = labels.findIndex((label) => label === name);
+  return chartColorSets[nameIdx].highlightColor.hex;
 }

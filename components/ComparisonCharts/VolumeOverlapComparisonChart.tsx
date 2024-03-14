@@ -18,22 +18,14 @@ type Props = {
 
 const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
   const coinLabels = useCarouselSelectedElements();
-  const { label: x, values } = prepareComparisonData(chartData, "total_volumes");
+  const { label: x, values } = prepareComparisonData(
+    chartData,
+    "total_volumes"
+  );
   const overlapValues = overlapData(values, coinLabels);
 
   const volumeChartData: ChartData<"bar"> = {
     labels: x,
-
-    /**
-     * The compiler will throw an error here even though the charts work without any issues.
-     * The backgroundColor prop accepts an array; but if that array is generated through the callback it's not considered valid for some reason.
-     *
-     * I have raised a github issue about this:
-     * https://github.com/chartjs/Chart.js/issues/11711
-     *
-     * ts-ignore for now
-     */
-    // @ts-ignore
     datasets: chartData.map((_, idx) => {
       return {
         backgroundColor: function (context) {
@@ -44,11 +36,9 @@ const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
             coinLabels
           );
         },
-        hoverBackgroundColor: getOverlapHoverColor(
-          idx,
-          overlapValues,
-          coinLabels
-        ),
+        hoverBackgroundColor: function (context) {
+          return getOverlapHoverColor(idx, context, overlapValues, coinLabels);
+        },
 
         data: overlapValues.map((value) => value[idx].volume),
         label: idx.toString(),
