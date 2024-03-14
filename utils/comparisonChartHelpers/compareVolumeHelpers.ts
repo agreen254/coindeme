@@ -39,7 +39,7 @@ export function volumeComparisonGradient(
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
     handleGradientColorStops(
-      { alphaStart: 1, alphaEnd: 1 },
+      { alphaTop: 1, alphaBottom: 1 },
       gradient,
       chartIdx
     );
