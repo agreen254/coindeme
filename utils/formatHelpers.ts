@@ -25,12 +25,12 @@ export function formatPriceChangePercentage(price: number) {
  * 100_000 -> 100k
  * 2_000_000 -> 2M
  */
-export function formatPriceValue(price: number) {
+export function formatPriceChangeValue(price: number, numTrailing: number = 2) {
   return price < 0.01
     ? formatSmallNum(price)
     : Intl.NumberFormat("en-US", {
         notation: "compact",
-        maximumFractionDigits: 2,
+        maximumFractionDigits: numTrailing,
       }).format(price);
 }
 

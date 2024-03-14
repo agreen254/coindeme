@@ -33,7 +33,7 @@ export function priceComparisonGradient(
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
     handleGradientColorStops(
-      { alphaStart: 0.8, alphaEnd: 0.0 },
+      { alphaTop: 0.8, alphaBottom: 0.0 },
       gradient,
       chartIdx
     );
@@ -64,7 +64,8 @@ export const priceComparisonOptions: ChartOptions<"line"> = {
       borderColor: tooltipBorderColor,
       borderWidth: 1,
       caretPadding: 14,
-      yAlign: "top",
+      position: "nearest",
+      yAlign: "bottom",
     },
   },
   interaction: {

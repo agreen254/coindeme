@@ -3,9 +3,11 @@
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import { useCarouselHasNoneSelected } from "@/hooks/useCarousel";
+import { useVolumeChartMode } from "@/hooks/useVolumeChartMode";
 
 import { ErrorBoundary } from "react-error-boundary";
-import VolumeComparisonChart from "./VolumeComparisonChart";
+import VolumeOverlapComparisonChart from "./VolumeOverlapComparisonChart";
+import VolumeStackComparisonChart from "./VolumeStackComparisonChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -14,11 +16,15 @@ type Props = {
 const PriceComparisonChartWrapper = ({ chartData }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
+  const mode = useVolumeChartMode();
 
-  if (hasNoneSelected || hasNoData)
+  if (hasNoneSelected || hasNoData) {
     return (
-      <p className="mt-4 font-light text-center text-stone-400/50">No data to display.</p>
+      <p className="mt-4 font-light text-center text-stone-400/50">
+        No data to display.
+      </p>
     );
+  }
 
   return (
     <div className="w-full h-full p-4">
@@ -29,7 +35,11 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
           </p>
         }
       >
-        <VolumeComparisonChart chartData={chartData} />
+        {mode === "stack" ? (
+          <VolumeStackComparisonChart chartData={chartData} />
+        ) : (
+          <VolumeOverlapComparisonChart chartData={chartData} />
+        )}
       </ErrorBoundary>
     </div>
   );

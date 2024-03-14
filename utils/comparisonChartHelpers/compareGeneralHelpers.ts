@@ -36,28 +36,29 @@ import { formatPriceValue } from "../formatHelpers";
 export const decimationThreshold = 150;
 
 export const gridColor = "#27272A";
+export const legendFontColor = "#A1A1AA";
 export const tooltipBackgroundColor = "#121212";
-export const tooltipBorderColor = "#D4D4D8";
+export const tooltipBorderColor = "#71717A";
 
 export function handleGradientColorStops(
-  alphaValues: { alphaStart: number; alphaEnd: number },
+  alphaValues: { alphaTop: number; alphaBottom: number },
   gradient: CanvasGradient | undefined,
-  chartIdx: number
+  chartIdx: number,
 ) {
+  const { r: rTop, g: gTop, b: bTop } = chartColorSets[chartIdx].startColor.rgb;
   const {
-    r: rStart,
-    g: gStart,
-    b: bStart,
-  } = chartColorSets[chartIdx].startColor.rgb;
-  const { r: rEnd, g: gEnd, b: bEnd } = chartColorSets[chartIdx].endColor.rgb;
+    r: rBottom,
+    g: gBottom,
+    b: bBottom,
+  } = chartColorSets[chartIdx].endColor.rgb;
 
   gradient?.addColorStop(
     1,
-    `rgba(${rStart}, ${gStart}, ${bStart}, ${alphaValues.alphaStart})`
+    `rgba(${rTop}, ${gTop}, ${bTop}, ${alphaValues.alphaTop})`
   );
   gradient?.addColorStop(
     0,
-    `rgba(${rEnd}, ${gEnd}, ${bEnd}, ${alphaValues.alphaEnd})`
+    `rgba(${rBottom}, ${gBottom}, ${bBottom}, ${alphaValues.alphaBottom})`
   );
 }
 
