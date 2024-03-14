@@ -10,6 +10,7 @@ import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 
 import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
+import VolumeChartSwitcher from "./VolumeChartSwitcher";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
 
 const ComparisonChartsWrapper = () => {
@@ -45,8 +46,9 @@ const ComparisonChartsWrapper = () => {
           <VolumeComparisonChartWrapper chartData={chartData} />
         </div>
       </div>
-      <div className="mt-[14px]">
+      <div className="flex justify-between mt-[10px] mb-4">
         <ComparisonChartsTimeSelector isPending={pulseChartBackground} />
+        <VolumeChartSwitcher isPending={pulseChartBackground} />
       </div>
     </div>
   );

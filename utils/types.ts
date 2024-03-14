@@ -76,3 +76,8 @@ export type MarketQueryResult = UseInfiniteQueryResult<
   InfiniteData<MarketResponse, unknown>,
   Error
 >;
+
+export type OverlappedVolumeData = {
+  name: string;
+  volume: number;
+}
