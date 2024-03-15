@@ -6,7 +6,7 @@ import { useMarketQuery } from "@/hooks/useMarketQuery";
 import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
 import ComparisonChartsWrapper from "@/components/ComparisonCharts/ComparisonChartsWrapper";
 import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
-import SearchBar from "@/components/Search/SearchBar";
+import SearchWrapper from "@/components/Search/SearchWrapper";
 
 export default function Home() {
   // TODO: get the three fields below from url search params
@@ -22,9 +22,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center gap-y-4">
-      {queryResult.data?.pages && (
-        <SearchBar targets={getSearchTargets(queryResult.data?.pages)} />
-      )}
+      <SearchWrapper targets={getSearchTargets(queryResult.data?.pages)} />
       <CarouselWrapper axis="x" queryResult={queryResult} />
       <div className="flex justify-between w-table-xl gap-x-12">
         <ComparisonChartsWrapper />

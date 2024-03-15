@@ -1,71 +1,26 @@
-"use client";
-
-import type { SearchTargets } from "@/utils/types";
-
-import fuzzysort from "fuzzysort";
-import { getSearchResults } from "@/utils/getSearchElements";
-import { useState } from "react";
+import SearchIcon from "@/Icons/Search";
 
 type Props = {
-  targets: SearchTargets;
+  disabled: boolean;
+  searchText: string;
+  
+  // eslint-disable-next-line
+  setSearchText: (text: string) => void;
 };
 
-type SearchResultWrapper = {
-  result: Fuzzysort.Result;
-  otherText: string;
-  kind: string;
-};
-
-const SearchBar = ({ targets }: Props) => {
-  const [searchText, setSearchText] = useState("");
-  const bestResults = getSearchResults(targets, searchText);
-
-  const highlightMatchedChars = (result: Fuzzysort.Result) => {
-    return fuzzysort.highlight(result, (m, i) => (
-      <span
-        key={result + "highlight" + i}
-        className="font-semibold text-red-500"
-      >
-        {m}
-      </span>
-    ));
-  };
-  const handleNameMatch = (wrapper: SearchResultWrapper) => {
-    const symbol = wrapper.otherText;
-    return (
-      <span>
-        {highlightMatchedChars(wrapper.result)} {symbol}
-      </span>
-    );
-  };
-  const handleSymbolMatch = (wrapper: SearchResultWrapper) => {
-    const name = wrapper.otherText;
-    return (
-      <span>
-        {name} {highlightMatchedChars(wrapper.result)}
-      </span>
-    );
-  };
-
+const SearchBar = ({ disabled, searchText, setSearchText }: Props) => {
   return (
-    <div className="flex justify-center">
-      <div>
-        <input
-          type="search"
-          placeholder="search coins"
-          value={searchText}
-          className="px-5 py-3 rounded-lg"
-          onChange={(e) => setSearchText(e.currentTarget.value)}
-        />
-        {bestResults.map((wrapper) => (
-          <p key={wrapper.result.target + "searchResult"}>
-            {wrapper.kind === "symbol"
-              ? handleSymbolMatch(wrapper)
-              : handleNameMatch(wrapper)}
-          </p>
-        ))}
-      </div>
-    </div>
+    <>
+      <input
+        type="text"
+        placeholder={disabled ? "Loading..." : "Search..."}
+        value={searchText}
+        disabled={disabled}
+        className="pr-5 pl-12 py-2 w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/80 shadow-[0_-0.5px_0_1px] shadow-zinc-500/60 disabled:cursor-not-allowed"
+        onChange={(e) => setSearchText(e.currentTarget.value)}
+      />
+      <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px]" />
+    </>
   );
 };
 
