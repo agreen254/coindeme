@@ -1,19 +1,49 @@
 "use client";
 
-import type { SearchElements } from "@/utils/types";
+import type { SearchTargets } from "@/utils/types";
 
 import fuzzysort from "fuzzysort";
+import { getSearchResults } from "@/utils/getSearchElements";
 import { useState } from "react";
 
 type Props = {
-  elements: SearchElements;
+  targets: SearchTargets;
 };
 
-const SearchBar = ({ elements }: Props) => {
+type SearchResultWrapper = {
+  result: Fuzzysort.Result;
+  otherText: string;
+  kind: string;
+};
+
+const SearchBar = ({ targets }: Props) => {
   const [searchText, setSearchText] = useState("");
-  const searchResults = fuzzysort.go(searchText, elements.names, {
-    key: "name",
-  });
+  const bestResults = getSearchResults(targets, searchText);
+
+  const highlightResult = (result: Fuzzysort.Result) => {
+    return fuzzysort.highlight(result, (m, i) => (
+      <span
+        key={result + "highlight" + i}
+        className="font-semibold text-red-500"
+      >
+        {m}
+      </span>
+    ));
+  };
+  const displayNameMatch = (wrapper: SearchResultWrapper) => {
+    return (
+      <span>
+        {highlightResult(wrapper.result)} {wrapper.otherText}
+      </span>
+    );
+  };
+  const displaySymbolMatch = (wrapper: SearchResultWrapper) => {
+    return (
+      <span>
+        {wrapper.otherText} {highlightResult(wrapper.result)}
+      </span>
+    );
+  };
 
   return (
     <div className="flex justify-center">
@@ -24,11 +54,11 @@ const SearchBar = ({ elements }: Props) => {
           value={searchText}
           onChange={(e) => setSearchText(e.currentTarget.value)}
         />
-        {searchResults.map((res) => (
-          <p key={res.obj.name}>
-            {fuzzysort.highlight(res, (m) => (
-              <span className="font-semibold text-red-500">{m}</span>
-            ))}
+        {bestResults.map((wrapper) => (
+          <p key={wrapper.result.target + "searchResult"}>
+            {wrapper.kind === "symbol"
+              ? displaySymbolMatch(wrapper)
+              : displayNameMatch(wrapper)}
           </p>
         ))}
       </div>

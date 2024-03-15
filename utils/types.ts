@@ -86,3 +86,14 @@ export type SearchElements = {
   names: { name: string }[];
   ids: { id: string }[];
 };
+
+export type SearchTargets = {
+  name: string;
+  symbol: string;
+}[];
+
+export type SearchResultWrapper = {
+  result: Fuzzysort.Result;
+  otherText: string; // store the name if the symbol is matched and vice-versa
+  kind: string;
+};

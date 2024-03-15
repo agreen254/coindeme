@@ -1,6 +1,6 @@
 "use client";
 
-import { getSearchElements } from "@/utils/getSearchElements";
+import { getSearchTargets } from "@/utils/getSearchElements";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
@@ -20,11 +20,11 @@ export default function Home() {
     marketFetchOrder
   );
 
-  const searchElements = getSearchElements(queryResult.data?.pages);
-
   return (
     <main className="flex flex-col items-center gap-y-4">
-      {searchElements && <SearchBar elements={searchElements} />}
+      {queryResult.data?.pages && (
+        <SearchBar targets={getSearchTargets(queryResult.data?.pages)} />
+      )}
       <CarouselWrapper axis="x" queryResult={queryResult} />
       <div className="flex justify-between w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
