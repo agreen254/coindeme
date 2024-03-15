@@ -20,7 +20,7 @@ const SearchBar = ({ targets }: Props) => {
   const [searchText, setSearchText] = useState("");
   const bestResults = getSearchResults(targets, searchText);
 
-  const highlightResult = (result: Fuzzysort.Result) => {
+  const highlightMatchedChars = (result: Fuzzysort.Result) => {
     return fuzzysort.highlight(result, (m, i) => (
       <span
         key={result + "highlight" + i}
@@ -30,17 +30,19 @@ const SearchBar = ({ targets }: Props) => {
       </span>
     ));
   };
-  const displayNameMatch = (wrapper: SearchResultWrapper) => {
+  const handleNameMatch = (wrapper: SearchResultWrapper) => {
+    const symbol = wrapper.otherText;
     return (
       <span>
-        {highlightResult(wrapper.result)} {wrapper.otherText}
+        {highlightMatchedChars(wrapper.result)} {symbol}
       </span>
     );
   };
-  const displaySymbolMatch = (wrapper: SearchResultWrapper) => {
+  const handleSymbolMatch = (wrapper: SearchResultWrapper) => {
+    const name = wrapper.otherText;
     return (
       <span>
-        {wrapper.otherText} {highlightResult(wrapper.result)}
+        {name} {highlightMatchedChars(wrapper.result)}
       </span>
     );
   };
@@ -52,13 +54,14 @@ const SearchBar = ({ targets }: Props) => {
           type="search"
           placeholder="search coins"
           value={searchText}
+          className="px-5 py-3 rounded-lg"
           onChange={(e) => setSearchText(e.currentTarget.value)}
         />
         {bestResults.map((wrapper) => (
           <p key={wrapper.result.target + "searchResult"}>
             {wrapper.kind === "symbol"
-              ? displaySymbolMatch(wrapper)
-              : displayNameMatch(wrapper)}
+              ? handleSymbolMatch(wrapper)
+              : handleNameMatch(wrapper)}
           </p>
         ))}
       </div>
