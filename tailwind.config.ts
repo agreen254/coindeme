@@ -56,6 +56,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        "bitcoin": "#F7931A",
+        "eth": "#849DFF",
         "paynes-gray": "#646E78",
         "market-teal": "#1CB3AA",
         "market-red": "#D14E85",

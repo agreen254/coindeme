@@ -25,7 +25,7 @@ ChartJS.register(
   Tooltip
 );
 
-import { formatPriceChangeValue } from "../formatHelpers";
+import { formatPriceValue } from "../formatHelpers";
 
 /**
  * Comparison charts will have a maximum number of points per dataset equivalent to this value.
@@ -72,7 +72,7 @@ export function handleTicksXAxis(label: string, index: number) {
 
 export function handleTicksYAxis(value: number, index: number) {
   if (value === 0) return 0; // don't want '0.00e0'
-  return formatPriceChangeValue(value);
+  return formatPriceValue(value);
 }
 
 /**

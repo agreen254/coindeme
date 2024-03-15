@@ -1,7 +1,7 @@
 import type { Market, MarketRequest } from "@/utils/types";
 
-import { marketRequest, marketSchema } from "@/validation/schema";
 import { NextRequest, NextResponse } from "next/server";
+import { marketRequest, marketSchema } from "@/validation/schema";
 
 export async function POST(req: NextRequest) {
   const body: MarketRequest = await req.json();
