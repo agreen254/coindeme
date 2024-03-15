@@ -38,6 +38,30 @@ export const comparisonChartResponseSchema = z.object({
   total_volumes: z.array(z.array(z.number().nullable()).length(2)),
 });
 
+export const globalResponseSchema = z.object({
+  active_cryptocurrencies: z.number(),
+  markets: z.number(),
+  total_market_cap: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
+  total_volume: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
+  market_cap_percentage: z.object({
+    btc: z.number(),
+    eth: z.number(),
+  }),
+  market_cap_change_percentage_24h_usd: z.number(),
+});
+
 export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),

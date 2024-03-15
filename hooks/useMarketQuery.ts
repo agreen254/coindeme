@@ -24,15 +24,18 @@ export const useMarketQuery = (
     staleTime: 300 * 1000,
 
     queryFn: async ({ pageParam }): Promise<MarketResponse> => {
-      const response = await fetch("http://localhost:3000/api/v1/table", {
-        method: "POST",
-        body: JSON.stringify(<MarketRequest>{
-          page: pageParam,
-          currency: currency,
-          fetchParam: fetchParam,
-          fetchOrder: fetchOrder,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/table`,
+        {
+          method: "POST",
+          body: JSON.stringify(<MarketRequest>{
+            page: pageParam,
+            currency: currency,
+            fetchParam: fetchParam,
+            fetchOrder: fetchOrder,
+          }),
+        }
+      );
 
       // https://tanstack.com/query/latest/docs/framework/react/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default
       if (!response.ok) {

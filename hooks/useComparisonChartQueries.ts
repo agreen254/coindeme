@@ -18,7 +18,7 @@ export const useComparisonChartQueries = ({
       queryKey: ["comparison", "chart", id, currency, days],
       queryFn: async (): Promise<ComparisonChartResponse> => {
         const response = await fetch(
-          "http://localhost:3000/api/v1/comparison",
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/comparison`,
           {
             method: "POST",
             body: JSON.stringify(<ComparisonChartRequest>{

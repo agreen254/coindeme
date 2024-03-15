@@ -13,7 +13,7 @@ import {
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
 import { sort } from "fast-sort";
-import { formatPriceChangeValue } from "../formatHelpers";
+import { formatPriceValue } from "../formatHelpers";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function volumeComparisonGradient(
@@ -167,7 +167,7 @@ export function getOptionsOverlapped(
             if (label) {
               label = `${
                 overlapValues[dataIdx][datasetIdx].name
-              }: ${formatPriceChangeValue(sumVolume)}`;
+              }: ${formatPriceValue(sumVolume)}`;
             }
 
             return label;
