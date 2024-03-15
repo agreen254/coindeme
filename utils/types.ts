@@ -80,4 +80,9 @@ export type MarketQueryResult = UseInfiniteQueryResult<
 export type OverlappedVolumeData = {
   name: string;
   volume: number;
-}
+};
+
+export type SearchElements = {
+  names: { name: string }[];
+  ids: { id: string }[];
+};
