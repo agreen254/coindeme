@@ -7,7 +7,9 @@ export const useGlobalData = () => {
     retry: 0,
     queryKey: ["global"],
     queryFn: async (): Promise<GlobalResponse> => {
-      const response = await fetch("http://localhost:3000/api/v1/global");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/global`
+      );
 
       if (!response.ok) {
         const err = await response.json();
