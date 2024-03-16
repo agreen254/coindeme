@@ -59,7 +59,7 @@ const GlobalData = () => {
           className={cn(
             "w-4 h-4 inline mr-1",
             market_cap_change > 0 && "fill-market-up",
-            market_cap_change < 0 && "fill-market-down"
+            market_cap_change < 0 && "fill-market-down rotate-180"
           )}
         />
         {currencySymbol + formatPriceValue(total_market_cap[currency])}
