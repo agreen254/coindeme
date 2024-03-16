@@ -7,7 +7,7 @@ const NavBar = () => {
     <div className="mt-4 mb-12">
       <div className="flex justify-between mb-2">
         <div className="ml-12">
-          portfolio
+          portfolio button goes here
         </div>
         <div className="flex items-start gap-x-4">
           <SearchWrapper />

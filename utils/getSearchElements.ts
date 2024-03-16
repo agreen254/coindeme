@@ -15,7 +15,10 @@ export function getSearchTargets(data: MarketResponse[] | undefined) {
 
 export function parseOnePage(data: Market) {
   return data.reduce((res: SearchTargets, mkt) => {
-    return [...res, { name: mkt.name, symbol: mkt.symbol.toUpperCase() }];
+    return [
+      ...res,
+      { name: mkt.name, symbol: mkt.symbol.toUpperCase(), id: mkt.id },
+    ];
   }, []);
 }
 
@@ -31,21 +34,38 @@ export function getSearchResults(
   targets: SearchTargets,
   searchText: string
 ): SearchResultWrapper[] {
-  return targets.flatMap((target, idx) => {
+  return targets.flatMap((target) => {
     // specify a fallback score if no match is found that is impossibly low;
     // this way we know it needs to be excluded.
     const nameRes = fuzzysort.single(searchText, target.name) ?? {
       score: -100000,
       target: target.name,
+      id: target.id,
     };
     const symbolRes = fuzzysort.single(searchText, target.symbol) ?? {
       score: -100000,
       target: target.symbol,
+      id: target.id,
     };
 
+    // no matches found, when [] is flattened it is removed from the results array
     if (nameRes.score === -100000 && symbolRes.score === -100000) return [];
     return nameRes.score > symbolRes.score
-      ? [{ result: nameRes, kind: "name", otherText: target.symbol }]
-      : [{ result: symbolRes, kind: "symbol", otherText: target.name }];
+      ? [
+          {
+            result: nameRes,
+            kind: "name",
+            otherText: target.symbol,
+            id: target.id,
+          },
+        ]
+      : [
+          {
+            result: symbolRes,
+            kind: "symbol",
+            otherText: target.name,
+            id: target.id,
+          },
+        ];
   });
 }

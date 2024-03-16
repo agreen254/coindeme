@@ -1,13 +1,19 @@
 import type { SearchResultWrapper } from "@/utils/types";
 
 import fuzzysort from "fuzzysort";
+import { motion } from "framer-motion";
+
+import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 type Props = {
   results: SearchResultWrapper[];
   searchText: string;
 };
 
-const SearchResultsMenu = ({ results }: Props) => {
+const SearchResultsMenu = ({ results, searchText }: Props) => {
+  const isVisible = results.length !== 0 || searchText !== "";
+
   const highlightMatchedChars = (result: Fuzzysort.Result) => {
     return fuzzysort.highlight(result, (m, i) => (
       <span key={result + "highlight" + i} className="font-bold text-[#4DFDFF]">
@@ -39,18 +45,34 @@ const SearchResultsMenu = ({ results }: Props) => {
   };
 
   return (
-    <div className="w-[320px] max-h-[240px] overflow-y-auto bg-white/10 font-normal rounded-md mt-2 text-zinc-200">
-      {results.map((wrapper) => (
-        <p
-          key={wrapper.result.target + "searchResult"}
-          className="indent-3 hover:bg-zinc-600 py-1"
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          key="searchResults"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="w-[320px] max-h-[240px] overflow-y-auto bg-zinc-800 border border-stone-300 font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
-          {wrapper.kind === "symbol"
-            ? handleSymbolMatch(wrapper)
-            : handleNameMatch(wrapper)}
-        </p>
-      ))}
-    </div>
+          {results.map((wrapper) => (
+            <Link
+              href={`/coin/${wrapper.id}`}
+              key={wrapper.result.target + "searchResult"}
+              className="indent-3 hover:bg-zinc-600 py-1 block"
+            >
+              {wrapper.kind === "symbol"
+                ? handleSymbolMatch(wrapper)
+                : handleNameMatch(wrapper)}
+            </Link>
+          ))}
+          {results.length === 0 && (
+            <p className="italic text-muted-foreground font-medium py-1 indent-3">
+              No results found.
+            </p>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

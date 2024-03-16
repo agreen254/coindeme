@@ -12,7 +12,7 @@ const SearchBar = ({ disabled, searchText, setSearchText }: Props) => {
   return (
     <>
       <input
-        type="text"
+        type="search"
         placeholder={disabled ? "" : "Search..."}
         value={searchText}
         disabled={disabled}

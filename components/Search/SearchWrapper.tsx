@@ -11,12 +11,13 @@ const SearchWrapper = () => {
   const [searchText, setSearchText] = useState("");
 
   // re-using the same query will not cause a double fetch
+  // but need to remember to adjust it once params are stored in local storage
   const queryResult = useMarketQuery("usd", "market_cap", "desc");
   const targets = getSearchTargets(queryResult.data?.pages);
 
   if (!targets) {
     return (
-      <div className="relative">
+      <div className="relative mb-2">
         <SearchBar disabled searchText="" setSearchText={setSearchText} />
       </div>
     );
@@ -26,7 +27,7 @@ const SearchWrapper = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="relative">
+      <div className="relative mb-2">
         <SearchBar
           disabled={false}
           searchText={searchText}
