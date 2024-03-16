@@ -1,19 +1,18 @@
 "use client";
 
-import type { SearchTargets } from "@/utils/types";
-
-import { getSearchResults } from "@/utils/getSearchElements";
+import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useState } from "react";
 
 import SearchBar from "./SearchBar";
 import SearchResultsMenu from "./SearchResultsMenu";
 
-type Props = {
-  targets: SearchTargets | undefined;
-};
-
-const SearchWrapper = ({ targets }: Props) => {
+const SearchWrapper = () => {
   const [searchText, setSearchText] = useState("");
+
+  // re-using the same query will not cause a double fetch
+  const queryResult = useMarketQuery("usd", "market_cap", "desc");
+  const targets = getSearchTargets(queryResult.data?.pages);
 
   if (!targets) {
     return (

@@ -20,7 +20,7 @@ const GlobalData = () => {
   const currencySymbol = currencyMap.get("usd");
 
   if (isPending || !data)
-    return <div className="flex h-12 border-y border-white/10"></div>;
+    return <div className="flex h-[52px] border-y border-white/10"></div>;
 
   const {
     active_cryptocurrencies: num_active_coins,
@@ -35,7 +35,7 @@ const GlobalData = () => {
   } = data;
 
   return (
-    <div className="flex justify-center items-center h-16 gap-x-[2%] border-y border-white/10 text-sm">
+    <div className="flex justify-center items-center h-[52px] gap-x-[2%] border-y border-white/10 text-sm">
       <span>
         <HandCoinsIcon className="w-6 h-6 inline" />
         <span className="ml-1 mr-2 font-semibold text-muted-foreground">
