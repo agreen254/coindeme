@@ -10,10 +10,7 @@ type Props = {
 const SearchResultsMenu = ({ results }: Props) => {
   const highlightMatchedChars = (result: Fuzzysort.Result) => {
     return fuzzysort.highlight(result, (m, i) => (
-      <span
-        key={result + "highlight" + i}
-        className="font-semibold text-[#4DFDFF]"
-      >
+      <span key={result + "highlight" + i} className="font-bold text-[#4DFDFF]">
         {m}
       </span>
     ));
@@ -23,7 +20,8 @@ const SearchResultsMenu = ({ results }: Props) => {
     const symbol = wrapper.otherText;
     return (
       <span>
-        {highlightMatchedChars(wrapper.result)} {symbol}
+        <span>{highlightMatchedChars(wrapper.result)} </span>
+        <span className="text-zinc-300 font-semibold">{symbol}</span>
       </span>
     );
   };
@@ -32,13 +30,16 @@ const SearchResultsMenu = ({ results }: Props) => {
     const name = wrapper.otherText;
     return (
       <span>
-        {name} {highlightMatchedChars(wrapper.result)}
+        <span>{name} </span>
+        <span className="text-zinc-300 font-semibold">
+          {highlightMatchedChars(wrapper.result)}
+        </span>
       </span>
     );
   };
 
   return (
-    <div className="w-[320px] max-h-[240px] overflow-y-auto bg-white/10 font-normal rounded-md mt-2 text-zinc-3400">
+    <div className="w-[320px] max-h-[240px] overflow-y-auto bg-white/10 font-normal rounded-md mt-2 text-zinc-200">
       {results.map((wrapper) => (
         <p
           key={wrapper.result.target + "searchResult"}
