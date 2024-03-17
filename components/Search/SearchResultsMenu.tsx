@@ -9,10 +9,13 @@ import Link from "next/link";
 type Props = {
   results: SearchResultWrapper[];
   searchText: string;
+  setSearchText: (text: string) => void;
 };
 
-const SearchResultsMenu = ({ results, searchText }: Props) => {
+const SearchResultsMenu = ({ results, searchText, setSearchText }: Props) => {
   const isVisible = results.length !== 0 || searchText !== "";
+
+  const clearSearchText = () => setSearchText("");
 
   const highlightMatchedChars = (result: Fuzzysort.Result) => {
     return fuzzysort.highlight(result, (m, i) => (
@@ -57,6 +60,7 @@ const SearchResultsMenu = ({ results, searchText }: Props) => {
           {results.map((wrapper) => (
             <Link
               href={`/coin/${wrapper.id}`}
+              onClick={clearSearchText}
               key={wrapper.result.target + "searchResult"}
               className="indent-3 hover:bg-zinc-600 py-1 block"
             >

@@ -33,7 +33,11 @@ const SearchWrapper = () => {
           searchText={searchText}
           setSearchText={setSearchText}
         />
-        <SearchResultsMenu results={searchResults} searchText={searchText} />
+        <SearchResultsMenu
+          results={searchResults}
+          searchText={searchText}
+          setSearchText={setSearchText}
+        />
       </div>
     </div>
   );
