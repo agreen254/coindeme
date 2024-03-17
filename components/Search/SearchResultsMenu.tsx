@@ -9,6 +9,8 @@ import Link from "next/link";
 type Props = {
   results: SearchResultWrapper[];
   searchText: string;
+  
+  // eslint-disable-next-line
   setSearchText: (text: string) => void;
 };
 
