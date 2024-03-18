@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 type SearchBarState = {
-  query: string;
   menuIsVisible: boolean;
   menuSelectedIndex: number;
+  query: string;
   actions: SearchBarAction;
 };
 
@@ -25,15 +25,26 @@ const useSearchBarStore = create<SearchBarState>((set) => ({
   },
 }));
 
-export const useSearchMenuIsVisible = () => {
-  return useSearchBarStore((state) => state.menuIsVisible);
-};
 export const useSearchBarQuery = () => {
   return useSearchBarStore((state) => state.query);
+};
+export const useSearchMenuIsVisible = () => {
+  return useSearchBarStore((state) => state.menuIsVisible);
 };
 export const useSearchMenuSelectedIndex = () => {
   return useSearchBarStore((state) => state.menuSelectedIndex);
 };
 export const useSearchBarActions = () => {
   return useSearchBarStore((state) => state.actions);
+};
+
+export const useClearBarAndMenu = () => {
+  const { setMenuIsVisible, setMenuSelectedIndex, setQuery } =
+    useSearchBarActions();
+
+  return () => {
+    setQuery("");
+    setMenuSelectedIndex(-1);
+    setMenuIsVisible(false);
+  };
 };

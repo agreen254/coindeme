@@ -13,21 +13,20 @@ const SearchWrapper = () => {
   const queryResult = useMarketQuery("usd", "market_cap", "desc");
   const searchQuery = useSearchBarQuery();
   const targets = getSearchTargets(queryResult.data?.pages);
+  const searchResults = targets ? getSearchResults(targets, searchQuery) : [];
 
   if (!targets) {
     return (
       <div className="relative mb-2">
-        <SearchBar disabled />
+        <SearchBar disabled results={searchResults} />
       </div>
     );
   }
 
-  const searchResults = getSearchResults(targets, searchQuery);
-
   return (
     <div className="flex justify-center">
       <div className="relative mb-2">
-        <SearchBar disabled={false} />
+        <SearchBar disabled={false} results={searchResults} />
         <SearchResultsMenu results={searchResults} />
       </div>
     </div>
