@@ -2,20 +2,16 @@
 
 import type { SearchResultWrapper } from "@/utils/types";
 
-import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
 import { useClickAway } from "@uidotdev/usehooks";
 import {
   useClearBarAndMenu,
-  useSearchBarActions,
   useSearchMenuIsVisible,
-  useSearchMenuSelectedIndex,
 } from "@/hooks/useSearchBar";
 import React from "react";
 
 import { AnimatePresence } from "framer-motion";
-import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
-import Link from "next/link";
+import SearchResultsMenuItem from "./SearchResultsMenuItem";
 
 type Props = {
   results: SearchResultWrapper[];
@@ -24,9 +20,6 @@ type Props = {
 const SearchResultsMenu = ({ results }: Props) => {
   const clearBarAndMenu = useClearBarAndMenu();
   const isVisible = useSearchMenuIsVisible();
-  const selectedIndex = useSearchMenuSelectedIndex();
-
-  const { setMenuSelectedIndex } = useSearchBarActions();
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
@@ -44,23 +37,14 @@ const SearchResultsMenu = ({ results }: Props) => {
           exit={{ opacity: 0 }}
           ref={clickAwayRef}
           transition={{ ease: "easeIn", duration: 0.2 }}
-          className="w-[320px] overflow-y-auto bg-[hsl(275,11%,15%)] border border-stone-300 font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+          className="w-[320px] max-h-[320px] overflow-y-auto bg-[hsl(275,11%,15%)] border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
           {results.map((wrapper, idx) => (
-            <Link
-              href={`/coin/${wrapper.id}`}
-              onClick={clearBarAndMenu}
+            <SearchResultsMenuItem
               key={wrapper.result.target + "searchResult"}
-              className={cn(
-                "indent-3 py-1 block",
-                idx === selectedIndex && "bg-zinc-600"
-              )}
-              onMouseEnter={() => setMenuSelectedIndex(idx)}
-            >
-              {wrapper.kind === "symbol"
-                ? HandleSymbolMatch(wrapper)
-                : HandleNameMatch(wrapper)}
-            </Link>
+              wrapper={wrapper}
+              idx={idx}
+            />
           ))}
           {results.length === 0 && (
             <p className="italic text-muted-foreground font-medium py-1 indent-3">

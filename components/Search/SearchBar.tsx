@@ -24,19 +24,21 @@ const SearchBar = ({ disabled, results }: Props) => {
   const router = useRouter();
   const selectedIndex = useSearchMenuSelectedIndex();
 
-  const { setMenuIsVisible, setMenuSelectedIndex, setQuery } =
+  const { setIsUsingMouse, setMenuIsVisible, setMenuSelectedIndex, setQuery } =
     useSearchBarActions();
 
   const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp") {
       // stop the default event of jumping to the front/back of input text
       e.preventDefault();
+      setIsUsingMouse(false);
       setMenuSelectedIndex(
         selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
       );
     }
     if (e.key === "ArrowDown") {
       e.preventDefault();
+      setIsUsingMouse(false);
       setMenuSelectedIndex(
         selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
       );
