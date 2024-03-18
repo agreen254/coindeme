@@ -83,4 +83,17 @@ export type MarketQueryResult = UseInfiniteQueryResult<
 export type OverlappedVolumeData = {
   name: string;
   volume: number;
-}
+};
+
+export type SearchTargets = {
+  name: string;
+  symbol: string;
+  id: string;
+}[];
+
+export type SearchResultWrapper = {
+  result: Fuzzysort.Result;
+  otherText: string; // store the name if the symbol is matched and vice-versa
+  kind: string;
+  id: string;
+};

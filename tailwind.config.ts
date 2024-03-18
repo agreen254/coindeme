@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      boxShadow: {
+        "top": "0 -0.5px 0 1px",
+      },
       backgroundImage: {
         "grad-dark":
           "linear-gradient(135deg, rgba(8,50,58,0.65), rgba(8,60,70,0) 2100px), linear-gradient(225deg, rgba(85,3,87,0.35), rgba(85,3,87,0) 1600px), linear-gradient(336deg, rgba(0,0,0,1), rgba(0,0,0,0.1) 90%)",
@@ -56,8 +59,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "bitcoin": "#F7931A",
-        "eth": "#849DFF",
+        bitcoin: "#F7931A",
+        eth: "#849DFF",
         "paynes-gray": "#646E78",
         "market-teal": "#1CB3AA",
         "market-red": "#D14E85",
