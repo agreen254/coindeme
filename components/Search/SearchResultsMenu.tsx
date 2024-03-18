@@ -2,9 +2,10 @@ import type { SearchResultWrapper } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
+import { useClickAway } from "@uidotdev/usehooks";
 import {
   useSearchBarActions,
-  useSearchBarQuery,
+  useSearchMenuIsVisible,
   useSearchMenuSelectedIndex,
 } from "@/hooks/useSearchBar";
 import React from "react";
@@ -18,26 +19,27 @@ type Props = {
 };
 
 const SearchResultsMenu = ({ results }: Props) => {
-  const query = useSearchBarQuery();
+  const isVisible = useSearchMenuIsVisible();
   const selectedIndex = useSearchMenuSelectedIndex();
-  const { setQuery, setMenuSelectedIndex } = useSearchBarActions();
-
-  const activeSearchBar = results.length !== 0 || query !== "";
+  const { setMenuIsVisible, setMenuSelectedIndex, setQuery } =
+    useSearchBarActions();
 
   const clearSearchText = () => setQuery("");
 
-  // const ref: React.MutableRefObject<HTMLDivElement> = useClickAway(() => {
-  //   setIsVisible(false);
-  // });
+  const ref: React.MutableRefObject<HTMLDivElement> = useClickAway(() => {
+    clearSearchText();
+    setMenuIsVisible(false);
+  });
 
   return (
     <AnimatePresence>
-      {activeSearchBar && (
+      {isVisible && (
         <motion.div
           key="searchResults"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          ref={ref}
           transition={{ ease: "easeIn", duration: 0.2 }}
           className="w-[320px] max-h-[240px] overflow-y-auto bg-[hsl(275,11%,15%)] border border-stone-300 font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
