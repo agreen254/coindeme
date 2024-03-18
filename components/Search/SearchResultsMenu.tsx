@@ -1,74 +1,60 @@
 import type { SearchResultWrapper } from "@/utils/types";
 
-import fuzzysort from "fuzzysort";
+import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
+import {
+  useSearchBarActions,
+  useSearchBarQuery,
+  useSearchMenuSelectedIndex,
+} from "@/hooks/useSearchBar";
+import React from "react";
 
 import { AnimatePresence } from "framer-motion";
+import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
 import Link from "next/link";
 
 type Props = {
   results: SearchResultWrapper[];
-  searchText: string;
-  
-  // eslint-disable-next-line
-  setSearchText: (text: string) => void;
 };
 
-const SearchResultsMenu = ({ results, searchText, setSearchText }: Props) => {
-  const isVisible = results.length !== 0 || searchText !== "";
+const SearchResultsMenu = ({ results }: Props) => {
+  const query = useSearchBarQuery();
+  const selectedIndex = useSearchMenuSelectedIndex();
+  const { setQuery, setMenuSelectedIndex } = useSearchBarActions();
 
-  const clearSearchText = () => setSearchText("");
+  const activeSearchBar = results.length !== 0 || query !== "";
 
-  const highlightMatchedChars = (result: Fuzzysort.Result) => {
-    return fuzzysort.highlight(result, (m, i) => (
-      <span key={result + "highlight" + i} className="font-bold text-[#4DFDFF]">
-        {m}
-      </span>
-    ));
-  };
+  const clearSearchText = () => setQuery("");
 
-  const handleNameMatch = (wrapper: SearchResultWrapper) => {
-    const symbol = wrapper.otherText;
-    return (
-      <span>
-        <span>{highlightMatchedChars(wrapper.result)} </span>
-        <span className="text-zinc-300 font-semibold">{symbol}</span>
-      </span>
-    );
-  };
-
-  const handleSymbolMatch = (wrapper: SearchResultWrapper) => {
-    const name = wrapper.otherText;
-    return (
-      <span>
-        <span>{name} </span>
-        <span className="text-zinc-300 font-semibold">
-          {highlightMatchedChars(wrapper.result)}
-        </span>
-      </span>
-    );
-  };
+  // const ref: React.MutableRefObject<HTMLDivElement> = useClickAway(() => {
+  //   setIsVisible(false);
+  // });
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {activeSearchBar && (
         <motion.div
           key="searchResults"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="w-[320px] max-h-[240px] overflow-y-auto bg-zinc-800 border border-stone-300 font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+          transition={{ ease: "easeIn", duration: 0.2 }}
+          className="w-[320px] max-h-[240px] overflow-y-auto bg-[hsl(275,11%,15%)] border border-stone-300 font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
-          {results.map((wrapper) => (
+          {results.map((wrapper, idx) => (
             <Link
               href={`/coin/${wrapper.id}`}
               onClick={clearSearchText}
               key={wrapper.result.target + "searchResult"}
-              className="indent-3 hover:bg-zinc-600 py-1 block"
+              className={cn(
+                "indent-3 py-1 block",
+                idx === selectedIndex && "bg-zinc-600"
+              )}
+              onMouseEnter={() => setMenuSelectedIndex(idx)}
             >
               {wrapper.kind === "symbol"
-                ? handleSymbolMatch(wrapper)
-                : handleNameMatch(wrapper)}
+                ? HandleSymbolMatch(wrapper)
+                : HandleNameMatch(wrapper)}
             </Link>
           ))}
           {results.length === 0 && (
