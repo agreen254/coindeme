@@ -1,6 +1,7 @@
 "use client";
 
 import { useMarketQuery } from "@/hooks/useMarketQuery";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
 import ComparisonChartsWrapper from "@/components/ComparisonCharts/ComparisonChartsWrapper";
@@ -8,7 +9,7 @@ import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrap
 
 export default function Home() {
   // TODO: get the three fields below from url search params
-  const currency = "usd";
+  const currency = useUserCurrencySetting();
   const marketFetchParam = "market_cap";
   const marketFetchOrder = "desc";
 

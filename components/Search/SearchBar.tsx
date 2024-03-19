@@ -48,6 +48,10 @@ const SearchBar = ({ disabled, results }: Props) => {
       router.push(`/coin/${results[selectedIndex].id}`);
       clearBarAndMenu();
     }
+    if (e.key === "Escape") {
+      e.preventDefault();
+      clearBarAndMenu();
+    }
   };
 
   const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
