@@ -37,7 +37,7 @@ const SearchResultsMenu = ({ results }: Props) => {
           exit={{ opacity: 0 }}
           ref={clickAwayRef}
           transition={{ ease: "easeIn", duration: 0.2 }}
-          className="w-[320px] max-h-[320px] overflow-y-auto bg-[hsl(275,11%,15%)] border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+          className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
           {results.map((wrapper, idx) => (
             <SearchResultsMenuItem
