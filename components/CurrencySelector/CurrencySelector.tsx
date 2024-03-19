@@ -12,10 +12,16 @@ import CoinsIcon from "@/Icons/Coins";
 
 const CurrencySelector = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const cleanUp = () => {
+    setIsVisible(false);
+    setSelectedIndex(-1);
+  };
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
-      setIsVisible(false);
+      cleanUp();
     }
   );
   const currencyEntries = Array.from(currencyMap.entries());
@@ -26,6 +32,15 @@ const CurrencySelector = () => {
         className="h-[42px] w-[108px] rounded-md bg-white/10 focus:outline-none focus:ring-[1px] focus:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
         onClick={() => {
           setIsVisible((prev) => !prev);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowUp") {
+          
+          }
+          if (e.key === "Escape") {
+            e.preventDefault();
+            cleanUp();
+          }
         }}
       >
         <CoinsIcon className="w-6 h-6 mr-1 inline" />
@@ -47,11 +62,15 @@ const CurrencySelector = () => {
             transition={{ ease: "easeIn", duration: 0.2 }}
             className="w-[108px] absolute top-[52px] z-10 rounded-md text-zinc-200 border border-stone-300 bg-dropdown"
           >
-            {currencyEntries.map((entry) => (
+            {currencyEntries.map((entry, idx) => (
               <button
                 key={entry[0] + "selector"}
-                className="w-full text-left indent-4 py-1 block hover:bg-zinc-600 first:rounded-t-md last:rounded-b-md"
+                className={cn(
+                  "w-full text-left indent-3 py-1 block hover:bg-zinc-600 first:rounded-t-md last:rounded-b-md",
+                  idx === selectedIndex && "bg-zinc-600"
+                )}
                 onClick={() => setIsVisible(false)}
+                onMouseEnter={() => setSelectedIndex(idx)}
               >
                 <span className="font-semibold mr-2">{entry[1]}</span>
                 <span>{entry[0].toUpperCase()}</span>
