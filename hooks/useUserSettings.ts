@@ -5,20 +5,12 @@ import { persist } from "zustand/middleware";
 
 type UserSettingsState = {
   currency: Currency;
-  actions: UserSettingsAction;
-};
-
-type UserSettingsAction = {
-  setCurrency: (currency: UserSettingsState["currency"]) => void;
 };
 
 const useUserSettingsStore = create<UserSettingsState>()(
   persist(
-    (set) => ({
+    (_) => ({
       currency: "usd",
-      actions: {
-        setCurrency: (currency) => () => set({ currency: currency }),
-      },
     }),
     {
       name: "crypto-user-settings",
@@ -28,4 +20,7 @@ const useUserSettingsStore = create<UserSettingsState>()(
 
 export const useUserCurrencySetting = () => {
   return useUserSettingsStore((state) => state.currency);
+};
+export const useUserSetCurrency = (currency: Currency) => {
+  return useUserSettingsStore.setState({ currency: currency });
 };

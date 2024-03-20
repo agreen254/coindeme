@@ -7,6 +7,10 @@ import { currencyMap } from "@/utils/maps";
 import { motion } from "framer-motion";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useState } from "react";
+import {
+  useUserCurrencySetting,
+  useUserSetCurrency as setCurrency,
+} from "@/hooks/useUserSettings";
 
 import { AnimatePresence } from "framer-motion";
 import { ChevronDown as ChevronIcon } from "lucide-react";
@@ -14,14 +18,17 @@ import CoinsIcon from "@/Icons/Coins";
 
 const CurrencySelector = () => {
   const transitionLength = 0.2; // seconds
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  // do not actually update the value in the menu until the user selects a new one
-  const [displayedIndex, setDisplayedIndex] = useState(0);
+  const currency = useUserCurrencySetting();
 
   const currencyEntries = Array.from(currencyMap.entries());
+  const currencyIndex = currencyEntries.findIndex(
+    (entry) => entry[0] === currency
+  );
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(currencyIndex);
+
+  const currencyNameFromIndex = currencyEntries[selectedIndex][0];
 
   const handleCurrencyKeyEvents = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "ArrowUp") {
@@ -38,7 +45,7 @@ const CurrencySelector = () => {
     }
     if (e.key === "Enter") {
       e.preventDefault();
-      setDisplayedIndex(selectedIndex);
+      setCurrency(currencyNameFromIndex);
       setIsVisible(!isVisible);
     }
     if (e.key === "Escape") {
@@ -63,7 +70,7 @@ const CurrencySelector = () => {
         onKeyDown={(e) => handleCurrencyKeyEvents(e)}
       >
         <CoinsIcon className="w-6 h-6 ml-2 inline" />
-        {currencyEntries[displayedIndex][0].toUpperCase()}
+        {currency.toUpperCase()}
         <ChevronIcon
           className={cn(
             "w-4 h-4 mr-2 inline transition-all",
@@ -89,7 +96,7 @@ const CurrencySelector = () => {
                   idx === selectedIndex && "bg-zinc-600"
                 )}
                 onClick={() => {
-                  setDisplayedIndex(selectedIndex);
+                  setCurrency(currencyNameFromIndex);
                   setIsVisible(false);
                 }}
                 onMouseEnter={() => setSelectedIndex(idx)}
