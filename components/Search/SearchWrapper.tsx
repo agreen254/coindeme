@@ -1,9 +1,12 @@
 "use client";
 
+import { createDropdownStore } from "@/hooks/useDropdown";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useSearchBarQuery } from "@/hooks/useSearchBar";
+import { useState } from "react";
 
+import { DropdownContext } from "@/hooks/useDropdown";
 import SearchBar from "./SearchBar";
 import SearchResultsMenu from "./SearchResultsMenu";
 
@@ -15,19 +18,23 @@ const SearchWrapper = () => {
   const targets = getSearchTargets(queryResult.data?.pages);
   const searchResults = targets ? getSearchResults(targets, searchQuery) : [];
 
-  if (!targets) {
-    return (
-      <div className="relative mb-2">
-        <SearchBar disabled results={searchResults} />
-      </div>
-    );
-  }
+  const [searchDropdownStore] = useState(() =>
+    createDropdownStore({ menuSelectedIndex: -1 })
+  );
 
   return (
     <div className="flex justify-center">
       <div className="relative mb-2">
-        <SearchBar disabled={false} results={searchResults} />
-        <SearchResultsMenu results={searchResults} />
+        <DropdownContext.Provider value={searchDropdownStore}>
+          {targets ? (
+            <>
+              <SearchBar disabled={false} results={searchResults} />
+              <SearchResultsMenu results={searchResults} />
+            </>
+          ) : (
+            <SearchBar disabled results={searchResults} />
+          )}
+        </DropdownContext.Provider>
       </div>
     </div>
   );
