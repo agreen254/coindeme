@@ -13,6 +13,8 @@ export async function POST(req: NextRequest) {
     const fetchTail = `&x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}`;
     return [fetchHead, fetchBody, fetchTail].join("");
   };
+
+  // make sure the information for the next page is contained in the response
   const responseTransfomer = (body: MarketRequest, response: Market) => {
     return <MarketResponse>{
       market: response,
