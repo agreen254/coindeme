@@ -14,8 +14,7 @@ interface DropdownState extends DropdownProps {
 }
 
 /**
- * This paired with a context provider effectively allows an indeterminate number of different
- * dropdown menus to be used without each one needing its own custom hook to manage its state.
+ * Create a small context for each dropdown menu in the app to avoid repeating logic.
  *
  * Some Docs:
  * https://docs.pmnd.rs/zustand/guides/initialize-state-with-props#common-patterns
@@ -50,4 +49,18 @@ export function useDropdownContext<T>(
   }
 
   return useStore(store, selector);
+}
+
+export function useResetDropdown() {
+  const store = useContext(DropdownContext);
+  if (!store) {
+    throw new Error("Missing a DropdownContext.Provider in the tree.");
+  }
+
+  return () =>
+    store.setState({
+      isUsingMouse: false,
+      menuIsVisible: false,
+      menuSelectedIndex: -1,
+    });
 }

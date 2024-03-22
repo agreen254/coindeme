@@ -3,13 +3,9 @@
 import { ChangeEvent, KeyboardEvent } from "react";
 import type { SearchResultWrapper } from "@/utils/types";
 
-import {
-  useClearBarAndMenu,
-  useSearchBarActions,
-  useSearchBarQuery,
-  useSearchMenuSelectedIndex,
-} from "@/hooks/useSearchBar";
 import { useRouter } from "next/navigation";
+import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
+import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
 
 import SearchIcon from "@/Icons/Search";
 
@@ -18,39 +14,58 @@ type Props = {
   results: SearchResultWrapper[];
 };
 
-const SearchBar = ({ disabled, results }: Props) => {
-  const clearBarAndMenu = useClearBarAndMenu();
-  const query = useSearchBarQuery();
+const SearchActivator = ({ disabled, results }: Props) => {
+  const query = useSearchQuery();
   const router = useRouter();
-  const selectedIndex = useSearchMenuSelectedIndex();
+  const { setQuery } = useSearchQueryActions();
+  const setIsUsingMouse = useDropdownContext((s) => s.setIsUsingMouse);
+  const [selectedIndex, setSelectedIndex] = [
+    useDropdownContext((s) => s.menuSelectedIndex),
+    useDropdownContext((s) => s.setMenuSelectedIndex),
+  ];
+  const setMenuIsVisible = useDropdownContext((s) => s.setMenuIsVisible);
 
-  const { setIsUsingMouse, setMenuIsVisible, setMenuSelectedIndex, setQuery } =
-    useSearchBarActions();
+  const resetMenu = useResetDropdown();
+  const resetBarAndMenu = () => {
+    setQuery("");
+    resetMenu();
+  };
 
   const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowUp") {
       // stop the default event of jumping to the front/back of input text
       e.preventDefault();
       setIsUsingMouse(false);
-      setMenuSelectedIndex(
+      setSelectedIndex(
         selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
       );
     }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setIsUsingMouse(false);
-      setMenuSelectedIndex(
+      setSelectedIndex(
         selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
       );
     }
+
     if (e.key === "Enter") {
       e.preventDefault();
-      router.push(`/coin/${results[selectedIndex].id}`);
-      clearBarAndMenu();
+      // if there are no results nothing will happen,
+      // otherwise if user hits enter with nothing selected then default to the first result
+      if (results.length > 0) {
+        router.push(
+          selectedIndex === -1
+            ? `/coin/${results[0].id}`
+            : `/coin/${results[selectedIndex].id}`
+        );
+        resetBarAndMenu();
+      }
     }
+
     if (e.key === "Escape") {
       e.preventDefault();
-      clearBarAndMenu();
+      resetBarAndMenu();
     }
   };
 
@@ -79,4 +94,4 @@ const SearchBar = ({ disabled, results }: Props) => {
   );
 };
 
-export default SearchBar;
+export default SearchActivator;

@@ -1,29 +1,29 @@
 "use client";
 
-import type { SearchResultWrapper } from "@/utils/types";
-
 import { motion } from "framer-motion";
 import { useClickAway } from "@uidotdev/usehooks";
-import {
-  useClearBarAndMenu,
-  useSearchMenuIsVisible,
-} from "@/hooks/useSearchBar";
-import React from "react";
+import { useSearchQueryActions } from "@/hooks/useSearch";
+import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
 
 import { AnimatePresence } from "framer-motion";
-import SearchResultsMenuItem from "./SearchResultsMenuItem";
 
 type Props = {
-  results: SearchResultWrapper[];
+  children: React.ReactNode;
 };
 
-const SearchResultsMenu = ({ results }: Props) => {
-  const clearBarAndMenu = useClearBarAndMenu();
-  const isVisible = useSearchMenuIsVisible();
+const SearchResultsMenu = ({ children }: Props) => {
+  const isVisible = useDropdownContext((s) => s.menuIsVisible);
+  const { setQuery } = useSearchQueryActions();
+  const resetMenu = useResetDropdown();
+
+  const resetBarAndMenu = () => {
+    setQuery("");
+    resetMenu();
+  };
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
-      clearBarAndMenu();
+      resetBarAndMenu();
     }
   );
 
@@ -39,18 +39,7 @@ const SearchResultsMenu = ({ results }: Props) => {
           transition={{ ease: "easeIn", duration: 0.2 }}
           className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
-          {results.map((wrapper, idx) => (
-            <SearchResultsMenuItem
-              key={wrapper.result.target + "searchResult"}
-              wrapper={wrapper}
-              idx={idx}
-            />
-          ))}
-          {results.length === 0 && (
-            <p className="italic text-muted-foreground font-medium py-1 indent-3">
-              No results found.
-            </p>
-          )}
+          {children}
         </motion.div>
       )}
     </AnimatePresence>

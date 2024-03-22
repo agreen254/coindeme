@@ -3,13 +3,8 @@
 import type { SearchResultWrapper } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
+import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
 import { useEffect, useRef } from "react";
-import {
-  useClearBarAndMenu,
-  useSearchBarActions,
-  useSearchBarIsUsingMouse,
-  useSearchMenuSelectedIndex,
-} from "@/hooks/useSearchBar";
 
 import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
 import Link from "next/link";
@@ -20,12 +15,21 @@ type Props = {
 };
 
 const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
-  const clearBarAndMenu = useClearBarAndMenu();
-  const isUsingMouse = useSearchBarIsUsingMouse();
   const ref = useRef<HTMLDivElement>(null);
-  const selectedIndex = useSearchMenuSelectedIndex();
+  const [isUsingMouse, setIsUsingMouse] = [
+    useDropdownContext((s) => s.isUsingMouse),
+    useDropdownContext((s) => s.setIsUsingMouse),
+  ];
+  const [selectedIndex, setSelectedIndex] = [
+    useDropdownContext((s) => s.menuSelectedIndex),
+    useDropdownContext((s) => s.setMenuSelectedIndex),
+  ];
 
-  const { setIsUsingMouse, setMenuSelectedIndex } = useSearchBarActions();
+  const resetMenu = useResetDropdown();
+  const resetBarAndMenu = () => {
+    setIsUsingMouse(false);
+    resetMenu();
+  };
 
   // prevent scrolling beyond what the user can see
   // the `isUsingMouse` check is necessary to prevent auto-scrolling if you navigate with the mouse
@@ -39,7 +43,7 @@ const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
     <div ref={ref}>
       <Link
         href={`/coin/${wrapper.id}`}
-        onClick={clearBarAndMenu}
+        onClick={resetBarAndMenu}
         key={wrapper.result.target + "searchResult"}
         className={cn(
           "indent-3 py-1 block",
@@ -47,7 +51,7 @@ const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
         )}
         onMouseEnter={() => {
           setIsUsingMouse(true);
-          setMenuSelectedIndex(idx);
+          setSelectedIndex(idx);
         }}
       >
         {wrapper.kind === "symbol"

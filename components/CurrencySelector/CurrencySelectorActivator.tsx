@@ -31,17 +31,20 @@ const CurrencySelectorActivator = () => {
         selectedIndex <= 0 ? currencyEntries.length - 1 : selectedIndex - 1
       );
     }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex(
         selectedIndex === currencyEntries.length - 1 ? 0 : selectedIndex + 1
       );
     }
+
     if (e.key === "Enter") {
       e.preventDefault();
       if (isVisible) setCurrency(currencyEntries[selectedIndex][0]);
       setIsVisible(!isVisible);
     }
+
     if (e.key === "Escape") {
       e.preventDefault();
       setIsVisible(false);
