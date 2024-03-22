@@ -69,6 +69,7 @@ const config = {
         "carousel-focus": "#5B9ACA",
         "carousel-selected": "#487AA1",
         "dropdown": "hsl(275,11%,15%)",
+        "menu-highlight": "#4DFDFF",
       },
       borderRadius: {
         lg: "var(--radius)",

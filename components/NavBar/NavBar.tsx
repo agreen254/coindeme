@@ -1,4 +1,4 @@
-import CurrencySelectorWrapper from "../CurrencySelector/CurrencySelector";
+import CurrencyWrapper from "../CurrencySelector/CurrencyWrapper";
 import GlobalData from "./GlobalData";
 import SearchWrapper from "../Search/SearchWrapper";
 import ThemeToggle from "./ThemeToggle";
@@ -10,7 +10,7 @@ const NavBar = () => {
         <div className="ml-12">portfolio button goes here</div>
         <div className="flex items-start gap-x-4">
           <SearchWrapper />
-          <CurrencySelectorWrapper />
+          <CurrencyWrapper />
           <div className="mr-12">
             <ThemeToggle />
           </div>
