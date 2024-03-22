@@ -8,6 +8,7 @@ import {
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
   globalResponseSchema,
+  wrappedGlobalResponseSchema,
   marketSchema,
   marketResponseSchema,
   marketRequest,
@@ -55,6 +56,7 @@ export type ComparisonData = {
 };
 
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
+export type WrappedGlobalResponse = z.infer<typeof wrappedGlobalResponseSchema>;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
