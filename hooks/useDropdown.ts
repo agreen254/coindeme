@@ -14,7 +14,7 @@ interface DropdownState extends DropdownProps {
 }
 
 /**
- * Create a small context for each dropdown menu in the app to avoid repeating logic.
+ * Create a small context that can allow any component tree to have a unique dropdown logic store.
  *
  * Some Docs:
  * https://docs.pmnd.rs/zustand/guides/initialize-state-with-props#common-patterns
@@ -37,9 +37,16 @@ export const createDropdownStore = (initProps?: Partial<DropdownProps>) => {
   }));
 };
 
+// need to use ReturnType here because we want the structure of the store,
+// not the structure of the function that created the store.
 type DropdownStore = ReturnType<typeof createDropdownStore>;
 export const DropdownContext = createContext<DropdownStore | null>(null);
 
+/**
+ * Hook to access methods and state from the parent provider.
+ *
+ * const foo = useDropdownContext(store => store.foo);
+ */
 export function useDropdownContext<T>(
   selector: (state: DropdownState) => T
 ): T {
@@ -51,6 +58,15 @@ export function useDropdownContext<T>(
   return useStore(store, selector);
 }
 
+/**
+ * Hook to reset the state of the dropdown. The returned callback itself is not a hook.
+ *
+ * This is useful because once the primary function is called at the top level of the component,
+ * the returned callback can be used anywhere it is needed.
+ *
+ * Instead of having to manually import all of the methods each time this functionality is needed,
+ * it is now hidden behind this hook.
+ */
 export function useResetDropdown() {
   const store = useContext(DropdownContext);
   if (!store) {
