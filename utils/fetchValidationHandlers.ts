@@ -77,7 +77,7 @@ export async function postValidationHandler<T, U, V = any>(
  * @param responseTransformer optional method for transforming the format of the response, takes response as input
  */
 export async function getValidationHandler<T, U = any>(
-  responseValidator: z.AnyZodObject,
+  responseValidator: z.AnyZodObject | z.ZodArray<z.AnyZodObject>,
   fetchUrlExtractor: () => string,
   responseTransformer?: (response: T, ...args: any) => U
 ) {
