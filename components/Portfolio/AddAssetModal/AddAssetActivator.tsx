@@ -8,7 +8,7 @@ type Props = {
 const AddAssetActivator = ({ setOpen }: Props) => {
   return (
     <button
-      className="bg-zinc-900/70 rounded-lg border border-zinc-800"
+      className="rounded-lg px-5 py-3 bg-zinc-600/70 border border-zinc-800"
       onClick={() => setOpen(true)}
     >
       Add Asset
