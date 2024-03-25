@@ -4,8 +4,8 @@ import type { SearchResultWrapper } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
-import { useEffect, useRef } from "react";
 
+import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
 import Link from "next/link";
 
@@ -15,35 +15,19 @@ type Props = {
 };
 
 const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isUsingMouse, setIsUsingMouse] = [
-    useDropdownContext((s) => s.isUsingMouse),
-    useDropdownContext((s) => s.setIsUsingMouse),
-  ];
+  const setIsUsingMouse = useDropdownContext((s) => s.setIsUsingMouse);
   const [selectedIndex, setSelectedIndex] = [
     useDropdownContext((s) => s.menuSelectedIndex),
     useDropdownContext((s) => s.setMenuSelectedIndex),
   ];
 
-  const resetMenu = useResetDropdown();
-  const resetBarAndMenu = () => {
-    setIsUsingMouse(false);
-    resetMenu();
-  };
-
-  // prevent scrolling beyond what the user can see
-  // the `isUsingMouse` check is necessary to prevent auto-scrolling if you navigate with the mouse
-  useEffect(() => {
-    if (idx === selectedIndex && !isUsingMouse) {
-      ref.current?.scrollIntoView({ behavior: "instant", block: "center" });
-    }
-  }, [selectedIndex, isUsingMouse]);
+  const reset = useResetDropdown();
 
   return (
-    <div ref={ref}>
+    <DropdownMenuItem index={idx}>
       <Link
         href={`/coin/${wrapper.id}`}
-        onClick={resetBarAndMenu}
+        onClick={reset}
         key={wrapper.result.target + "searchResult"}
         className={cn(
           "indent-3 py-1 block",
@@ -58,7 +42,7 @@ const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
           ? HandleSymbolMatch(wrapper)
           : HandleNameMatch(wrapper)}
       </Link>
-    </div>
+    </DropdownMenuItem>
   );
 };
 
