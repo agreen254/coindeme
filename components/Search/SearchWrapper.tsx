@@ -1,35 +1,20 @@
 "use client";
 
-import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useSearchBarQuery } from "@/hooks/useSearchBar";
+import { createDropdownStore } from "@/hooks/useDropdown";
+import { useState } from "react";
 
-import SearchBar from "./SearchBar";
-import SearchResultsMenu from "./SearchResultsMenu";
+import { DropdownContext } from "@/hooks/useDropdown";
+import Search from "./Search";
 
 const SearchWrapper = () => {
-  // re-using the same query will not cause a double fetch
-  // but need to remember to adjust it once params are stored in local storage
-  const queryResult = useMarketQuery("usd", "market_cap", "desc");
-  const searchQuery = useSearchBarQuery();
-  const targets = getSearchTargets(queryResult.data?.pages);
-  const searchResults = targets ? getSearchResults(targets, searchQuery) : [];
-
-  if (!targets) {
-    return (
-      <div className="relative mb-2">
-        <SearchBar disabled results={searchResults} />
-      </div>
-    );
-  }
+  const [searchDropdownStore] = useState(() =>
+    createDropdownStore({ menuSelectedIndex: -1 })
+  );
 
   return (
-    <div className="flex justify-center">
-      <div className="relative mb-2">
-        <SearchBar disabled={false} results={searchResults} />
-        <SearchResultsMenu results={searchResults} />
-      </div>
-    </div>
+    <DropdownContext.Provider value={searchDropdownStore}>
+      <Search />
+    </DropdownContext.Provider>
   );
 };
 

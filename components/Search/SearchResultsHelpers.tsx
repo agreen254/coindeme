@@ -4,7 +4,7 @@ import fuzzysort from "fuzzysort";
 
 const HighlightMatchedChars = (result: Fuzzysort.Result) => {
   return fuzzysort.highlight(result, (m, i) => (
-    <span key={result + "highlight" + i} className="font-bold text-[#4DFDFF]">
+    <span key={result + "highlight" + i} className="font-bold text-menu-highlight">
       {m}
     </span>
   ));
