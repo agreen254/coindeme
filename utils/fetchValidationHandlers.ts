@@ -5,23 +5,23 @@ import { z } from "zod";
 /**
  * A wrapper for handling validation of POST requests.
  * Ensures both the body and response objects follow the expected schema.
- * 
- * T is the body,
- * U is the response,
- * V is the optional transformed response.
+ *
+ * @type T is the request body type,
+ * @type U is the expected response type,
+ * @type V is the optional transformed response type.
  *
  * @param req body of the request
  * @param bodyValidator zod object used to validate the body
  * @param responseValidator zod object used to validate the response
  * @param fetchUrlExtractor method used to get the fetch url
- * @param responseTransformer optional method used to alter the default response object, takes response and request body as inputs
+ * @param responseTransformer optional method used to alter the default response object
  */
 export async function postValidationHandler<T, U, V = any>(
   req: NextRequest,
   bodyValidator: z.AnyZodObject,
   responseValidator: z.AnyZodObject | z.ZodArray<z.AnyZodObject>,
   fetchUrlExtractor: (body: T) => string,
-  responseTransformer?: (body: T, response: U) => V
+  responseTransformer?: (body: T, response: U, ...args: any) => V
 ) {
   const body: T = await req.json();
   const bodyValidation = bodyValidator.safeParse(body);
@@ -61,16 +61,16 @@ export async function postValidationHandler<T, U, V = any>(
   if (responseTransformer) {
     return NextResponse.json<V>(responseTransformer(body, data));
   } else {
-    return NextResponse.json(data as U);
+    return NextResponse.json<U>(data);
   }
 }
 
 /**
  * A wrapper for handling GET requests.
  * Ensures the response follows the expected schema.
- * 
- * T is the response,
- * U is the optional transformed response.
+ *
+ * @type T is the expected response type,
+ * @type U is the optional transformed response type.
  *
  * @param responseValidator zod object used to validate structure of response
  * @param fetchUrlExtractor method used to get the url
@@ -79,7 +79,7 @@ export async function postValidationHandler<T, U, V = any>(
 export async function getValidationHandler<T, U = any>(
   responseValidator: z.AnyZodObject,
   fetchUrlExtractor: () => string,
-  responseTransformer?: (response: T) => U
+  responseTransformer?: (response: T, ...args: any) => U
 ) {
   const fetchURL = fetchUrlExtractor();
 
@@ -109,6 +109,6 @@ export async function getValidationHandler<T, U = any>(
   if (responseTransformer) {
     return NextResponse.json<U>(responseTransformer(data));
   } else {
-    return NextResponse.json(data as T);
+    return NextResponse.json<T>(data);
   }
 }
