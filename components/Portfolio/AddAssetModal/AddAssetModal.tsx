@@ -20,7 +20,6 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
     // prevent scrolling when modal is open
     if (open) {
       document.body.style.overflowY = "hidden";
-      document.body.style.scrollbarGutter = "stable";
     } else document.body.style.overflowY = "scroll";
 
     // make sure modal is closed when user presses escape key
@@ -34,7 +33,11 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
 
   if (!open) return <></>;
   return (
-    <div className="h-full w-full flex justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10">
+    <div
+      className="h-full w-full flex justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10"
+      role="dialog"
+      aria-modal="true"
+    >
       <div
         className="w-[886px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800"
         ref={clickAwayRef}
