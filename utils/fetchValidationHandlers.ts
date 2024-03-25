@@ -59,9 +59,9 @@ export async function postValidationHandler<T, U, V = any>(
   }
 
   if (responseTransformer) {
-    return NextResponse.json<V>(responseTransformer(body, data));
+    return NextResponse.json(responseTransformer(body, data) as V);
   } else {
-    return NextResponse.json<U>(data);
+    return NextResponse.json(data as U);
   }
 }
 
@@ -107,8 +107,8 @@ export async function getValidationHandler<T, U = any>(
   }
 
   if (responseTransformer) {
-    return NextResponse.json<U>(responseTransformer(data));
+    return NextResponse.json(responseTransformer(data) as U);
   } else {
-    return NextResponse.json<T>(data);
+    return NextResponse.json(data as T);
   }
 }

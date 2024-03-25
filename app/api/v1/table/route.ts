@@ -15,8 +15,11 @@ export async function POST(req: NextRequest) {
   };
 
   // make sure the information for the next page is contained in the response
-  const responseTransfomer = (body: MarketRequest, response: Market) => {
-    return <MarketResponse>{
+  const responseTransfomer = (
+    body: MarketRequest,
+    response: Market
+  ): MarketResponse => {
+    return {
       market: response,
       nextPage: body.page + 1,
     };
