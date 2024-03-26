@@ -1,14 +1,14 @@
 "use client";
 
-import { createDropdownStore } from "@/hooks/useDropdown";
+import { createDropdownStore } from "@/hooks/useDropdownStore";
 import { useState } from "react";
 
-import { DropdownContext } from "@/hooks/useDropdown";
+import { DropdownContext } from "@/hooks/useDropdownStore";
 import Search from "./Search";
 
 const SearchWrapper = () => {
   const [searchDropdownStore] = useState(() =>
-    createDropdownStore({ menuSelectedIndex: -1 })
+    createDropdownStore({ selectedIndex: -1 })
   );
 
   return (

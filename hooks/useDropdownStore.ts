@@ -3,14 +3,14 @@ import { createContext, useContext } from "react";
 
 interface DropdownProps {
   isUsingMouse: boolean;
-  menuIsVisible: boolean;
-  menuSelectedIndex: number;
+  isVisible: boolean;
+  selectedIndex: number;
 }
 
 interface DropdownState extends DropdownProps {
   setIsUsingMouse: (status: DropdownProps["isUsingMouse"]) => void;
-  setMenuIsVisible: (status: DropdownProps["menuIsVisible"]) => void;
-  setMenuSelectedIndex: (index: DropdownProps["menuSelectedIndex"]) => void;
+  setIsVisible: (status: DropdownProps["isVisible"]) => void;
+  setSelectedIndex: (index: DropdownProps["selectedIndex"]) => void;
 }
 
 /**
@@ -24,16 +24,16 @@ interface DropdownState extends DropdownProps {
 export const createDropdownStore = (initProps?: Partial<DropdownProps>) => {
   const fallbackProps: DropdownProps = {
     isUsingMouse: false,
-    menuIsVisible: false,
-    menuSelectedIndex: -1,
+    isVisible: false,
+    selectedIndex: -1,
   };
 
   return createStore<DropdownState>()((set) => ({
     ...fallbackProps,
     ...initProps,
     setIsUsingMouse: (status) => set(() => ({ isUsingMouse: status })),
-    setMenuIsVisible: (status) => set(() => ({ menuIsVisible: status })),
-    setMenuSelectedIndex: (index) => set(() => ({ menuSelectedIndex: index })),
+    setIsVisible: (status) => set(() => ({ isVisible: status })),
+    setSelectedIndex: (index) => set(() => ({ selectedIndex: index })),
   }));
 };
 
@@ -45,11 +45,9 @@ export const DropdownContext = createContext<DropdownStore | null>(null);
 /**
  * Hook to access methods and state from the parent provider.
  *
- * const foo = useDropdownContext(store => store.foo);
+ * const foo = useDropdownStore(store => store.foo);
  */
-export function useDropdownContext<T>(
-  selector: (state: DropdownState) => T
-): T {
+export function useDropdownStore<T>(selector: (state: DropdownState) => T): T {
   const store = useContext(DropdownContext);
   if (!store) {
     throw new Error("Missing a DropdownContext.Provider in the tree.");
@@ -67,7 +65,7 @@ export function useDropdownContext<T>(
  * Instead of having to manually import all of the methods each time this functionality is needed,
  * it is now hidden behind this hook.
  */
-export function useResetDropdown() {
+export function useDropdownReset() {
   const store = useContext(DropdownContext);
   if (!store) {
     throw new Error("Missing a DropdownContext.Provider in the tree.");
@@ -76,7 +74,7 @@ export function useResetDropdown() {
   return () =>
     store.setState({
       isUsingMouse: false,
-      menuIsVisible: false,
-      menuSelectedIndex: -1,
+      isVisible: false,
+      selectedIndex: -1,
     });
 }

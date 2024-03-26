@@ -2,7 +2,7 @@ import { KeyboardEvent } from "react";
 
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
-import { useDropdownContext } from "@/hooks/useDropdown";
+import { useDropdownStore } from "@/hooks/useDropdownStore";
 import {
   useUserCurrencySetting,
   useUserSetCurrency as setCurrency,
@@ -15,14 +15,8 @@ const CurrencySelectorActivator = () => {
   const currency = useUserCurrencySetting();
   const currencyEntries = Array.from(currencyMap.entries());
 
-  const [isVisible, setIsVisible] = [
-    useDropdownContext((s) => s.menuIsVisible),
-    useDropdownContext((s) => s.setMenuIsVisible),
-  ];
-  const [selectedIndex, setSelectedIndex] = [
-    useDropdownContext((s) => s.menuSelectedIndex),
-    useDropdownContext((s) => s.setMenuSelectedIndex),
-  ];
+  const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
+    useDropdownStore((state) => state);
 
   const handleCurrencyKeyEvents = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "ArrowUp") {

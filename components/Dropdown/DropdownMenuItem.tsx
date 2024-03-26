@@ -1,18 +1,17 @@
 "use client";
 
-import { useDropdownContext } from "@/hooks/useDropdown";
+import { useDropdownStore } from "@/hooks/useDropdownStore";
 import { useEffect, useRef } from "react";
 
 type Props = {
   children: React.ReactNode;
+  className?: string;
   index: number;
 };
 
-const DropdownMenuItem = ({ children, index }: Props) => {
+const DropdownMenuItem = ({ children, className, index }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-
-  const isUsingMouse = useDropdownContext((s) => s.isUsingMouse);
-  const selectedIndex = useDropdownContext((s) => s.menuSelectedIndex);
+  const { isUsingMouse, selectedIndex } = useDropdownStore((state) => state);
 
   // prevent scrolling beyond what the user can see
   // the `isUsingMouse` check is necessary to prevent auto-scrolling if you navigate with the mouse
@@ -22,7 +21,11 @@ const DropdownMenuItem = ({ children, index }: Props) => {
     }
   }, [selectedIndex, isUsingMouse]);
 
-  return <div ref={ref}>{children}</div>;
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
 };
 
 export default DropdownMenuItem;

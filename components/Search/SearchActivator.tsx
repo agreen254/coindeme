@@ -4,7 +4,7 @@ import { ChangeEvent, KeyboardEvent } from "react";
 import type { SearchResultWrapper } from "@/utils/types";
 
 import { useRouter } from "next/navigation";
-import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
+import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
 
 import SearchIcon from "@/Icons/Search";
@@ -18,14 +18,14 @@ const SearchActivator = ({ disabled, results }: Props) => {
   const query = useSearchQuery();
   const router = useRouter();
   const { setQuery } = useSearchQueryActions();
-  const setIsUsingMouse = useDropdownContext((s) => s.setIsUsingMouse);
+  const setIsUsingMouse = useDropdownStore((s) => s.setIsUsingMouse);
   const [selectedIndex, setSelectedIndex] = [
-    useDropdownContext((s) => s.menuSelectedIndex),
-    useDropdownContext((s) => s.setMenuSelectedIndex),
+    useDropdownStore((s) => s.selectedIndex),
+    useDropdownStore((s) => s.setSelectedIndex),
   ];
-  const setMenuIsVisible = useDropdownContext((s) => s.setMenuIsVisible);
+  const setMenuIsVisible = useDropdownStore((s) => s.setIsVisible);
 
-  const resetMenu = useResetDropdown();
+  const resetMenu = useDropdownReset();
   const resetBarAndMenu = () => {
     setQuery("");
     resetMenu();

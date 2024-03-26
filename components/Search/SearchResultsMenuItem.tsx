@@ -3,7 +3,7 @@
 import type { SearchResultWrapper } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
-import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
+import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
@@ -15,13 +15,13 @@ type Props = {
 };
 
 const SearchResultsMenuItem = ({ wrapper, idx }: Props) => {
-  const setIsUsingMouse = useDropdownContext((s) => s.setIsUsingMouse);
+  const setIsUsingMouse = useDropdownStore((s) => s.setIsUsingMouse);
   const [selectedIndex, setSelectedIndex] = [
-    useDropdownContext((s) => s.menuSelectedIndex),
-    useDropdownContext((s) => s.setMenuSelectedIndex),
+    useDropdownStore((s) => s.selectedIndex),
+    useDropdownStore((s) => s.setSelectedIndex),
   ];
 
-  const reset = useResetDropdown();
+  const reset = useDropdownReset();
 
   return (
     <DropdownMenuItem index={idx}>
