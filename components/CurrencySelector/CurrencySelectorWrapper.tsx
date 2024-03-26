@@ -1,18 +1,13 @@
 "use client";
 
-import { createDropdownStore } from "@/hooks/useDropdownStore";
-import { useState } from "react";
-
 import CurrencySelector from "./CurrencySelector";
-import { DropdownContext } from "@/hooks/useDropdownStore";
+import DropdownProvider from "../Dropdown/DropdownProvider";
 
 const CurrencySelectorWrapper = () => {
-  const [store] = useState(() => createDropdownStore());
-
   return (
-    <DropdownContext.Provider value={store}>
+    <DropdownProvider>
       <CurrencySelector />
-    </DropdownContext.Provider>
+    </DropdownProvider>
   );
 };
 

@@ -1,7 +1,7 @@
 import { createStore, useStore } from "zustand";
 import { createContext, useContext } from "react";
 
-interface DropdownProps {
+export interface DropdownProps {
   isUsingMouse: boolean;
   isVisible: boolean;
   selectedIndex: number;
