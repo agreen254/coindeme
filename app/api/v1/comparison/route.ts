@@ -7,7 +7,7 @@ import {
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
 } from "@/validation/schema";
-import { postValidationHandler } from "@/utils/fetchValidationHandlers";
+import { postValidationHandler } from "@/validation/handler";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {

@@ -1,6 +1,6 @@
 import type { GlobalResponse, WrappedGlobalResponse } from "@/utils/types";
 
-import { getValidationHandler } from "@/utils/fetchValidationHandlers";
+import { getValidationHandler } from "@/validation/handler";
 import { wrappedGlobalResponseSchema } from "@/validation/schema";
 import { NextRequest } from "next/server";
 

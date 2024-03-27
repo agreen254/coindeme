@@ -2,7 +2,7 @@ import type { Market, MarketRequest, MarketResponse } from "@/utils/types";
 
 import { marketRequest, marketSchema } from "@/validation/schema";
 import { NextRequest } from "next/server";
-import { postValidationHandler } from "@/utils/fetchValidationHandlers";
+import { postValidationHandler } from "@/validation/handler";
 
 export async function POST(req: NextRequest) {
   const urlExtractor = (body: MarketRequest) => {
