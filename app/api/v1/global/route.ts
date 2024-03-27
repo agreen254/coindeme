@@ -1,36 +1,21 @@
-import { globalResponseSchema } from "@/validation/schema";
-import { NextRequest, NextResponse } from "next/server";
+import type { GlobalResponse, WrappedGlobalResponse } from "@/utils/types";
 
-// The "req" prop needs to be here, even though it isn't used, so Next will not make this a static route.
+import { getValidationHandler } from "@/validation/handler";
+import { wrappedGlobalResponseSchema } from "@/validation/schema";
+import { NextRequest } from "next/server";
+
 // eslint-disable-next-line
 export async function GET(req: NextRequest) {
-  const response = await fetch("https://api.coingecko.com/api/v3/global");
-  if (!response.ok) {
-    return NextResponse.json(
-      {
-        message: [response.status, response.statusText].join(" "),
-      },
-      {
-        status: response.status,
-      }
-    );
-  }
+  const urlExtractor = () => "https://api.coingecko.com/api/v3/global";
 
-  const data = await response.json();
+  // the default response is { data: {...} } so go ahead and unwrap it
+  const responseTransformer = (
+    response: WrappedGlobalResponse
+  ): GlobalResponse => response.data;
 
-  // returns like this: { data: {...} } so need to unwrap
-  const unwrappedData = data?.data;
-  const validation = globalResponseSchema.safeParse(unwrappedData);
-  if (!validation.success) {
-    return NextResponse.json(
-      {
-        message: "Failed to validate global data.",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
-
-  return NextResponse.json(unwrappedData);
+  return getValidationHandler<WrappedGlobalResponse, GlobalResponse>(
+    wrappedGlobalResponseSchema,
+    urlExtractor,
+    responseTransformer
+  );
 }

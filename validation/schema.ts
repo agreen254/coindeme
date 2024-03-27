@@ -62,6 +62,10 @@ export const globalResponseSchema = z.object({
   market_cap_change_percentage_24h_usd: z.number(),
 });
 
+export const wrappedGlobalResponseSchema = z.object({
+  data: globalResponseSchema,
+});
+
 export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),
