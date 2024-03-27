@@ -1,9 +1,14 @@
 "use client";
 
+import { flatMarketRes } from "@/utils/flatMarketRes";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
 
+import AddCoin from "./AddCoin";
 import CloseIcon from "@/Icons/Close";
+import DropdownProvider from "@/components/Dropdown/DropdownProvider";
+import Image from "next/image";
 
 type Props = {
   open: boolean;
@@ -12,8 +17,32 @@ type Props = {
 };
 
 const AddAssetModal = ({ open, setOpen }: Props) => {
+  const market = useMarketQuery("usd", "market_cap", "desc");
+  const [selectedCoinId, setSelectedCoinId] = useState("");
+  const [amount, setAmount] = useState<number>();
+
+  const clearOnExit = () => {
+    setOpen(false);
+    setSelectedCoinId("");
+  };
+
+  const coinInfo = flatMarketRes(market.data?.pages)?.find(
+    (coin) => coin.id === selectedCoinId
+  );
+
+  const coinImageUrl = coinInfo?.image || "";
+  const coinSymbol = coinInfo?.symbol || "";
+
+  // refs used to check if any of the dropdown menus are open
+  // if they are and the user clicks out, want the dropdown to close not the whole modal
+  const coinSearchRef = useRef<HTMLDivElement>(null);
+
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
-    () => setOpen(false)
+    () => {
+      if (!coinSearchRef?.current) {
+        clearOnExit();
+      }
+    }
   );
 
   useEffect(() => {
@@ -22,9 +51,12 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
       document.body.style.overflowY = "hidden";
     } else document.body.style.overflowY = "scroll";
 
-    // make sure modal is closed when user presses escape key
+    // make sure modal is closed when user presses escape key,
+    // but if any dropdowns are open we want those to close instead
     const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape" && !coinSearchRef?.current) {
+        clearOnExit();
+      }
     };
     document.addEventListener("keydown", close);
 
@@ -39,29 +71,51 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
       aria-modal="true"
     >
       <div
-        className="w-[886px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800"
         ref={clickAwayRef}
+        className="w-[886px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800"
       >
         <div className="p-12">
           <div className="flex justify-between">
             <h3 className="text-xl ml-1">Select Coins</h3>
             <button onClick={() => setOpen(false)}>
-              <CloseIcon className="w-6 h-6" />
+              <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
             </button>
           </div>
           <div className="flex justify-between gap-8 mt-8">
-            <div className="w-[297px] h-[241px] rounded-lg bg-zinc-800/60"></div>
+            <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg bg-zinc-800/60">
+              {selectedCoinId && (
+                <div>
+                  <Image
+                    src={coinImageUrl}
+                    alt="coin logo"
+                    width={80}
+                    height={80}
+                  />
+                  <p className="text-center text-lg font-semibold text-muted-foreground uppercase mt-2">
+                    {coinSymbol}
+                  </p>
+                </div>
+              )}
+            </div>
             <div className="w-[461px] flex flex-col gap-y-4">
-              <input
-                type="text"
-                className="h-11 pl-2 rounded-lg bg-zinc-800/60"
-                placeholder="Select coins"
-              />
-              <input
-                type="text"
-                className="h-11 pl-2 rounded-lg bg-zinc-800/60"
-                placeholder="Purchased amount"
-              />
+              <DropdownProvider>
+                <AddCoin
+                  ref={coinSearchRef}
+                  coinId={selectedCoinId}
+                  setCoinId={setSelectedCoinId}
+                />
+              </DropdownProvider>
+              <DropdownProvider>
+                <input
+                  type="tel"
+                  value={amount}
+                  onChange={(e) =>
+                    setAmount(parseFloat(e.currentTarget.value) || 0)
+                  }
+                  className="h-11 pl-2 rounded-lg bg-zinc-800/60"
+                  placeholder="Purchased amount"
+                />
+              </DropdownProvider>
               <input
                 type="text"
                 className="h-11 pl-2 rounded-lg bg-zinc-800/60"

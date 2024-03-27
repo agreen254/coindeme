@@ -7,23 +7,31 @@ import { useRouter } from "next/navigation";
 import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
 
-import SearchIcon from "@/Icons/Search";
+interface SearchActivatorProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  searchResults: SearchResultWrapper[];
+  localQuery?: string;
+  setLocalQuery?: (q: string) => void;
+}
 
-type Props = {
-  disabled: boolean;
-  results: SearchResultWrapper[];
-};
-
-const SearchActivator = ({ disabled, results }: Props) => {
-  const query = useSearchQuery();
+const SearchActivator = ({
+  searchResults,
+  localQuery,
+  setLocalQuery,
+  ...props
+}: SearchActivatorProps) => {
   const router = useRouter();
-  const { setQuery } = useSearchQueryActions();
-  const setIsUsingMouse = useDropdownStore((s) => s.setIsUsingMouse);
-  const [selectedIndex, setSelectedIndex] = [
-    useDropdownStore((s) => s.selectedIndex),
-    useDropdownStore((s) => s.setSelectedIndex),
-  ];
-  const setMenuIsVisible = useDropdownStore((s) => s.setIsVisible);
+
+  const navQuery = useSearchQuery();
+  const navSetQuery = useSearchQueryActions().setQuery;
+
+  const isUsingLocal = localQuery !== undefined && setLocalQuery !== undefined;
+  const [query, setQuery] = isUsingLocal
+    ? [localQuery, setLocalQuery]
+    : [navQuery, navSetQuery];
+
+  const { setIsUsingMouse, setIsVisible, selectedIndex, setSelectedIndex } =
+    useDropdownStore((state) => state);
 
   const resetMenu = useDropdownReset();
   const resetBarAndMenu = () => {
@@ -37,7 +45,7 @@ const SearchActivator = ({ disabled, results }: Props) => {
       e.preventDefault();
       setIsUsingMouse(false);
       setSelectedIndex(
-        selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
+        selectedIndex > 0 ? selectedIndex - 1 : searchResults.length - 1
       );
     }
 
@@ -45,7 +53,7 @@ const SearchActivator = ({ disabled, results }: Props) => {
       e.preventDefault();
       setIsUsingMouse(false);
       setSelectedIndex(
-        selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
+        selectedIndex < searchResults.length - 1 ? selectedIndex + 1 : 0
       );
     }
 
@@ -53,11 +61,11 @@ const SearchActivator = ({ disabled, results }: Props) => {
       e.preventDefault();
       // if there are no results nothing will happen,
       // otherwise if user hits enter with nothing selected then default to the first result
-      if (results.length > 0) {
+      if (searchResults.length > 0) {
         router.push(
           selectedIndex === -1
-            ? `/coin/${results[0].id}`
-            : `/coin/${results[selectedIndex].id}`
+            ? `/coin/${searchResults[0].id}`
+            : `/coin/${searchResults[selectedIndex].id}`
         );
         resetBarAndMenu();
       }
@@ -72,25 +80,21 @@ const SearchActivator = ({ disabled, results }: Props) => {
   const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.currentTarget.value);
     if (e.currentTarget.value !== "") {
-      setMenuIsVisible(true);
+      setIsVisible(true);
     } else {
-      setMenuIsVisible(false);
+      setIsVisible(false);
     }
   };
 
   return (
-    <>
-      <input
-        type="search"
-        placeholder={disabled ? "" : "Search..."}
-        value={query}
-        disabled={disabled}
-        className="pr-5 pl-12 py-[9px] w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/50 shadow-[0_-0.5px_0_1px] shadow-zinc-500/60 disabled:cursor-not-allowed"
-        onChange={(e) => handleUpdateQuery(e)}
-        onKeyDown={(e) => handleSearchKeyEvents(e)}
-      />
-      <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px]" />
-    </>
+    <input
+      type="search"
+      placeholder={props.disabled ? "" : "Search Coins"}
+      value={props.value || query}
+      onChange={(e) => handleUpdateQuery(e)}
+      onKeyDown={(e) => handleSearchKeyEvents(e)}
+      {...props}
+    />
   );
 };
 

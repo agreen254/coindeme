@@ -12,6 +12,7 @@ import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
 import Link from "next/link";
 import SearchActivator from "./SearchActivator";
+import SearchIcon from "@/Icons/Search";
 
 const Search = () => {
   // re-using the same query will not cause a double fetch
@@ -37,7 +38,12 @@ const Search = () => {
   return (
     <div className="flex justify-center">
       <div ref={clickAwayRef} className="relative mb-2">
-        <SearchActivator disabled={!targets} results={results} />
+        <SearchActivator
+          disabled={!targets}
+          searchResults={results}
+          className="pr-5 pl-12 py-[9px] w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/50 shadow-[0_-0.5px_0_1px] shadow-zinc-500/60 disabled:cursor-not-allowed"
+        />
+        <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px]" />
         <DropdownMenu
           motionKey="searchResults"
           className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
