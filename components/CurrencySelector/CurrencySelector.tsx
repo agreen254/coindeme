@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { currencyMap } from "@/utils/maps";
+import { currencyEntries, currencyMap } from "@/utils/maps";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 import { useEffect } from "react";
@@ -16,7 +16,6 @@ import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 
 const CurrencySelector = () => {
   const currency = useUserCurrencySetting();
-  const currencyEntries = Array.from(currencyMap.entries());
   const transitionLength = 0.2; // seconds
 
   const setCurrency = useUserSetCurrency;
@@ -43,8 +42,8 @@ const CurrencySelector = () => {
     <div className="relative" ref={clickAwayRef}>
       <CurrencySelectorActivator />
       <DropdownMenu
-        motionKey="currencyDropdown"
-        className="w-[108px] absolute top-[52px] group z-10 rounded-md text-zinc-200 border border-stone-300 bg-dropdown"
+        key="currencyDropdown"
+        className="w-[108px] absolute top-[52px] z-10 rounded-md text-zinc-200 border border-stone-300 bg-dropdown"
       >
         {currencyEntries.map((entry, index) => (
           <DropdownMenuItem

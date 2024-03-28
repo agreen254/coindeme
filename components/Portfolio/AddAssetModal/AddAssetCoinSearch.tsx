@@ -24,11 +24,11 @@ type Props = {
   setSelectedCoinId: (id: string) => void;
 };
 
-// forward the ref so we can keep track of when the menu is open
 const AddCoin = forwardRef(
   (
     { selectedCoinId, setSelectedCoinId }: Props,
-    ref: ForwardedRef<HTMLDivElement>
+    // forward the ref so we can keep track of when the menu is open
+    dropdownRef: ForwardedRef<HTMLDivElement>
   ) => {
     const market = useMarketQuery("usd", "market_cap", "desc");
     const [query, setQuery] = useState("");
@@ -103,46 +103,45 @@ const AddCoin = forwardRef(
             onKeyDown={(e) => handleKeyDown(e)}
           />
           <DropdownMenu
-            motionKey="searchResults"
+            key="searchResults"
+            ref={dropdownRef}
             className="w-[461px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
           >
-            <div ref={ref}>
-              {results.map((wrapper, idx) => (
-                <DropdownMenuItem
-                  index={idx}
-                  key={wrapper.result.target + "searchResult"}
+            {results.map((wrapper, idx) => (
+              <DropdownMenuItem
+                index={idx}
+                key={wrapper.result.target + "searchResult"}
+              >
+                <button
+                  className={cn(
+                    "indent-3 py-1 block w-full text-start",
+                    idx === selectedIndex && "bg-zinc-600"
+                  )}
+                  onClick={() => {
+                    setSelectedCoinId(wrapper.id);
+                    setQuery(
+                      wrapper.kind === "symbol"
+                        ? wrapper.otherText
+                        : wrapper.result.target
+                    );
+                    reset();
+                  }}
+                  onMouseEnter={() => {
+                    setIsUsingMouse(true);
+                    setSelectedIndex(idx);
+                  }}
                 >
-                  <button
-                    className={cn(
-                      "indent-3 py-1 block w-full text-start",
-                      idx === selectedIndex && "bg-zinc-600"
-                    )}
-                    onClick={() => {
-                      setSelectedCoinId(wrapper.id);
-                      setQuery(
-                        wrapper.kind === "symbol"
-                          ? wrapper.otherText
-                          : wrapper.result.target
-                      );
-                      reset();
-                    }}
-                    onMouseEnter={() => {
-                      setIsUsingMouse(true);
-                      setSelectedIndex(idx);
-                    }}
-                  >
-                    {wrapper.kind === "symbol"
-                      ? HandleSymbolMatch(wrapper)
-                      : HandleNameMatch(wrapper)}
-                  </button>
-                </DropdownMenuItem>
-              ))}
-              {results.length === 0 && (
-                <p className="italic text-muted-foreground font-medium py-1 indent-3">
-                  No results found.
-                </p>
-              )}
-            </div>
+                  {wrapper.kind === "symbol"
+                    ? HandleSymbolMatch(wrapper)
+                    : HandleNameMatch(wrapper)}
+                </button>
+              </DropdownMenuItem>
+            ))}
+            {results.length === 0 && (
+              <p className="italic text-muted-foreground font-medium py-1 indent-3">
+                No results found.
+              </p>
+            )}
           </DropdownMenu>
         </div>
       </div>

@@ -45,7 +45,7 @@ const Search = () => {
         />
         <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px]" />
         <DropdownMenu
-          motionKey="searchResults"
+          key="searchResults"
           className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
         >
           {results.map((wrapper, idx) => (

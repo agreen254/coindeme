@@ -17,6 +17,7 @@ export const currencyMap = new Map<Currency, string>([
   ["btc", "฿"],
   ["eth", "Ξ"],
 ]);
+export const currencyEntries = Array.from(currencyMap.entries());
 
 export const marketFetchParamMap = new Map<MarketFetchParam, string>([
   ["market_cap", "market cap"],

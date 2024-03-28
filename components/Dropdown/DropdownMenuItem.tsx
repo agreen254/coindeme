@@ -9,7 +9,11 @@ type Props = {
   index: number;
 };
 
-const DropdownMenuItem = ({ children, className, index }: Props) => {
+interface DropdownMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  index: number;
+}
+
+const DropdownMenuItem = ({ index, ...props }: DropdownMenuItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { isUsingMouse, selectedIndex } = useDropdownStore((state) => state);
 
@@ -22,8 +26,8 @@ const DropdownMenuItem = ({ children, className, index }: Props) => {
   }, [selectedIndex, isUsingMouse]);
 
   return (
-    <div ref={ref} className={className}>
-      {children}
+    <div ref={ref} {...props}>
+      {props.children}
     </div>
   );
 };

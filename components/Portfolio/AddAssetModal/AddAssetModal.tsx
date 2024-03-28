@@ -5,6 +5,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
+import AddAssetCurrency from "./AddAssetCurrency";
 import AddCoin from "./AddAssetCoinSearch";
 import CloseIcon from "@/Icons/Close";
 import DropdownProvider from "@/components/Dropdown/DropdownProvider";
@@ -36,10 +37,11 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   // refs used to check if any of the dropdown menus are open
   // if they are and the user clicks out, want the dropdown to close not the whole modal
   const coinSearchRef = useRef<HTMLDivElement>(null);
+  const currencyRef = useRef<HTMLDivElement>(null);
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
-      if (!coinSearchRef?.current) {
+      if (!coinSearchRef?.current && !currencyRef?.current) {
         clearOnExit();
       }
     }
@@ -106,14 +108,10 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
                 />
               </DropdownProvider>
               <DropdownProvider>
-                <input
-                  type="tel"
-                  value={amount}
-                  onChange={(e) =>
-                    setAmount(parseFloat(e.currentTarget.value) || 0)
-                  }
-                  className="h-11 pl-2 rounded-lg bg-zinc-800/60"
-                  placeholder="Purchased amount"
+                <AddAssetCurrency
+                  ref={currencyRef}
+                  amount={amount}
+                  setAmount={setAmount}
                 />
               </DropdownProvider>
               <input
