@@ -5,7 +5,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
-import AddCoin from "./AddCoin";
+import AddCoin from "./AddAssetCoinSearch";
 import CloseIcon from "@/Icons/Close";
 import DropdownProvider from "@/components/Dropdown/DropdownProvider";
 import Image from "next/image";
@@ -101,8 +101,8 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
               <DropdownProvider>
                 <AddCoin
                   ref={coinSearchRef}
-                  coinId={selectedCoinId}
-                  setCoinId={setSelectedCoinId}
+                  selectedCoinId={selectedCoinId}
+                  setSelectedCoinId={setSelectedCoinId}
                 />
               </DropdownProvider>
               <DropdownProvider>

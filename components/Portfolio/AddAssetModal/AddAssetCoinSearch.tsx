@@ -1,6 +1,9 @@
 "use client";
 
+import { KeyboardEvent } from "react";
+
 import { cn } from "@/utils/cn";
+import { coinNameFromId } from "@/utils/coinNameFromId";
 import { ForwardedRef, forwardRef } from "react";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
 import { useClickAway } from "@uidotdev/usehooks";
@@ -17,13 +20,16 @@ import {
 import SearchActivator from "@/components/Search/SearchActivator";
 
 type Props = {
-  coinId: string;
-  setCoinId: (id: string) => void;
+  selectedCoinId: string;
+  setSelectedCoinId: (id: string) => void;
 };
 
 // forward the ref so we can keep track of when the menu is open
 const AddCoin = forwardRef(
-  ({ coinId, setCoinId }: Props, ref: ForwardedRef<HTMLDivElement>) => {
+  (
+    { selectedCoinId, setSelectedCoinId }: Props,
+    ref: ForwardedRef<HTMLDivElement>
+  ) => {
     const market = useMarketQuery("usd", "market_cap", "desc");
     const [query, setQuery] = useState("");
 
@@ -38,15 +44,52 @@ const AddCoin = forwardRef(
       () => {
         reset();
 
-        // save the previous coin entered by
-        // finding the object with the corresponding id and taking the corresponding name
-        if (coinId !== "") {
-          const coinNameFromId =
-            targets?.find((target) => target.id === coinId)?.name || "";
-          setQuery(coinNameFromId);
+        // Persist the coin name if you've already selected a coin, and then
+        // use the input again but don't choose a new coin
+        if (selectedCoinId !== "") {
+          setQuery(coinNameFromId(selectedCoinId, targets));
         }
       }
     );
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "ArrowUp") {
+        // stop the default event of jumping to the front/back of input text
+        e.preventDefault();
+        setIsUsingMouse(false);
+        setSelectedIndex(
+          selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
+        );
+      }
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        setIsUsingMouse(false);
+        setSelectedIndex(
+          selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
+        );
+      }
+
+      if (e.key === "Enter") {
+        e.preventDefault();
+        // if there are no results nothing will happen,
+        // otherwise if user hits enter with nothing selected then default to the first result
+
+        if (results.length > 0) {
+          const id =
+            selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
+          setQuery(coinNameFromId(id, targets));
+          setSelectedCoinId(id);
+        }
+
+        reset();
+      }
+
+      if (e.key === "Escape") {
+        e.preventDefault();
+        reset();
+      }
+    };
 
     return (
       <div className="w-full">
@@ -57,6 +100,7 @@ const AddCoin = forwardRef(
             className="h-11 w-full p-2 rounded-lg bg-zinc-800/60"
             localQuery={query}
             setLocalQuery={setQuery}
+            onKeyDown={(e) => handleKeyDown(e)}
           />
           <DropdownMenu
             motionKey="searchResults"
@@ -74,7 +118,7 @@ const AddCoin = forwardRef(
                       idx === selectedIndex && "bg-zinc-600"
                     )}
                     onClick={() => {
-                      setCoinId(wrapper.id);
+                      setSelectedCoinId(wrapper.id);
                       setQuery(
                         wrapper.kind === "symbol"
                           ? wrapper.otherText
