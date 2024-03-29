@@ -1,8 +1,13 @@
 "use client";
 
 import { flatMarketRes } from "@/utils/flatMarketRes";
+import {
+  useAddAssetCoinId,
+  useAddAssetHasFocus,
+  useAddAssetActions,
+} from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import AddAssetCurrency from "./AddAssetCurrency";
@@ -19,12 +24,13 @@ type Props = {
 
 const AddAssetModal = ({ open, setOpen }: Props) => {
   const market = useMarketQuery("usd", "market_cap", "desc");
-  const [selectedCoinId, setSelectedCoinId] = useState("");
-  const [amount, setAmount] = useState<number>();
+  const hasFocus = useAddAssetHasFocus();
+  const selectedCoinId = useAddAssetCoinId();
+  const { setCoinId } = useAddAssetActions();
 
   const clearOnExit = () => {
     setOpen(false);
-    setSelectedCoinId("");
+    setCoinId("");
   };
 
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
@@ -56,7 +62,7 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
     // make sure modal is closed when user presses escape key,
     // but if any dropdowns are open we want those to close instead
     const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !coinSearchRef?.current) {
+      if (e.key === "Escape" && !coinSearchRef?.current && !hasFocus) {
         clearOnExit();
       }
     };
@@ -101,21 +107,13 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
             </div>
             <div className="w-[461px] flex flex-col gap-y-4">
               <DropdownProvider>
-                <AddCoin
-                  ref={coinSearchRef}
-                  selectedCoinId={selectedCoinId}
-                  setSelectedCoinId={setSelectedCoinId}
-                />
+                <AddCoin ref={coinSearchRef} />
               </DropdownProvider>
               <DropdownProvider>
-                <AddAssetCurrency
-                  ref={currencyRef}
-                  amount={amount}
-                  setAmount={setAmount}
-                />
+                <AddAssetCurrency ref={currencyRef} />
               </DropdownProvider>
               <input
-                type="text"
+                type="date"
                 className="h-11 pl-2 rounded-lg bg-zinc-800/60"
                 placeholder="Purchase date"
               />

@@ -6,6 +6,7 @@ import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { ForwardedRef, forwardRef } from "react";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+import { useAddAssetActions, useAddAssetCoinId } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownReset, useDropdownStore } from "@/hooks/useDropdownStore";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
@@ -19,18 +20,15 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
 
-type Props = {
-  selectedCoinId: string;
-  setSelectedCoinId: (id: string) => void;
-};
-
 const AddCoin = forwardRef(
   (
-    { selectedCoinId, setSelectedCoinId }: Props,
+    _,
     // forward the ref so we can keep track of when the menu is open
     dropdownRef: ForwardedRef<HTMLDivElement>
   ) => {
     const market = useMarketQuery("usd", "market_cap", "desc");
+    const coinId = useAddAssetCoinId();
+    const { setCoinId } = useAddAssetActions();
     const [query, setQuery] = useState("");
 
     const { setIsUsingMouse, selectedIndex, setSelectedIndex } =
@@ -46,8 +44,8 @@ const AddCoin = forwardRef(
 
         // Persist the coin name if you've already selected a coin, and then
         // use the input again but don't choose a new coin
-        if (selectedCoinId !== "") {
-          setQuery(coinNameFromId(selectedCoinId, targets));
+        if (coinId !== "") {
+          setQuery(coinNameFromId(coinId, targets));
         }
       }
     );
@@ -79,7 +77,7 @@ const AddCoin = forwardRef(
           const id =
             selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
           setQuery(coinNameFromId(id, targets));
-          setSelectedCoinId(id);
+          setCoinId(id);
         }
 
         reset();
@@ -118,7 +116,7 @@ const AddCoin = forwardRef(
                     idx === selectedIndex && "bg-zinc-600"
                   )}
                   onClick={() => {
-                    setSelectedCoinId(wrapper.id);
+                    setCoinId(wrapper.id);
                     setQuery(
                       wrapper.kind === "symbol"
                         ? wrapper.otherText
