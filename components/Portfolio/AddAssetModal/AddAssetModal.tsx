@@ -27,7 +27,7 @@ type Props = {
 const AddAssetModal = ({ open, setOpen }: Props) => {
   const market = useMarketQuery("usd", "market_cap", "desc");
   const coinId = useAddAssetCoinId();
-  const { setCoinId, setDate } = useAddAssetActions();
+  const { setAmount, setCoinId, setDate } = useAddAssetActions();
 
   const amount = useAddAssetAmount();
   const amountCurrency = useAddAssetAmountCurrency();
@@ -36,12 +36,12 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   const exitModal = () => {
     setOpen(false);
     setCoinId("");
+    setAmount(0);
   };
 
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
     (coin) => coin.id === coinId
   );
-
   const coinImageUrl = coinInfo?.image || "";
   const coinSymbol = coinInfo?.symbol || "";
 
@@ -49,6 +49,7 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   // if they are and the user clicks out, want the dropdown to close not the whole modal
   const coinSearchRef = useRef<HTMLDivElement>(null);
   const currencyRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
@@ -62,6 +63,34 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
     // prevent scrolling when modal is open
     if (open) {
       document.body.style.overflowY = "hidden";
+
+      // trap focus within modal while it is open
+      // https://medium.com/cstech/achieving-focus-trapping-in-a-react-modal-component-3f28f596f35b
+      const modalElement = modalRef.current;
+      const focusableElements = modalElement?.querySelectorAll(
+        // eslint-disable-next-line
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements?.[0];
+      const lastElement = focusableElements?.[focusableElements.length - 1];
+
+      const handleTabKeyPress = (e: KeyboardEvent) => {
+        if (e.key === "Tab") {
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            if (lastElement instanceof HTMLElement) lastElement.focus();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            if (firstElement instanceof HTMLElement) firstElement.focus();
+          }
+        }
+      };
+
+      modalElement?.addEventListener("keydown", handleTabKeyPress);
+
+      return () => {
+        modalElement?.removeEventListener("keydown", handleTabKeyPress);
+      };
     } else document.body.style.overflowY = "scroll";
 
     // make sure modal is closed when user presses escape key,
@@ -73,11 +102,13 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
     };
     document.addEventListener("keydown", handleModalKeys);
 
-    return () => document.removeEventListener("keydown", handleModalKeys);
+    return () => {
+      document.removeEventListener("keydown", handleModalKeys);
+    };
   }, [open, setOpen]);
 
   const handleAddAsset = () => {
-    return {
+    const data = {
       id: coinId,
       amount: amount,
       amountCurrency: amountCurrency,
@@ -90,9 +121,10 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   if (!open) return <></>;
   return (
     <div
-      className="h-full w-full flex justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10"
       role="dialog"
       aria-modal="true"
+      ref={modalRef}
+      className="h-full w-full flex justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10"
     >
       <div
         ref={clickAwayRef}
