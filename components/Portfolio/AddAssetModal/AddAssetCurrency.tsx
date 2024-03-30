@@ -1,12 +1,13 @@
 import { KeyboardEvent } from "react";
 
+import { addAsset } from "@/utils/addAsset";
 import { cn } from "@/utils/cn";
 import { currencyEntries, currencyMap } from "@/utils/maps";
-import { forwardRef, type ForwardedRef } from "react";
 import {
   useAddAssetActions,
   useAddAssetAmount,
   useAddAssetAmountCurrency,
+  useRetrieveAsset,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownReset, useDropdownStore } from "@/hooks/useDropdownStore";
@@ -15,13 +16,17 @@ import { ChevronDown as ChevronDownIcon } from "lucide-react";
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
 
-const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
+const AddAssetCurrency = () => {
   const amount = useAddAssetAmount();
   const amountCurrency = useAddAssetAmountCurrency();
   const reset = useDropdownReset();
-  const { setAmount, setAmountCurrency } = useAddAssetActions();
+  const { setAmount, setAmountCurrency, setCoinId, setModalIsOpen } =
+    useAddAssetActions();
   const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
     useDropdownStore((store) => store);
+
+  const currencyName =
+    selectedIndex === -1 ? "usd" : currencyEntries[selectedIndex][0];
 
   const clickAwayRef: React.MutableRefObject<HTMLInputElement> = useClickAway(
     () => {
@@ -30,10 +35,21 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
     }
   );
 
+  const exitModal = () => {
+    setModalIsOpen(false);
+    setCoinId("");
+    setAmount(0);
+  };
+  const asset = useRetrieveAsset();
+  const handleAddAsset = () => {
+    const added = addAsset(asset);
+    if (added) exitModal();
+  };
+
   const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      alert("submit!");
+      handleAddAsset();
     }
   };
 
@@ -55,7 +71,7 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (selectedIndex >= 0) {
-        setAmountCurrency(currencyEntries[selectedIndex][0]);
+        setAmountCurrency(currencyName);
       }
       setIsVisible(!isVisible);
       setSelectedIndex(-1);
@@ -86,7 +102,7 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
       </>
       <>
         <label htmlFor="assetCurrency" className="sr-only">
-          select asset purchase currency
+          select purchase currency
         </label>
         <button
           id="assetCurrency"
@@ -108,7 +124,6 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
           </span>
         </button>
         <DropdownMenu
-          ref={ref}
           key="addCurrency"
           className="absolute w-[5rem] top-[52px] right-0 rounded-md bg-dropdown border border-stone-300"
         >
@@ -125,7 +140,7 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
                 className="w-full text-center py-1 block"
                 onMouseEnter={() => setSelectedIndex(idx)}
                 onClick={() => {
-                  setAmountCurrency(currencyEntries[selectedIndex][0]);
+                  setAmountCurrency(currencyName);
                   reset();
                 }}
               >
@@ -138,8 +153,6 @@ const AddAssetCurrency = forwardRef((_, ref: ForwardedRef<HTMLDivElement>) => {
       </>
     </div>
   );
-});
+};
 
 export default AddAssetCurrency;
-
-AddAssetCurrency.displayName = "AddAssetCurrency";

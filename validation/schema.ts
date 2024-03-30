@@ -9,18 +9,18 @@ export const validCurrenciesSchema = z.union([
   z.literal("eth"),
 ]);
 
-export const addAssetSchema = z.object({
-  id: z.string().min(1, { message: "Please select a coin to add." }),
+export const assetSchema = z.object({
+  id: z.string().min(1, { message: "Please select a coin to add" }),
   amount: z
     .number()
-    .min(1e-10, { message: "Assets must have a non-zero amount." }),
+    .min(1e-15, { message: "Assets must have a non-zero value" }),
 
-  amountCurrency: z.string(),
+  amountCurrency: validCurrenciesSchema,
   date: z
     .date()
-    .max(new Date(), { message: "Assets cannot be purchased in the future." })
+    .max(new Date(), { message: "Assets cannot be purchased in the future" })
     .min(new Date(lastYear()), {
-      message: "Assets must be purchased before one full year ago.",
+      message: "Assets must be purchased before one full year ago",
     }),
 });
 

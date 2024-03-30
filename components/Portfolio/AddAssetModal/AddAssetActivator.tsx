@@ -1,15 +1,12 @@
-type Props = {
-  open: boolean;
-  
-  // eslint-disable-next-line
-  setOpen: (status: boolean) => void;
-};
+import { useAddAssetActions } from "@/hooks/useAddAsset";
 
-const AddAssetActivator = ({ setOpen }: Props) => {
+const AddAssetActivator = () => {
+  const { setModalIsOpen } = useAddAssetActions();
+
   return (
     <button
       className="rounded-lg px-5 py-3 bg-zinc-600/70 border border-zinc-800"
-      onClick={() => setOpen(true)}
+      onClick={() => setModalIsOpen(true)}
     >
       Add Asset
     </button>

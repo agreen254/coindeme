@@ -1,4 +1,5 @@
-import { Currency } from "@/utils/types";
+import type { Currency } from "@/utils/types";
+
 import { create } from "zustand";
 
 type AddAssetState = {
@@ -6,6 +7,7 @@ type AddAssetState = {
   amountCurrency: Currency;
   coinId: string;
   date: string;
+  modalIsOpen: boolean;
 
   actions: AddAssetActions;
 };
@@ -15,6 +17,7 @@ type AddAssetActions = {
   setAmountCurrency: (currency: Currency) => void;
   setCoinId: (id: string) => void;
   setDate: (date: string) => void;
+  setModalIsOpen: (status: boolean) => void;
 };
 
 const useAddAssetStore = create<AddAssetState>((set) => ({
@@ -22,12 +25,14 @@ const useAddAssetStore = create<AddAssetState>((set) => ({
   amountCurrency: "usd",
   coinId: "",
   date: "",
+  modalIsOpen: false,
 
   actions: {
     setAmount: (amount) => set(() => ({ amount: amount })),
     setAmountCurrency: (currency) => set(() => ({ amountCurrency: currency })),
     setCoinId: (id) => set(() => ({ coinId: id })),
     setDate: (date) => set(() => ({ date: date })),
+    setModalIsOpen: (status) => set(() => ({ modalIsOpen: status })),
   },
 }));
 
@@ -43,7 +48,18 @@ export const useAddAssetCoinId = () => {
 export const useAddAssetDate = () => {
   return useAddAssetStore((state) => state.date);
 };
+export const useAddAssetModalIsOpen = () => {
+  return useAddAssetStore((state) => state.modalIsOpen);
+};
 
 export const useAddAssetActions = () => {
   return useAddAssetStore((state) => state.actions);
+};
+export const useRetrieveAsset = () => {
+  return useAddAssetStore((state) => ({
+    amount: Number.isNaN(state.amount) ? 0 : state.amount,
+    amountCurrency: state.amountCurrency,
+    id: state.coinId,
+    date: new Date(state.date),
+  }));
 };

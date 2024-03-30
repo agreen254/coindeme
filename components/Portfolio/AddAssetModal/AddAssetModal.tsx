@@ -1,16 +1,18 @@
 "use client";
 
+import { addAsset } from "@/utils/addAsset";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import {
   useAddAssetActions,
-  useAddAssetAmount,
-  useAddAssetAmountCurrency,
   useAddAssetCoinId,
   useAddAssetDate,
+  useAddAssetModalIsOpen,
+  useRetrieveAsset,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useEffect, useRef } from "react";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
+import { useModalListener } from "@/hooks/useModalListener";
+import { useRef } from "react";
 
 import AddAssetCurrency from "./AddAssetCurrency";
 import AddCoin from "./AddAssetCoinSearch";
@@ -18,25 +20,20 @@ import CloseIcon from "@/Icons/Close";
 import DropdownProvider from "@/components/Dropdown/DropdownProvider";
 import Image from "next/image";
 
-type Props = {
-  open: boolean;
-  // eslint-disable-next-line
-  setOpen: (status: boolean) => void;
-};
+const AddAssetModal = () => {
+  const isOpen = useAddAssetModalIsOpen();
+  const { setAmount, setCoinId, setDate, setModalIsOpen } =
+    useAddAssetActions();
 
-const AddAssetModal = ({ open, setOpen }: Props) => {
   const market = useMarketQuery("usd", "market_cap", "desc");
   const coinId = useAddAssetCoinId();
-  const { setAmount, setCoinId, setDate } = useAddAssetActions();
-
-  const amount = useAddAssetAmount();
-  const amountCurrency = useAddAssetAmountCurrency();
   const date = useAddAssetDate();
 
   const exitModal = () => {
-    setOpen(false);
+    setModalIsOpen(false);
     setCoinId("");
     setAmount(0);
+    setDate("");
   };
 
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
@@ -45,80 +42,21 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   const coinImageUrl = coinInfo?.image || "";
   const coinSymbol = coinInfo?.symbol || "";
 
-  // refs used to check if any of the dropdown menus are open
-  // if they are and the user clicks out, want the dropdown to close not the whole modal
-  const coinSearchRef = useRef<HTMLDivElement>(null);
-  const currencyRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
-    () => {
-      if (!coinSearchRef?.current && !currencyRef?.current) {
-        exitModal();
-      }
-    }
+    () => exitModal()
   );
 
-  useEffect(() => {
-    // prevent scrolling when modal is open
-    if (open) {
-      document.body.style.overflowY = "hidden";
+  useModalListener(modalRef, isOpen, exitModal);
 
-      // trap focus within modal while it is open
-      // https://medium.com/cstech/achieving-focus-trapping-in-a-react-modal-component-3f28f596f35b
-      const modalElement = modalRef.current;
-      const focusableElements = modalElement?.querySelectorAll(
-        // eslint-disable-next-line
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      const firstElement = focusableElements?.[0];
-      const lastElement = focusableElements?.[focusableElements.length - 1];
-
-      const handleTabKeyPress = (e: KeyboardEvent) => {
-        if (e.key === "Tab") {
-          if (e.shiftKey && document.activeElement === firstElement) {
-            e.preventDefault();
-            if (lastElement instanceof HTMLElement) lastElement.focus();
-          } else if (!e.shiftKey && document.activeElement === lastElement) {
-            e.preventDefault();
-            if (firstElement instanceof HTMLElement) firstElement.focus();
-          }
-        }
-      };
-
-      modalElement?.addEventListener("keydown", handleTabKeyPress);
-
-      return () => {
-        modalElement?.removeEventListener("keydown", handleTabKeyPress);
-      };
-    } else document.body.style.overflowY = "scroll";
-
-    // make sure modal is closed when user presses escape key,
-    // but if any dropdowns are open we want those to close instead
-    const handleModalKeys = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (!coinSearchRef?.current && !currencyRef?.current) exitModal();
-      }
-    };
-    document.addEventListener("keydown", handleModalKeys);
-
-    return () => {
-      document.removeEventListener("keydown", handleModalKeys);
-    };
-  }, [open, setOpen]);
-
+  const asset = useRetrieveAsset();
   const handleAddAsset = () => {
-    const data = {
-      id: coinId,
-      amount: amount,
-      amountCurrency: amountCurrency,
-
-      // date html input always stores format as yyyy-mm-dd
-      date: date,
-    };
+    const added = addAsset(asset);
+    if (added) exitModal();
   };
 
-  if (!open) return <></>;
+  if (!isOpen) return <></>;
   return (
     <div
       role="dialog"
@@ -132,11 +70,11 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
       >
         <div className="p-12">
           <div className="flex justify-between">
-            <h3 className="text-xl ml-1">Select Coins</h3>
+            <h2 className="text-xl ml-1">Select Coins</h2>
             <label htmlFor="closeModal" className="sr-only">
               Close Modal
             </label>
-            <button id="closeModal" onClick={() => setOpen(false)}>
+            <button id="closeModal" onClick={() => setModalIsOpen(false)}>
               <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
             </button>
           </div>
@@ -158,10 +96,10 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
             </div>
             <div className="w-[461px] flex flex-col gap-y-4">
               <DropdownProvider>
-                <AddCoin ref={coinSearchRef} />
+                <AddCoin />
               </DropdownProvider>
               <DropdownProvider>
-                <AddAssetCurrency ref={currencyRef} />
+                <AddAssetCurrency />
               </DropdownProvider>
               <>
                 <label htmlFor="date" className="sr-only">
@@ -173,7 +111,7 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
                   className="h-11 pl-2 pr-4 rounded-lg bg-zinc-800/60"
                   placeholder="Purchase date"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") alert("submit!");
+                    if (e.key === "Enter") handleAddAsset();
                   }}
                   onChange={(e) => {
                     setDate(e.currentTarget.value);
@@ -188,7 +126,12 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
                 >
                   Cancel
                 </button>
-                <button className="w-1/2 rounded-md bg-[rgba(52,211,153,0.25)] shadow-[0_-1px_0_1px] shadow-zinc-500/60">
+                <button
+                  className="w-1/2 rounded-md bg-teal-950 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
+                  onClick={() => {
+                    handleAddAsset();
+                  }}
+                >
                   Add Asset
                 </button>
               </div>

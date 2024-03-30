@@ -11,7 +11,7 @@ interface SearchActivatorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   searchResults: SearchResultWrapper[];
   localQuery?: string;
-  setLocalQuery?: (q: string) => void;
+  setLocalQuery?: (_q: string) => void;
 }
 
 const SearchActivator = ({
