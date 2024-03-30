@@ -3,12 +3,6 @@
 import { useDropdownStore } from "@/hooks/useDropdownStore";
 import { useEffect, useRef } from "react";
 
-type Props = {
-  children: React.ReactNode;
-  className?: string;
-  index: number;
-};
-
 interface DropdownMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   index: number;
 }

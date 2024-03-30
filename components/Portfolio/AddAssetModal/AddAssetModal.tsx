@@ -2,9 +2,11 @@
 
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import {
-  useAddAssetCoinId,
-  useAddAssetHasFocus,
   useAddAssetActions,
+  useAddAssetAmount,
+  useAddAssetAmountCurrency,
+  useAddAssetCoinId,
+  useAddAssetDate,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useEffect, useRef } from "react";
@@ -24,17 +26,20 @@ type Props = {
 
 const AddAssetModal = ({ open, setOpen }: Props) => {
   const market = useMarketQuery("usd", "market_cap", "desc");
-  const hasFocus = useAddAssetHasFocus();
-  const selectedCoinId = useAddAssetCoinId();
-  const { setCoinId } = useAddAssetActions();
+  const coinId = useAddAssetCoinId();
+  const { setCoinId, setDate } = useAddAssetActions();
 
-  const clearOnExit = () => {
+  const amount = useAddAssetAmount();
+  const amountCurrency = useAddAssetAmountCurrency();
+  const date = useAddAssetDate();
+
+  const exitModal = () => {
     setOpen(false);
     setCoinId("");
   };
 
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
-    (coin) => coin.id === selectedCoinId
+    (coin) => coin.id === coinId
   );
 
   const coinImageUrl = coinInfo?.image || "";
@@ -48,7 +53,7 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
       if (!coinSearchRef?.current && !currencyRef?.current) {
-        clearOnExit();
+        exitModal();
       }
     }
   );
@@ -61,15 +66,26 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
 
     // make sure modal is closed when user presses escape key,
     // but if any dropdowns are open we want those to close instead
-    const close = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !coinSearchRef?.current && !hasFocus) {
-        clearOnExit();
+    const handleModalKeys = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (!coinSearchRef?.current && !currencyRef?.current) exitModal();
       }
     };
-    document.addEventListener("keydown", close);
+    document.addEventListener("keydown", handleModalKeys);
 
-    return () => document.removeEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", handleModalKeys);
   }, [open, setOpen]);
+
+  const handleAddAsset = () => {
+    return {
+      id: coinId,
+      amount: amount,
+      amountCurrency: amountCurrency,
+
+      // date html input always stores format as yyyy-mm-dd
+      date: date,
+    };
+  };
 
   if (!open) return <></>;
   return (
@@ -85,13 +101,16 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
         <div className="p-12">
           <div className="flex justify-between">
             <h3 className="text-xl ml-1">Select Coins</h3>
-            <button onClick={() => setOpen(false)}>
+            <label htmlFor="closeModal" className="sr-only">
+              Close Modal
+            </label>
+            <button id="closeModal" onClick={() => setOpen(false)}>
               <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
             </button>
           </div>
           <div className="flex justify-between gap-8 mt-8">
             <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg bg-zinc-800/60">
-              {selectedCoinId && (
+              {coinId && (
                 <div>
                   <Image
                     src={coinImageUrl}
@@ -112,11 +131,35 @@ const AddAssetModal = ({ open, setOpen }: Props) => {
               <DropdownProvider>
                 <AddAssetCurrency ref={currencyRef} />
               </DropdownProvider>
-              <input
-                type="date"
-                className="h-11 pl-2 rounded-lg bg-zinc-800/60"
-                placeholder="Purchase date"
-              />
+              <>
+                <label htmlFor="date" className="sr-only">
+                  select date of asset purchase
+                </label>
+                <input
+                  type="date"
+                  id="date"
+                  className="h-11 pl-2 pr-4 rounded-lg bg-zinc-800/60"
+                  placeholder="Purchase date"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") alert("submit!");
+                  }}
+                  onChange={(e) => {
+                    setDate(e.currentTarget.value);
+                  }}
+                  value={date}
+                />
+              </>
+              <div className="flex justify-between gap-x-4 mt-4 text-center">
+                <button
+                  className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
+                  onClick={() => exitModal()}
+                >
+                  Cancel
+                </button>
+                <button className="w-1/2 rounded-md bg-[rgba(52,211,153,0.25)] shadow-[0_-1px_0_1px] shadow-zinc-500/60">
+                  Add Asset
+                </button>
+              </div>
             </div>
           </div>
         </div>

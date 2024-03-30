@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { currencyEntries, currencyMap } from "@/utils/maps";
+import { currencyEntries } from "@/utils/maps";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 import { useEffect } from "react";

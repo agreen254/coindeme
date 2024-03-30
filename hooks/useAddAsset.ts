@@ -2,10 +2,10 @@ import { Currency } from "@/utils/types";
 import { create } from "zustand";
 
 type AddAssetState = {
-  amount: number | undefined;
+  amount: number;
   amountCurrency: Currency;
   coinId: string;
-  hasFocus: boolean;
+  date: string;
 
   actions: AddAssetActions;
 };
@@ -14,20 +14,20 @@ type AddAssetActions = {
   setAmount: (amount: number) => void;
   setAmountCurrency: (currency: Currency) => void;
   setCoinId: (id: string) => void;
-  setFocus: (status: boolean) => void;
+  setDate: (date: string) => void;
 };
 
 const useAddAssetStore = create<AddAssetState>((set) => ({
-  amount: undefined,
+  amount: 0,
   amountCurrency: "usd",
   coinId: "",
-  hasFocus: false,
+  date: "",
 
   actions: {
     setAmount: (amount) => set(() => ({ amount: amount })),
     setAmountCurrency: (currency) => set(() => ({ amountCurrency: currency })),
     setCoinId: (id) => set(() => ({ coinId: id })),
-    setFocus: (status) => set((state) => ({ hasFocus: status })),
+    setDate: (date) => set(() => ({ date: date })),
   },
 }));
 
@@ -40,8 +40,8 @@ export const useAddAssetAmountCurrency = () => {
 export const useAddAssetCoinId = () => {
   return useAddAssetStore((state) => state.coinId);
 };
-export const useAddAssetHasFocus = () => {
-  return useAddAssetStore((state) => state.hasFocus);
+export const useAddAssetDate = () => {
+  return useAddAssetStore((state) => state.date);
 };
 
 export const useAddAssetActions = () => {

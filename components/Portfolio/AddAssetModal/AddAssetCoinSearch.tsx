@@ -31,7 +31,7 @@ const AddCoin = forwardRef(
     const { setCoinId } = useAddAssetActions();
     const [query, setQuery] = useState("");
 
-    const { setIsUsingMouse, selectedIndex, setSelectedIndex } =
+    const { isVisible, setIsUsingMouse, selectedIndex, setSelectedIndex } =
       useDropdownStore((state) => state);
 
     const targets = getSearchTargets(market.data?.pages);
@@ -70,16 +70,15 @@ const AddCoin = forwardRef(
 
       if (e.key === "Enter") {
         e.preventDefault();
+        if (!isVisible) alert("submit");
         // if there are no results nothing will happen,
         // otherwise if user hits enter with nothing selected then default to the first result
-
         if (results.length > 0) {
           const id =
             selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
           setQuery(coinNameFromId(id, targets));
           setCoinId(id);
         }
-
         reset();
       }
 
@@ -92,7 +91,12 @@ const AddCoin = forwardRef(
     return (
       <div className="w-full">
         <div ref={clickAwayRef} className="relative">
+          <label htmlFor="coinSearch" className="sr-only">
+            search coins to select asset
+          </label>
           <SearchActivator
+            id="coinSearch"
+            autoComplete="off"
             disabled={!targets}
             searchResults={results}
             className="h-11 w-full p-2 rounded-lg bg-zinc-800/60"
