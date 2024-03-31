@@ -1,13 +1,12 @@
 import { KeyboardEvent } from "react";
 
-import { addAsset } from "@/utils/addAsset";
 import { cn } from "@/utils/cn";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import {
+  useAddAsset,
   useAddAssetActions,
   useAddAssetAmount,
   useAddAssetAmountCurrency,
-  useRetrieveAsset,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownReset, useDropdownStore } from "@/hooks/useDropdownStore";
@@ -20,8 +19,7 @@ const AddAssetCurrency = () => {
   const amount = useAddAssetAmount();
   const amountCurrency = useAddAssetAmountCurrency();
   const reset = useDropdownReset();
-  const { setAmount, setAmountCurrency, setCoinId, setModalIsOpen } =
-    useAddAssetActions();
+  const { setAmount, setAmountCurrency } = useAddAssetActions();
   const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
     useDropdownStore((store) => store);
 
@@ -35,16 +33,7 @@ const AddAssetCurrency = () => {
     }
   );
 
-  const exitModal = () => {
-    setModalIsOpen(false);
-    setCoinId("");
-    setAmount(0);
-  };
-  const asset = useRetrieveAsset();
-  const handleAddAsset = () => {
-    const added = addAsset(asset);
-    if (added) exitModal();
-  };
+  const handleAddAsset = useAddAsset();
 
   const handleKeyDownInput = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

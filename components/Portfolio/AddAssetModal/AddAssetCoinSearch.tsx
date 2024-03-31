@@ -5,7 +5,11 @@ import { KeyboardEvent } from "react";
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
-import { useAddAssetActions, useAddAssetCoinId } from "@/hooks/useAddAsset";
+import {
+  useAddAsset,
+  useAddAssetActions,
+  useAddAssetCoinId,
+} from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useDropdownReset, useDropdownStore } from "@/hooks/useDropdownStore";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
@@ -64,7 +68,7 @@ const AddCoin = () => {
 
     if (e.key === "Enter") {
       e.preventDefault();
-      if (!isVisible) alert("submit");
+      if (!isVisible) handleAddAsset();
       // if there are no results nothing will happen,
       // otherwise if user hits enter with nothing selected then default to the first result
       if (results.length > 0) {
@@ -81,6 +85,8 @@ const AddCoin = () => {
       reset();
     }
   };
+
+  const handleAddAsset = useAddAsset();
 
   return (
     <div className="w-full">

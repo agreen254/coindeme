@@ -1,5 +1,6 @@
 import type { Currency } from "@/utils/types";
 
+import { addAsset } from "@/utils/addAsset";
 import { create } from "zustand";
 
 type AddAssetState = {
@@ -62,4 +63,19 @@ export const useRetrieveAsset = () => {
     id: state.coinId,
     date: new Date(state.date),
   }));
+};
+export const useAddAsset = () => {
+  const exitModal = () =>
+    useAddAssetStore.setState((state) => ({
+      ...state,
+      modalIsOpen: false,
+      coinId: "",
+      amount: 0,
+    }));
+  const asset = useRetrieveAsset();
+
+  return () => {
+    const added = addAsset(asset);
+    if (added) exitModal();
+  };
 };

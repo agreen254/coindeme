@@ -1,13 +1,12 @@
 "use client";
 
-import { addAsset } from "@/utils/addAsset";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import {
+  useAddAsset,
   useAddAssetActions,
   useAddAssetCoinId,
   useAddAssetDate,
   useAddAssetModalIsOpen,
-  useRetrieveAsset,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
@@ -50,11 +49,7 @@ const AddAssetModal = () => {
 
   useModalListener(modalRef, isOpen, exitModal);
 
-  const asset = useRetrieveAsset();
-  const handleAddAsset = () => {
-    const added = addAsset(asset);
-    if (added) exitModal();
-  };
+  const handleAddAsset = useAddAsset();
 
   if (!isOpen) return <></>;
   return (
@@ -127,7 +122,7 @@ const AddAssetModal = () => {
                   Cancel
                 </button>
                 <button
-                  className="w-1/2 rounded-md bg-teal-950 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
+                  className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
                   onClick={() => {
                     handleAddAsset();
                   }}
