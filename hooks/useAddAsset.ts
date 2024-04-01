@@ -71,11 +71,15 @@ export const useAddAsset = () => {
       modalIsOpen: false,
       coinId: "",
       amount: 0,
+      date: "",
     }));
   const asset = useRetrieveAsset();
 
   return () => {
     const added = addAsset(asset);
-    if (added) exitModal();
+    if (added) {
+      // do processing and add to local storage here with another setState call
+      exitModal();
+    }
   };
 };

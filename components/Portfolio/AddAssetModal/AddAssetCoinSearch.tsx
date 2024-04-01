@@ -23,7 +23,7 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
 
-const AddCoin = () => {
+const AddAssetCoinSearch = () => {
   const market = useMarketQuery("usd", "market_cap", "desc");
   const coinId = useAddAssetCoinId();
   const { setCoinId } = useAddAssetActions();
@@ -149,6 +149,4 @@ const AddCoin = () => {
   );
 };
 
-export default AddCoin;
-
-AddCoin.displayName = "AddCoin";
+export default AddAssetCoinSearch;

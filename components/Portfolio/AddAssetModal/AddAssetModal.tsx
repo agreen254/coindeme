@@ -14,7 +14,7 @@ import { useModalListener } from "@/hooks/useModalListener";
 import { useRef } from "react";
 
 import AddAssetCurrency from "./AddAssetCurrency";
-import AddCoin from "./AddAssetCoinSearch";
+import AddAssetCoinSearch from "./AddAssetCoinSearch";
 import CloseIcon from "@/Icons/Close";
 import DropdownProvider from "@/components/Dropdown/DropdownProvider";
 import Image from "next/image";
@@ -91,7 +91,7 @@ const AddAssetModal = () => {
             </div>
             <div className="w-[461px] flex flex-col gap-y-4">
               <DropdownProvider>
-                <AddCoin />
+                <AddAssetCoinSearch />
               </DropdownProvider>
               <DropdownProvider>
                 <AddAssetCurrency />
