@@ -1,7 +1,8 @@
-import type { Currency } from "@/utils/types";
+import type { Asset, Currency } from "@/utils/types";
 
-import { addAsset } from "@/utils/addAsset";
+import { assetSchema } from "@/validation/schema";
 import { create } from "zustand";
+import toast from "react-hot-toast";
 
 type AddAssetState = {
   amount: number;
@@ -56,7 +57,17 @@ export const useAddAssetModalIsOpen = () => {
 export const useAddAssetActions = () => {
   return useAddAssetStore((state) => state.actions);
 };
-export const useRetrieveAsset = () => {
+export const useAddAssetResetModal = () => {
+  return () =>
+    useAddAssetStore.setState((state) => ({
+      ...state,
+      modalIsOpen: false,
+      coinId: "",
+      amount: 0,
+      date: "",
+    }));
+};
+export const useAddAssetRetrieveAsset = () => {
   return useAddAssetStore((state) => ({
     amount: Number.isNaN(state.amount) ? 0 : state.amount,
     amountCurrency: state.amountCurrency,
@@ -65,21 +76,27 @@ export const useRetrieveAsset = () => {
   }));
 };
 export const useAddAsset = () => {
-  const exitModal = () =>
-    useAddAssetStore.setState((state) => ({
-      ...state,
-      modalIsOpen: false,
-      coinId: "",
-      amount: 0,
-      date: "",
-    }));
-  const asset = useRetrieveAsset();
+  const resetModal = useAddAssetResetModal();
+  const asset = useAddAssetRetrieveAsset();
 
   return () => {
-    const added = addAsset(asset);
-    if (added) {
+    const isValidAsset = validateAsset(asset);
+    if (isValidAsset) {
       // do processing and add to local storage here with another setState call
-      exitModal();
+      resetModal();
     }
   };
 };
+
+function validateAsset(asset: Asset) {
+  const validation = assetSchema.safeParse(asset);
+
+  if (!validation.success) {
+    const errors = validation.error.errors.map((err) => err.message);
+    errors.forEach((err) => toast.error(err));
+    return false;
+  }
+
+  toast.success("Asset added.");
+  return true;
+}

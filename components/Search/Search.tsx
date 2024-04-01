@@ -27,11 +27,11 @@ const Search = () => {
   const targets = getSearchTargets(market.data?.pages);
   const results = targets ? getSearchResults(targets, query) : [];
 
-  const reset = useDropdownReset();
+  const resetDropdown = useDropdownReset();
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
       setQuery("");
-      reset();
+      resetDropdown();
     }
   );
 
@@ -55,7 +55,7 @@ const Search = () => {
             >
               <Link
                 href={`/coin/${wrapper.id}`}
-                onClick={reset}
+                onClick={resetDropdown}
                 className={cn(
                   "indent-3 py-1 block",
                   idx === selectedIndex && "bg-zinc-600"

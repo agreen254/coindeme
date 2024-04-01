@@ -6,6 +6,7 @@ import {
   useAddAssetActions,
   useAddAssetCoinId,
   useAddAssetDate,
+  useAddAssetResetModal,
   useAddAssetModalIsOpen,
 } from "@/hooks/useAddAsset";
 import { useClickAway } from "@uidotdev/usehooks";
@@ -21,19 +22,13 @@ import Image from "next/image";
 
 const AddAssetModal = () => {
   const isOpen = useAddAssetModalIsOpen();
-  const { setAmount, setCoinId, setDate, setModalIsOpen } =
-    useAddAssetActions();
+  const { setDate, setModalIsOpen } = useAddAssetActions();
+  const resetModal = useAddAssetResetModal();
+  const handleAddAsset = useAddAsset();
 
   const market = useMarketQuery("usd", "market_cap", "desc");
   const coinId = useAddAssetCoinId();
   const date = useAddAssetDate();
-
-  const exitModal = () => {
-    setModalIsOpen(false);
-    setCoinId("");
-    setAmount(0);
-    setDate("");
-  };
 
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
     (coin) => coin.id === coinId
@@ -42,14 +37,12 @@ const AddAssetModal = () => {
   const coinSymbol = coinInfo?.symbol || "";
 
   const modalRef = useRef<HTMLDivElement>(null);
-
+  const searchRef = useRef<HTMLInputElement>(null);
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
-    () => exitModal()
+    () => resetModal()
   );
 
-  useModalListener(modalRef, isOpen, exitModal);
-
-  const handleAddAsset = useAddAsset();
+  useModalListener(modalRef, searchRef, isOpen, resetModal);
 
   if (!isOpen) return <></>;
   return (
@@ -91,7 +84,7 @@ const AddAssetModal = () => {
             </div>
             <div className="w-[461px] flex flex-col gap-y-4">
               <DropdownProvider>
-                <AddAssetCoinSearch />
+                <AddAssetCoinSearch ref={searchRef} />
               </DropdownProvider>
               <DropdownProvider>
                 <AddAssetCurrency />
@@ -103,7 +96,7 @@ const AddAssetModal = () => {
                 <input
                   type="date"
                   id="date"
-                  className="h-11 pl-2 pr-4 rounded-lg bg-zinc-800/60"
+                  className="h-11 pl-2 pr-3 rounded-lg bg-zinc-800/60"
                   placeholder="Purchase date"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") handleAddAsset();
@@ -117,7 +110,7 @@ const AddAssetModal = () => {
               <div className="flex justify-between gap-x-4 mt-4 text-center">
                 <button
                   className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
-                  onClick={() => exitModal()}
+                  onClick={() => resetModal()}
                 >
                   Cancel
                 </button>

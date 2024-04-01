@@ -18,7 +18,7 @@ import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
 const AddAssetCurrency = () => {
   const amount = useAddAssetAmount();
   const amountCurrency = useAddAssetAmountCurrency();
-  const reset = useDropdownReset();
+  const resetDropdown = useDropdownReset();
   const { setAmount, setAmountCurrency } = useAddAssetActions();
   const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
     useDropdownStore((store) => store);
@@ -130,7 +130,7 @@ const AddAssetCurrency = () => {
                 onMouseEnter={() => setSelectedIndex(idx)}
                 onClick={() => {
                   setAmountCurrency(currencyName);
-                  reset();
+                  resetDropdown();
                 }}
               >
                 <span className="font-semibold mr-2 ">{entry[1]}</span>
