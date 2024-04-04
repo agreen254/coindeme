@@ -502,7 +502,6 @@ const AssetModalBody = (
               </button>
               <button
                 className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
-                // type="submit"
                 onClick={() => {
                   handleAddAsset();
                 }}
