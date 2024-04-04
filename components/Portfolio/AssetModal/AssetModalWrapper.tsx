@@ -3,7 +3,7 @@
 import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import { useRef, useState } from "react";
 
-import AssetAddModalActivator from "./AssetAddModalActivator";
+import AssetModalAddActivator from "./AssetModalAddActivator";
 import AssetModalBody from "./AssetModalBody";
 import DropdownProvider from "@/providers/DropdownProvider";
 
@@ -16,7 +16,7 @@ const AssetModalWrapper = () => {
 
   return (
     <DropdownProvider initialUnits={dropdownUnits}>
-      <AssetAddModalActivator ref={activatorRef} setIsOpen={setModalIsOpen} />
+      <AssetModalAddActivator ref={activatorRef} setIsOpen={setModalIsOpen} />
       <AssetModalBody
         ref={activatorRef}
         isOpen={modalIsOpen}

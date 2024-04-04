@@ -11,13 +11,13 @@ export interface DropdownUnit {
 
 interface DropdownState {
   units: DropdownUnit[];
-  createUnit: (id: string) => void;
+  createUnit: (id: DropdownUnit["id"]) => void;
 
   setIsUsingMouse: (status: DropdownUnit["isUsingMouse"], id: string) => void;
   setIsVisible: (status: DropdownUnit["isVisible"], id: string) => void;
   setSelectedIndex: (index: DropdownUnit["selectedIndex"], id: string) => void;
 
-  toggleIsVisible: (id: string) => void;
+  toggleIsVisible: (id: DropdownUnit["id"]) => void;
 }
 
 export function initializeNewDropdown(id: string): DropdownUnit {
@@ -63,11 +63,7 @@ export const createDropdownStore = (units: DropdownUnit[] = []) => {
           isVisible: state.units[idx].isVisible,
           selectedIndex: state.units[idx].selectedIndex,
         };
-        const newUnits = replaceArrayUnit<DropdownUnit>(
-          state.units,
-          newUnit,
-          idx
-        );
+        const newUnits = replaceArrayUnit(state.units, newUnit);
         return { units: newUnits };
       }),
 
@@ -80,11 +76,7 @@ export const createDropdownStore = (units: DropdownUnit[] = []) => {
           isVisible: status,
           selectedIndex: state.units[idx].selectedIndex,
         };
-        const newUnits = replaceArrayUnit<DropdownUnit>(
-          state.units,
-          newUnit,
-          idx
-        );
+        const newUnits = replaceArrayUnit(state.units, newUnit);
         return { units: newUnits };
       }),
 
@@ -97,11 +89,7 @@ export const createDropdownStore = (units: DropdownUnit[] = []) => {
           isVisible: state.units[idx].isVisible,
           selectedIndex: index,
         };
-        const newUnits = replaceArrayUnit<DropdownUnit>(
-          state.units,
-          newUnit,
-          idx
-        );
+        const newUnits = replaceArrayUnit(state.units, newUnit);
         return { units: newUnits };
       }),
 
@@ -114,11 +102,7 @@ export const createDropdownStore = (units: DropdownUnit[] = []) => {
           ...state.units[idx],
           isVisible: !state.units[idx].isVisible,
         };
-        const newUnits = replaceArrayUnit<DropdownUnit>(
-          state.units,
-          newUnit,
-          idx
-        );
+        const newUnits = replaceArrayUnit(state.units, newUnit);
         return { units: newUnits };
       }),
   }));
@@ -163,7 +147,7 @@ export function useDropdownResetFromId(id: string) {
     isUsingMouse: false,
     selectedIndex: -1,
   };
-  const newUnits = replaceArrayUnit<DropdownUnit>(units, newUnit, idx);
+  const newUnits = replaceArrayUnit(units, newUnit);
 
   return () =>
     store.setState({

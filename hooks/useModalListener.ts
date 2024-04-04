@@ -7,6 +7,7 @@ import { RefObject, useEffect } from "react";
  * @param focusOnOpenRef ref you want to be focused when modal opens
  * @param isOpen state variable to tell when the modal is open or not
  * @param handleExit callback to be fired when the modal exits
+ * @param dropdownRefs pass these to only close dropdowns with escape when the dropdowns are open
  */
 export const useModalListener = (
   modalRef: RefObject<HTMLDivElement>,

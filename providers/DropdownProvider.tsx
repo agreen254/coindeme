@@ -12,8 +12,8 @@ type Props = {
   initialUnits?: DropdownUnit[];
 };
 
-const DropdownProvider = ({ children, initialUnits }: Props) => {
-  const [store] = useState(() => createDropdownStore(initialUnits || []));
+const DropdownProvider = ({ children, initialUnits = [] }: Props) => {
+  const [store] = useState(() => createDropdownStore(initialUnits));
 
   return (
     <DropdownContext.Provider value={store}>

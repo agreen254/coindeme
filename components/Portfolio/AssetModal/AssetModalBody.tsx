@@ -122,7 +122,10 @@ const AssetModalBody = (
         if (!isVisibleSearch) handleAddAsset();
         // if there are no results nothing will happen,
         // otherwise if user hits enter with nothing selected then default to the first result
-        if (searchResults.length > 0) {
+        if (
+          searchResults.length > 0 &&
+          searchResults.length > selectedIndexSearch
+        ) {
           const id =
             selectedIndexSearch === -1
               ? searchResults[0].id
@@ -225,212 +228,210 @@ const AssetModalBody = (
         isOpen && "flex"
       )}
     >
-      <div className="w-[886px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800">
-        <div className="p-12">
-          <div className="flex justify-between">
-            <h2 className="text-xl ml-1">Select Coins</h2>
-            <label htmlFor="closeModal" className="sr-only">
-              Close Modal
-            </label>
-            <button
-              id="closeModal"
-              className="p-2 rounded-full"
-              onClick={handleModalExit}
-            >
-              <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
-            </button>
-          </div>
-          <div className="flex justify-between gap-8 mt-8">
-            <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg bg-zinc-800/60">
-              {coinId && (
-                <div>
-                  <Image
-                    src={coinImageUrl}
-                    alt="coin logo"
-                    width={80}
-                    height={80}
-                  />
-                  <p className="text-center text-lg font-semibold text-muted-foreground uppercase mt-2">
-                    {coinSymbol}
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="w-[461px] flex flex-col gap-y-4">
-              <AssetModalCoinSearch
-                ref={clickAwaySearchRef}
-                className="w-full relative"
-              >
-                <label htmlFor="coinSearch" className="sr-only">
-                  search coins to declare asset
-                </label>
-                <SearchActivator
-                  ref={coinInputRef}
-                  id="coinSearch"
-                  dropdownId={searchDropdownId}
-                  autoComplete="off"
-                  spellCheck="false"
-                  disabled={!searchTargets}
-                  searchResults={searchResults}
-                  className="h-11 w-full p-2 rounded-lg bg-zinc-800/60"
-                  localQuery={coinQuery}
-                  setLocalQuery={setCoinQuery}
-                  onKeyDown={(e) => handleKeyDownSearch(e)}
+      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900/70 border border-zinc-800">
+        <div className="flex justify-between">
+          <h2 className="text-xl ml-1">Select Coins</h2>
+          <label htmlFor="closeModal" className="sr-only">
+            Close Modal
+          </label>
+          <button
+            id="closeModal"
+            className="p-2 rounded-full"
+            onClick={handleModalExit}
+          >
+            <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
+          </button>
+        </div>
+        <div className="flex justify-between gap-8 mt-8">
+          <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg bg-zinc-800/60">
+            {coinId && (
+              <div>
+                <Image
+                  src={coinImageUrl}
+                  alt="coin logo"
+                  width={80}
+                  height={80}
                 />
-                <DropdownMenu
-                  ref={coinDropdownRef}
-                  dropdownId={searchDropdownId}
-                  key="searchResults"
-                  className="w-[461px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
-                >
-                  {searchResults.map((wrapper, idx) => (
-                    <DropdownMenuItem
-                      dropdownId="portfolioSearch"
-                      index={idx}
-                      key={wrapper.result.target + "searchResult"}
-                    >
-                      <button
-                        className={cn(
-                          "indent-3 py-1 block w-full text-start",
-                          idx === selectedIndexSearch && "bg-zinc-600"
-                        )}
-                        onClick={() => {
-                          setCoinId(wrapper.id);
-                          setCoinQuery(
-                            wrapper.kind === "symbol"
-                              ? wrapper.otherText
-                              : wrapper.result.target
-                          );
-                          resetSearch();
-                        }}
-                        onMouseEnter={() => {
-                          setIsUsingMouseSearch(true);
-                          setSelectedIndexSearch(idx);
-                        }}
-                      >
-                        {wrapper.kind === "symbol"
-                          ? HandleSymbolMatch(wrapper)
-                          : HandleNameMatch(wrapper)}
-                      </button>
-                    </DropdownMenuItem>
-                  ))}
-                  {searchResults.length === 0 && (
-                    <p className="italic text-muted-foreground font-medium py-1 indent-3">
-                      No results found.
-                    </p>
-                  )}
-                </DropdownMenu>
-              </AssetModalCoinSearch>
-              <AssetModalCurrency
-                className="w-full relative flex gap-x-2 justify-between"
-                ref={clickAwayCurrencyRef}
-              >
-                <span className="absolute left-2 top-[10px]">
-                  {currencyMap.get(valueCurrency)}
-                </span>
-                <label htmlFor="amount" className="sr-only">
-                  Enter amount purchased
-                </label>
-                <input
-                  type="number"
-                  id="amount"
-                  autoComplete="off"
-                  value={value}
-                  onChange={(e) => {
-                    setValue(parseFloat(e.currentTarget.value));
-                  }}
-                  onKeyDown={(e) => handleKeyDownCurrencyInput(e)}
-                  className="h-11 w-full pl-5 rounded-lg bg-zinc-800/60"
-                />
-                <label htmlFor="assetCurrency" className="sr-only">
-                  select purchase currency
-                </label>
-                <button
-                  id="assetCurrency"
-                  ref={currencyButtonRef}
-                  className={cn(
-                    "py-2 pr-2 pl-3 min-w-[5rem] rounded-lg bg-zinc-800/60",
-                    isVisibleCurrency && "border-2 border-muted-foreground"
-                  )}
-                  onKeyDown={(e) => handleKeyDownCurrencyMenu(e)}
-                  onClick={() => setIsVisibleCurrency(!isVisibleCurrency)}
-                >
-                  <span>{valueCurrency.toUpperCase()}</span>
-                  <span>
-                    <ChevronDownIcon
-                      className={cn(
-                        "w-4 h-4 ml-1 inline transition-transform",
-                        isVisibleCurrency && "rotate-180"
-                      )}
-                    />
-                  </span>
-                </button>
-                <DropdownMenu
-                  dropdownId={currencyDropdownId}
-                  ref={currencyDropdownRef}
-                  key="addCurrency"
-                  className="absolute w-[5rem] top-[52px] right-0 rounded-md bg-dropdown border border-stone-300"
-                >
-                  {currencyEntries.map((entry, idx) => (
-                    <DropdownMenuItem
-                      dropdownId={currencyDropdownId}
-                      key={entry[0] + "asset"}
-                      index={idx}
-                      className={cn(
-                        selectedIndexCurrency === idx &&
-                          "bg-zinc-600 first:rounded-t-md last:rounded-b-md"
-                      )}
-                    >
-                      <button
-                        className="w-full text-center py-1 block"
-                        onMouseEnter={() => setSelectedIndexCurrency(idx)}
-                        onClick={() => {
-                          setValueCurrency(currencyName);
-                          resetCurrency();
-                        }}
-                      >
-                        <span className="font-semibold mr-2 ">{entry[1]}</span>
-                        <span>{entry[0].toUpperCase()}</span>
-                      </button>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenu>
-              </AssetModalCurrency>
-              <AssetModalDate>
-                <label htmlFor="date" className="sr-only">
-                  select date of asset purchase
-                </label>
-                <input
-                  type="date"
-                  id="date"
-                  className="h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60"
-                  placeholder="Purchase date"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddAsset();
-                  }}
-                  onChange={(e) => {
-                    setDate(e.currentTarget.value);
-                  }}
-                  value={date}
-                />
-              </AssetModalDate>
-              <div className="flex justify-between gap-x-4 mt-4 text-center">
-                <button
-                  className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
-                  onClick={handleModalExit}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
-                  type="submit"
-                  onClick={() => {
-                    handleAddAsset();
-                  }}
-                >
-                  Add Asset
-                </button>
+                <p className="text-center text-lg font-semibold text-muted-foreground uppercase mt-2">
+                  {coinSymbol}
+                </p>
               </div>
+            )}
+          </div>
+          <div className="w-[461px] flex flex-col gap-y-4">
+            <AssetModalCoinSearch
+              ref={clickAwaySearchRef}
+              className="w-full relative"
+            >
+              <label htmlFor="coinSearch" className="sr-only">
+                search coins to declare asset
+              </label>
+              <SearchActivator
+                ref={coinInputRef}
+                id="coinSearch"
+                dropdownId={searchDropdownId}
+                autoComplete="off"
+                spellCheck="false"
+                disabled={!searchTargets}
+                searchResults={searchResults}
+                className="h-11 w-full p-2 rounded-lg bg-zinc-800/60"
+                localQuery={coinQuery}
+                setLocalQuery={setCoinQuery}
+                onKeyDown={(e) => handleKeyDownSearch(e)}
+              />
+              <DropdownMenu
+                ref={coinDropdownRef}
+                dropdownId={searchDropdownId}
+                key="searchResults"
+                className="w-[461px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+              >
+                {searchResults.map((wrapper, idx) => (
+                  <DropdownMenuItem
+                    dropdownId="portfolioSearch"
+                    index={idx}
+                    key={wrapper.result.target + "searchResult"}
+                  >
+                    <button
+                      className={cn(
+                        "indent-3 py-1 block w-full text-start",
+                        idx === selectedIndexSearch && "bg-zinc-600"
+                      )}
+                      onClick={() => {
+                        setCoinId(wrapper.id);
+                        setCoinQuery(
+                          wrapper.kind === "symbol"
+                            ? wrapper.otherText
+                            : wrapper.result.target
+                        );
+                        resetSearch();
+                      }}
+                      onMouseEnter={() => {
+                        setIsUsingMouseSearch(true);
+                        setSelectedIndexSearch(idx);
+                      }}
+                    >
+                      {wrapper.kind === "symbol"
+                        ? HandleSymbolMatch(wrapper)
+                        : HandleNameMatch(wrapper)}
+                    </button>
+                  </DropdownMenuItem>
+                ))}
+                {searchResults.length === 0 && (
+                  <p className="italic text-muted-foreground font-medium py-1 indent-3">
+                    No results found.
+                  </p>
+                )}
+              </DropdownMenu>
+            </AssetModalCoinSearch>
+            <AssetModalCurrency
+              className="w-full relative flex gap-x-2 justify-between"
+              ref={clickAwayCurrencyRef}
+            >
+              <span className="absolute left-2 top-[10px]">
+                {currencyMap.get(valueCurrency)}
+              </span>
+              <label htmlFor="amount" className="sr-only">
+                Enter amount purchased
+              </label>
+              <input
+                type="number"
+                id="amount"
+                autoComplete="off"
+                value={value}
+                onChange={(e) => {
+                  setValue(parseFloat(e.currentTarget.value));
+                }}
+                onKeyDown={(e) => handleKeyDownCurrencyInput(e)}
+                className="h-11 w-full pl-5 rounded-lg bg-zinc-800/60"
+              />
+              <label htmlFor="assetCurrency" className="sr-only">
+                select purchase currency
+              </label>
+              <button
+                id="assetCurrency"
+                ref={currencyButtonRef}
+                className={cn(
+                  "py-2 pr-2 pl-3 min-w-[5rem] rounded-lg bg-zinc-800/60",
+                  isVisibleCurrency && "border-2 border-muted-foreground"
+                )}
+                onKeyDown={(e) => handleKeyDownCurrencyMenu(e)}
+                onClick={() => setIsVisibleCurrency(!isVisibleCurrency)}
+              >
+                <span>{valueCurrency.toUpperCase()}</span>
+                <span>
+                  <ChevronDownIcon
+                    className={cn(
+                      "w-4 h-4 ml-1 inline transition-transform",
+                      isVisibleCurrency && "rotate-180"
+                    )}
+                  />
+                </span>
+              </button>
+              <DropdownMenu
+                dropdownId={currencyDropdownId}
+                ref={currencyDropdownRef}
+                key="addCurrency"
+                className="absolute w-[5rem] top-[52px] right-0 rounded-md bg-dropdown border border-stone-300"
+              >
+                {currencyEntries.map((entry, idx) => (
+                  <DropdownMenuItem
+                    dropdownId={currencyDropdownId}
+                    key={entry[0] + "asset"}
+                    index={idx}
+                    className={cn(
+                      selectedIndexCurrency === idx &&
+                        "bg-zinc-600 first:rounded-t-md last:rounded-b-md"
+                    )}
+                  >
+                    <button
+                      className="w-full text-center py-1 block"
+                      onMouseEnter={() => setSelectedIndexCurrency(idx)}
+                      onClick={() => {
+                        setValueCurrency(currencyName);
+                        resetCurrency();
+                      }}
+                    >
+                      <span className="font-semibold mr-2 ">{entry[1]}</span>
+                      <span>{entry[0].toUpperCase()}</span>
+                    </button>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenu>
+            </AssetModalCurrency>
+            <AssetModalDate>
+              <label htmlFor="date" className="sr-only">
+                select date of asset purchase
+              </label>
+              <input
+                type="date"
+                id="date"
+                className="h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60"
+                placeholder="Purchase date"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAddAsset();
+                }}
+                onChange={(e) => {
+                  setDate(e.currentTarget.value);
+                }}
+                value={date}
+              />
+            </AssetModalDate>
+            <div className="flex justify-between gap-x-4 mt-4 text-center">
+              <button
+                className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
+                onClick={handleModalExit}
+              >
+                Cancel
+              </button>
+              <button
+                className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
+                type="submit"
+                onClick={() => {
+                  handleAddAsset();
+                }}
+              >
+                Add Asset
+              </button>
             </div>
           </div>
         </div>

@@ -9,12 +9,12 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const AssetAddModalActivator = forwardRef(
+const AssetModalAddActivator = forwardRef(
   ({ setIsOpen }: Props, ref: ForwardedRef<HTMLButtonElement>) => {
     return (
       <button
         ref={ref}
-        className="rounded-lg px-5 py-3 bg-zinc-600/70 border border-zinc-800 focus:outline-none focus:border-2 focus:border-stone-300"
+        className="rounded-lg px-5 py-3 w-[244px] font-medium bg-teal-700 shadow-[0_0_20px_8px] shadow-market-teal/15 focus:outline-none focus:border focus:border-stone-300"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         Add Asset
@@ -23,6 +23,6 @@ const AssetAddModalActivator = forwardRef(
   }
 );
 
-export default AssetAddModalActivator;
+export default AssetModalAddActivator;
 
-AssetAddModalActivator.displayName = "AsssetAddModalActivator";
+AssetModalAddActivator.displayName = "AsssetAddModalActivator";
