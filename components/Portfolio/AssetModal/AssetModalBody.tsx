@@ -2,6 +2,7 @@ import type { Currency } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
+import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
@@ -85,7 +86,6 @@ const AssetModalBody = (
   const forwardedActivatorRef = useForwardRef(activatorRef);
 
   // dropdown handlers and state for the search input
-  const searchDropdownId = "portfolioSearch";
   const {
     setIsUsingMouse: setIsUsingMouseSearch,
     setSelectedIndex: setSelectedIndexSearch,
@@ -146,7 +146,6 @@ const AssetModalBody = (
   };
 
   // dropdown handlers and state for the currency input
-  const currencyDropdownId = "portfolioCurrency";
   const {
     setIsUsingMouse: setIsUsingMouseCurrency,
     setIsVisible: setIsVisibleCurrency,
@@ -310,6 +309,7 @@ const AssetModalBody = (
                     key={wrapper.result.target + "searchResult"}
                   >
                     <button
+                      tabIndex={-1}
                       className={cn(
                         "indent-3 py-1 block w-full text-start",
                         idx === selectedIndexSearch && "bg-zinc-600"
@@ -403,6 +403,7 @@ const AssetModalBody = (
                   >
                     <button
                       className="w-full text-center py-1 block"
+                      tabIndex={-1}
                       onMouseEnter={() => setSelectedIndexCurrency(idx)}
                       onClick={() => {
                         setValueCurrency(currencyName);

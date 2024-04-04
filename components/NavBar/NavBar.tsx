@@ -10,10 +10,10 @@ import Search from "../Search/Search";
 import ThemeToggle from "./ThemeToggle";
 
 const NavBar = () => {
-  const dropdownKeys = ["navSearch", "navCurrency"];
+  const navSearchId = "navSearch";
+  const navCurrencyId = "navCurrency";
+  const dropdownKeys = [navSearchId, navCurrencyId];
   const dropdownUnits = dropdownKeys.map((key) => initializeNewDropdown(key));
-  const searchId = dropdownUnits[0].id;
-  const currencyId = dropdownUnits[1].id;
 
   return (
     <div className="mt-4 mb-12">
@@ -24,8 +24,8 @@ const NavBar = () => {
         <div className="flex items-start gap-x-4">
           <DropdownProvider initialUnits={dropdownUnits}>
             {/* dropdownIds are defined in the provider file */}
-            <Search dropdownId={searchId} />
-            <CurrencySelector dropdownId={currencyId} />
+            <Search dropdownId={navSearchId} />
+            <CurrencySelector dropdownId={navCurrencyId} />
           </DropdownProvider>
           <div className="mr-12">
             <ThemeToggle />
