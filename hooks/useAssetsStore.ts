@@ -10,6 +10,6 @@ export function validateAsset(asset: AddedAsset) {
     return false;
   }
 
-  toast.success("Added asset.");
+  toast.success("Asset added");
   return true;
 }
