@@ -46,7 +46,7 @@ type Props = {
 };
 
 /**
- * This modal allows users to add [__TODO__: or edit] assets. It is designed to be accessible and keyboard-friendly,
+ * This modal allows users to add [__TODO__: or edit] assets. It is designed to be keyboard-friendly
  * and uses refs to keep track of focus states.
  *
  * Assets follow the asset schema defined in the validation folder.
