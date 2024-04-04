@@ -11,6 +11,7 @@ import {
   useDropdownSettersFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
+import { useForwardRef } from "@/hooks/useForwardRef";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import {
   useRef,
@@ -34,6 +35,7 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
 import AssetModalDate from "./Separators/AssetModalDate";
+import { useModalListener } from "@/hooks/useModalListener";
 
 type Props = {
   isOpen: boolean;
@@ -42,7 +44,7 @@ type Props = {
 
 const AssetModalBody = (
   { isOpen, setIsOpen }: Props,
-  _activatorRef: ForwardedRef<HTMLButtonElement>
+  activatorRef: ForwardedRef<HTMLButtonElement>
 ) => {
   // placeholder values
   const handleAddAsset = () => null;
@@ -80,6 +82,12 @@ const AssetModalBody = (
     useClickAway(() => {
       resetCurrency();
     });
+  const forwardedActivatorRef = useForwardRef(activatorRef);
+  const handleModalExit = () => {
+    setIsOpen(false);
+    forwardedActivatorRef.current?.focus();
+  };
+  useModalListener(modalRef, coinInputRef, isOpen, handleModalExit);
 
   // dropdown handlers and state unique to the search component
   const searchDropdownId = "portfolioSearch";
@@ -201,7 +209,7 @@ const AssetModalBody = (
             <label htmlFor="closeModal" className="sr-only">
               Close Modal
             </label>
-            <button id="closeModal" onClick={() => setIsOpen(false)}>
+            <button id="closeModal" onClick={handleModalExit}>
               <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
             </button>
           </div>
@@ -378,7 +386,7 @@ const AssetModalBody = (
               <div className="flex justify-between gap-x-4 mt-4 text-center">
                 <button
                   className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleModalExit}
                 >
                   Cancel
                 </button>

@@ -11,7 +11,7 @@ export const validCurrenciesSchema = z.union([
 
 export const addedAssetSchema = z.object({
   coinId: z.string().min(1, { message: "Please select a coin to add." }),
-  purchaseDate: z
+  date: z
     .date()
     .max(new Date(), { message: "Assets cannot be purchased in the future." })
     .min(new Date(lastYear()), {
