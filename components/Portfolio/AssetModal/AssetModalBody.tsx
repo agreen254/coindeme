@@ -45,6 +45,18 @@ type Props = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
+/**
+ * This modal allows users to add [__TODO__: or edit] assets. It is designed to be accessible and keyboard-friendly,
+ * and uses refs to keep track of focus states.
+ *
+ * Assets follow the asset schema defined in the validation folder.
+ * This component contains state to manage input of the necessary fields.
+ *
+ * The dropdown menus have a context to store each state based on unique IDs defined in the wrapper component.
+ *
+ * __TODO__: allow passing of stored assets into the modal for editing. Only keep one modal component in the DOM and
+ * inject data as needed. Do not have separate modal instances for individual assets in the portfolio.
+ */
 const AssetModalBody = (
   { isOpen, setIsOpen }: Props,
   activatorRef: ForwardedRef<HTMLButtonElement>
@@ -298,7 +310,7 @@ const AssetModalBody = (
               </div>
             )}
           </div>
-          <div className="w-[461px] flex flex-col gap-y-4">
+          <div className="w-[460px] flex flex-col gap-y-4">
             <AssetModalCoinSearch
               ref={clickAwaySearchRef}
               className="w-full relative"
@@ -336,7 +348,7 @@ const AssetModalBody = (
                 ref={coinDropdownRef}
                 dropdownId={searchDropdownId}
                 key="searchResults"
-                className="w-[461px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+                className="w-[460px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
               >
                 {searchResults.map((wrapper, idx) => (
                   <DropdownMenuItem
