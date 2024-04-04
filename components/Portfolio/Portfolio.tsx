@@ -11,9 +11,7 @@ const Portfolio = () => {
         </div>
         <AssetModalWrapper />
       </div>
-      <p className="italic mt-12 text-muted-foreground">
-        You currently have no assets.
-      </p>
+      <p className="italic mt-12 text-muted-foreground">No assets found.</p>
     </div>
   );
 };

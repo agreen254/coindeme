@@ -21,6 +21,7 @@ import {
   type SetStateAction,
 } from "react";
 import { useState } from "react";
+import { validateAsset } from "@/hooks/useAssetsStore";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import { ChevronDown as ChevronDownIcon } from "lucide-react";
@@ -46,9 +47,6 @@ const AssetModalBody = (
   { isOpen, setIsOpen }: Props,
   activatorRef: ForwardedRef<HTMLButtonElement>
 ) => {
-  // placeholder values
-  const handleAddAsset = () => null;
-
   // form state initializers
   const [coinId, setCoinId] = useState<string>("");
   const [coinQuery, setCoinQuery] = useState<string>("");
@@ -86,7 +84,7 @@ const AssetModalBody = (
     });
   const forwardedActivatorRef = useForwardRef(activatorRef);
 
-  // dropdown handlers and state unique to the search component
+  // dropdown handlers and state for the search input
   const searchDropdownId = "portfolioSearch";
   const {
     setIsUsingMouse: setIsUsingMouseSearch,
@@ -95,6 +93,7 @@ const AssetModalBody = (
   const { isVisible: isVisibleSearch, selectedIndex: selectedIndexSearch } =
     useDropdownUnitFromId(searchDropdownId);
   const resetSearch = useDropdownResetFromId(searchDropdownId);
+
   const handleKeyDownSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowUp": {
@@ -119,7 +118,10 @@ const AssetModalBody = (
       }
       case "Enter": {
         e.preventDefault();
-        if (!isVisibleSearch) handleAddAsset();
+        if (!isVisibleSearch) {
+          handleAddAsset();
+          break;
+        }
         // if there are no results nothing will happen,
         // otherwise if user hits enter with nothing selected then default to the first result
         if (
@@ -143,7 +145,7 @@ const AssetModalBody = (
     }
   };
 
-  // dropdown handlers and state unique to the currency component
+  // dropdown handlers and state for the currency input
   const currencyDropdownId = "portfolioCurrency";
   const {
     setIsUsingMouse: setIsUsingMouseCurrency,
@@ -153,10 +155,12 @@ const AssetModalBody = (
   const { isVisible: isVisibleCurrency, selectedIndex: selectedIndexCurrency } =
     useDropdownUnitFromId(currencyDropdownId);
   const resetCurrency = useDropdownResetFromId(currencyDropdownId);
+
   const currencyName =
     selectedIndexCurrency === -1
       ? "usd"
       : currencyEntries[selectedIndexCurrency][0];
+
   const handleKeyDownCurrencyInput = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
@@ -165,6 +169,7 @@ const AssetModalBody = (
       handleAddAsset();
     }
   };
+
   const handleKeyDownCurrencyMenu = (
     e: React.KeyboardEvent<HTMLButtonElement>
   ) => {
@@ -216,6 +221,19 @@ const AssetModalBody = (
     coinDropdownRef,
     currencyDropdownRef,
   ]);
+
+  const handleAddAsset = () => {
+    const isValid = validateAsset({
+      coinId: coinId,
+      date: new Date(date),
+      value: value,
+      valueCurrency: valueCurrency,
+    });
+    if (isValid) {
+      setIsOpen(false);
+      forwardedActivatorRef.current?.focus();
+    }
+  };
 
   return (
     <div
@@ -408,7 +426,10 @@ const AssetModalBody = (
                 className="h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60"
                 placeholder="Purchase date"
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") handleAddAsset();
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddAsset();
+                  }
                 }}
                 onChange={(e) => {
                   setDate(e.currentTarget.value);
@@ -425,9 +446,15 @@ const AssetModalBody = (
               </button>
               <button
                 className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
-                type="submit"
+                // type="submit"
                 onClick={() => {
                   handleAddAsset();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddAsset();
+                  }
                 }}
               >
                 Add Asset

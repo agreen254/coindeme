@@ -46,8 +46,12 @@ const Search = ({ dropdownId }: Props) => {
   return (
     <div className="flex justify-center">
       <div ref={clickAwayRef} className="relative mb-2">
+        <label htmlFor="mainSearch" className="sr-only">
+          Search Coins
+        </label>
         <SearchActivator
           dropdownId={dropdownId}
+          id="mainSearch"
           disabled={!targets}
           searchResults={results}
           className="pr-5 pl-12 py-[9px] w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"

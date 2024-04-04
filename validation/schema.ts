@@ -10,16 +10,14 @@ export const validCurrenciesSchema = z.union([
 ]);
 
 export const addedAssetSchema = z.object({
-  coinId: z.string().min(1, { message: "Please select a coin to add." }),
+  coinId: z.string().min(1, { message: "No coin selected" }),
   date: z
     .date()
-    .max(new Date(), { message: "Assets cannot be purchased in the future." })
+    .max(new Date(), { message: "Cannot use future dates" })
     .min(new Date(lastYear()), {
-      message: "Assets cannot be purchased before one year ago.",
+      message: "Date must be less than a year ago",
     }),
-  value: z
-    .number()
-    .min(1e-15, { message: "Assets must have a non-zero value." }),
+  value: z.number().min(1e-15, { message: "No value entered" }),
   valueCurrency: validCurrenciesSchema,
 });
 
