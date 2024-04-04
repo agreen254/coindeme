@@ -2,13 +2,20 @@
 
 import { forwardRef, type ForwardedRef } from "react";
 import { motion, type HTMLMotionProps } from "framer-motion";
-import { useDropdownStore } from "@/hooks/useDropdownStore";
+import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
 
 import { AnimatePresence } from "framer-motion";
 
+interface DropdownMenuProps extends HTMLMotionProps<"div"> {
+  dropdownId: string;
+}
+
 const DropdownMenu = forwardRef(
-  ({ ...props }: HTMLMotionProps<"div">, ref: ForwardedRef<HTMLDivElement>) => {
-    const isVisible = useDropdownStore((s) => s.isVisible);
+  (
+    { dropdownId, ...props }: DropdownMenuProps,
+    ref: ForwardedRef<HTMLDivElement>
+  ) => {
+    const { isVisible } = useDropdownUnitFromId(dropdownId);
 
     return (
       <AnimatePresence>

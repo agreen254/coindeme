@@ -1,6 +1,6 @@
-import type { Asset, Currency } from "@/utils/types";
+import type { AddedAsset, Currency } from "@/utils/types";
 
-import { assetSchema } from "@/validation/schema";
+import { addedAssetSchema } from "@/validation/schema";
 import { create } from "zustand";
 import toast from "react-hot-toast";
 
@@ -88,8 +88,8 @@ export const useAddAsset = () => {
   };
 };
 
-function validateAsset(asset: Asset) {
-  const validation = assetSchema.safeParse(asset);
+function validateAsset(asset: AddedAsset) {
+  const validation = addedAssetSchema.safeParse(asset);
 
   if (!validation.success) {
     const errors = validation.error.errors.map((err) => err.message);

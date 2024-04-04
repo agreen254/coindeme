@@ -2,7 +2,6 @@ import { KeyboardEvent } from "react";
 
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
-import { useDropdownStore } from "@/hooks/useDropdownStore";
 import {
   useUserCurrencySetting,
   useUserSetCurrency as setCurrency,
@@ -10,13 +9,22 @@ import {
 
 import { ChevronDown as ChevronIcon } from "lucide-react";
 import CoinsIcon from "@/Icons/Coins";
+import {
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
 
-const CurrencySelectorActivator = () => {
+type Props = {
+  dropdownId: string;
+};
+
+const CurrencySelectorActivator = ({ dropdownId }: Props) => {
   const currency = useUserCurrencySetting();
   const currencyEntries = Array.from(currencyMap.entries());
 
-  const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
-    useDropdownStore((state) => state);
+  const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
+  const { setIsVisible, setSelectedIndex } =
+    useDropdownSettersFromId(dropdownId);
 
   const handleCurrencyKeyEvents = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "ArrowUp") {

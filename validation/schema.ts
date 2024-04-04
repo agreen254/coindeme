@@ -9,19 +9,29 @@ export const validCurrenciesSchema = z.union([
   z.literal("eth"),
 ]);
 
-export const assetSchema = z.object({
-  id: z.string().min(1, { message: "Please select a coin to add." }),
-  amount: z
-    .number()
-    .min(1e-15, { message: "Assets must have a non-zero value." }),
-
-  amountCurrency: validCurrenciesSchema,
-  date: z
+export const addedAssetSchema = z.object({
+  coinId: z.string().min(1, { message: "Please select a coin to add." }),
+  purchaseDate: z
     .date()
     .max(new Date(), { message: "Assets cannot be purchased in the future." })
     .min(new Date(lastYear()), {
       message: "Assets cannot be purchased before one year ago.",
     }),
+  value: z
+    .number()
+    .min(1e-15, { message: "Assets must have a non-zero value." }),
+  valueCurrency: validCurrenciesSchema,
+});
+
+export const storedAssetSchema = z.object({
+  id: z.string(),
+  values: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
 });
 
 // each id represents a selected carousel element

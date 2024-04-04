@@ -5,12 +5,17 @@ import type { SearchResultWrapper } from "@/utils/types";
 
 import { forwardRef, type ForwardedRef } from "react";
 import { useRouter } from "next/navigation";
-import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
 import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
+import {
+  useDropdownResetFromId,
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
 
 interface SearchActivatorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   searchResults: SearchResultWrapper[];
+  dropdownId: string;
   localQuery?: string;
   setLocalQuery?: (_q: string) => void;
 }
@@ -21,6 +26,7 @@ interface SearchActivatorProps
 const SearchActivator = forwardRef(
   (
     {
+      dropdownId,
       searchResults,
       localQuery,
       setLocalQuery,
@@ -39,10 +45,11 @@ const SearchActivator = forwardRef(
       ? [localQuery, setLocalQuery]
       : [navQuery, navSetQuery];
 
-    const { setIsUsingMouse, setIsVisible, selectedIndex, setSelectedIndex } =
-      useDropdownStore((state) => state);
+    const { setIsUsingMouse, setIsVisible, setSelectedIndex } =
+      useDropdownSettersFromId(dropdownId);
+    const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
-    const resetDropdown = useDropdownReset();
+    const resetDropdown = useDropdownResetFromId(dropdownId);
     const resetSearch = () => {
       setQuery("");
       resetDropdown();

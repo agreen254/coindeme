@@ -4,7 +4,7 @@ import type {
 } from "@tanstack/react-query";
 
 import {
-  assetSchema,
+  addedAssetSchema,
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
@@ -18,7 +18,7 @@ import {
 } from "@/validation/schema";
 import { z } from "zod";
 
-export type Asset = z.infer<typeof assetSchema>;
+export type AddedAsset = z.infer<typeof addedAssetSchema>;
 
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];

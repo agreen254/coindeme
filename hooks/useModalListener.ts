@@ -4,13 +4,13 @@ import { RefObject, useEffect } from "react";
  * Hook to handle opening, closing, and keypress actions of a modal.
  *
  * @param modalRef ref assigned to the parent modal div
- * @param autofocusRef ref assigned to the element you would like focused when the modal is opened
+ * @param focusOnOpenRef ref focused when modal opens
  * @param isOpen state variable to tell when the modal is open or not
  * @param handleExit callback to be fired when the modal exits
  */
 export const useModalListener = (
   modalRef: RefObject<HTMLDivElement>,
-  autofocusRef: RefObject<HTMLInputElement>,
+  focusOnOpenRef: RefObject<HTMLInputElement>,
   isOpen: boolean,
   handleExit: () => void
 ) =>
@@ -22,7 +22,7 @@ export const useModalListener = (
 
     if (isOpen) {
       // immediately focus the desired element when the modal is opened
-      autofocusRef.current?.focus();
+      focusOnOpenRef.current?.focus();
 
       // prevent scrolling
       document.body.style.overflowY = "hidden";

@@ -1,15 +1,9 @@
 "use client";
 
-import AddAssetActivator from "./AddAssetModal/AddAssetActivator";
-import AddAssetModal from "./AddAssetModal/AddAssetModal";
+import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
 
 const Portfolio = () => {
-  return (
-    <div>
-      <AddAssetActivator />
-      <AddAssetModal />
-    </div>
-  );
+  return <AssetModalWrapper />;
 };
 
 export default Portfolio;

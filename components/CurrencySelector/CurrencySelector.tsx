@@ -3,7 +3,11 @@
 import { cn } from "@/utils/cn";
 import { currencyEntries } from "@/utils/maps";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useDropdownStore, useDropdownReset } from "@/hooks/useDropdownStore";
+import {
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+  useDropdownResetFromId,
+} from "@/hooks/useDropdownStore";
 import { useEffect } from "react";
 import {
   useUserCurrencySetting,
@@ -14,15 +18,20 @@ import CurrencySelectorActivator from "./CurrencySelectorActivator";
 import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 
-const CurrencySelector = () => {
+type Props = {
+  dropdownId: string;
+};
+
+const CurrencySelector = ({ dropdownId }: Props) => {
   const currency = useUserCurrencySetting();
   const transitionLength = 0.2; // seconds
 
   const setCurrency = useUserSetCurrency;
-  const reset = useDropdownReset();
+  const reset = useDropdownResetFromId(dropdownId);
 
-  const { isVisible, setIsVisible, selectedIndex, setSelectedIndex } =
-    useDropdownStore((state) => state);
+  const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
+  const { setIsVisible, setSelectedIndex } =
+    useDropdownSettersFromId(dropdownId);
 
   // prevent items being selected while the fadeout animation is playing
   useEffect(() => {
@@ -40,13 +49,15 @@ const CurrencySelector = () => {
 
   return (
     <div className="relative" ref={clickAwayRef}>
-      <CurrencySelectorActivator />
+      <CurrencySelectorActivator dropdownId={dropdownId} />
       <DropdownMenu
+        dropdownId={dropdownId}
         key="currencyDropdown"
         className="w-[108px] absolute top-[52px] z-10 rounded-md text-zinc-200 border border-stone-300 bg-dropdown"
       >
         {currencyEntries.map((entry, index) => (
           <DropdownMenuItem
+            dropdownId={dropdownId}
             key={entry[0] + "selector"}
             index={index}
             className={cn(
