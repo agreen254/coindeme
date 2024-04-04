@@ -4,7 +4,7 @@ import { RefObject, useEffect } from "react";
  * Hook to handle opening, closing, and keypress actions of a modal.
  *
  * @param modalRef ref assigned to the parent modal div
- * @param focusOnOpenRef ref focused when modal opens
+ * @param focusOnOpenRef ref you want to be focused when modal opens
  * @param isOpen state variable to tell when the modal is open or not
  * @param handleExit callback to be fired when the modal exits
  */
@@ -12,11 +12,13 @@ export const useModalListener = (
   modalRef: RefObject<HTMLDivElement>,
   focusOnOpenRef: RefObject<HTMLInputElement>,
   isOpen: boolean,
-  handleExit: () => void
+  handleExit: () => void,
+  dropdownRefs?: RefObject<HTMLElement>[]
 ) =>
   useEffect(() => {
     const handleModalExit = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleExit();
+      if (e.key === "Escape" && dropdownRefs?.every((ref) => !ref.current))
+        handleExit();
     };
     document.addEventListener("keydown", handleModalExit);
 
@@ -26,6 +28,9 @@ export const useModalListener = (
 
       // prevent scrolling
       document.body.style.overflowY = "hidden";
+
+      // prevent screen readers from reading content outside of modal
+      document.body.ariaHidden = "true";
 
       // trap focus selection within modal
       // https://medium.com/cstech/achieving-focus-trapping-in-a-react-modal-component-3f28f596f35b
@@ -56,7 +61,11 @@ export const useModalListener = (
         modalElement?.removeEventListener("keydown", handleModalKeyDown);
         document.removeEventListener("keydown", handleModalExit);
       };
-    } else document.body.style.overflowY = "scroll";
+    } else {
+      // restore properties that opening the modal alters
+      document.body.style.overflowY = "scroll";
+      document.body.ariaHidden = "false";
+    }
 
     return () => {
       document.removeEventListener("keydown", handleModalExit);

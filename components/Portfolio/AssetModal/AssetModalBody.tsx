@@ -71,7 +71,9 @@ const AssetModalBody = (
 
   // refs
   const coinInputRef = useRef<HTMLInputElement>(null);
-  const currencyRef = useRef<HTMLButtonElement>(null);
+  const coinDropdownRef = useRef<HTMLDivElement>(null);
+  const currencyButtonRef = useRef<HTMLButtonElement>(null);
+  const currencyDropdownRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const clickAwaySearchRef: React.MutableRefObject<HTMLDivElement> =
     useClickAway(() => {
@@ -83,11 +85,6 @@ const AssetModalBody = (
       resetCurrency();
     });
   const forwardedActivatorRef = useForwardRef(activatorRef);
-  const handleModalExit = () => {
-    setIsOpen(false);
-    forwardedActivatorRef.current?.focus();
-  };
-  useModalListener(modalRef, coinInputRef, isOpen, handleModalExit);
 
   // dropdown handlers and state unique to the search component
   const searchDropdownId = "portfolioSearch";
@@ -99,50 +96,54 @@ const AssetModalBody = (
     useDropdownUnitFromId(searchDropdownId);
   const resetSearch = useDropdownResetFromId(searchDropdownId);
   const handleKeyDownSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setIsUsingMouseSearch(false);
-      setSelectedIndexSearch(
-        selectedIndexSearch > 0
-          ? selectedIndexSearch - 1
-          : searchResults.length - 1
-      );
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setIsUsingMouseSearch(false);
-      setSelectedIndexSearch(
-        selectedIndexSearch < searchResults.length - 1
-          ? selectedIndexSearch + 1
-          : 0
-      );
-    }
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (!isVisibleSearch) handleAddAsset();
-      // if there are no results nothing will happen,
-      // otherwise if user hits enter with nothing selected then default to the first result
-      if (searchResults.length > 0) {
-        const id =
-          selectedIndexSearch === -1
-            ? searchResults[0].id
-            : searchResults[selectedIndexSearch].id;
-        setCoinQuery(coinNameFromId(id, searchTargets));
-        setCoinId(id);
+    switch (e.key) {
+      case "ArrowUp": {
+        e.preventDefault();
+        setIsUsingMouseSearch(false);
+        setSelectedIndexSearch(
+          selectedIndexSearch > 0
+            ? selectedIndexSearch - 1
+            : searchResults.length - 1
+        );
+        break;
       }
-      resetSearch();
-    }
-
-    if (e.key === "Escape") {
-      resetSearch();
+      case "ArrowDown": {
+        e.preventDefault();
+        setIsUsingMouseSearch(false);
+        setSelectedIndexSearch(
+          selectedIndexSearch < searchResults.length - 1
+            ? selectedIndexSearch + 1
+            : 0
+        );
+        break;
+      }
+      case "Enter": {
+        e.preventDefault();
+        if (!isVisibleSearch) handleAddAsset();
+        // if there are no results nothing will happen,
+        // otherwise if user hits enter with nothing selected then default to the first result
+        if (searchResults.length > 0) {
+          const id =
+            selectedIndexSearch === -1
+              ? searchResults[0].id
+              : searchResults[selectedIndexSearch].id;
+          setCoinQuery(coinNameFromId(id, searchTargets));
+          setCoinId(id);
+        }
+        resetSearch();
+        break;
+      }
+      case "Escape": {
+        resetSearch();
+        break;
+      }
     }
   };
 
   // dropdown handlers and state unique to the currency component
   const currencyDropdownId = "portfolioCurrency";
   const {
+    setIsUsingMouse: setIsUsingMouseCurrency,
     setIsVisible: setIsVisibleCurrency,
     setSelectedIndex: setSelectedIndexCurrency,
   } = useDropdownSettersFromId(currencyDropdownId);
@@ -164,38 +165,60 @@ const AssetModalBody = (
   const handleKeyDownCurrencyMenu = (
     e: React.KeyboardEvent<HTMLButtonElement>
   ) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndexCurrency(
-        selectedIndexCurrency <= 0
-          ? currencyEntries.length - 1
-          : selectedIndexCurrency - 1
-      );
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndexCurrency(
-        selectedIndexCurrency === currencyEntries.length - 1
-          ? 0
-          : selectedIndexCurrency + 1
-      );
-    }
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (selectedIndexCurrency >= 0) {
-        setValueCurrency(currencyName);
+    switch (e.key) {
+      case "ArrowUp": {
+        e.preventDefault();
+        setIsUsingMouseCurrency(false);
+        setSelectedIndexCurrency(
+          selectedIndexCurrency <= 0
+            ? currencyEntries.length - 1
+            : selectedIndexCurrency - 1
+        );
+        break;
       }
-      setIsVisibleCurrency(!isVisibleCurrency);
-      setSelectedIndexCurrency(-1);
+      case "ArrowDown": {
+        e.preventDefault();
+        setIsUsingMouseCurrency(false);
+        setSelectedIndexCurrency(
+          selectedIndexCurrency === currencyEntries.length - 1
+            ? 0
+            : selectedIndexCurrency + 1
+        );
+        break;
+      }
+      case "Escape": {
+        resetCurrency();
+        break;
+      }
+      case "Enter": {
+        e.preventDefault();
+        if (selectedIndexCurrency >= 0) {
+          setValueCurrency(currencyName);
+        }
+        setIsVisibleCurrency(!isVisibleCurrency);
+        setSelectedIndexCurrency(-1);
+        break;
+      }
     }
   };
+
+  const handleModalExit = () => {
+    setIsOpen(false);
+    setCoinId("");
+    setValue(0);
+    setDate("");
+    forwardedActivatorRef.current?.focus();
+  };
+  useModalListener(modalRef, coinInputRef, isOpen, handleModalExit, [
+    coinDropdownRef,
+    currencyDropdownRef,
+  ]);
 
   return (
     <div
       role="dialog"
       aria-modal="true"
+      aria-hidden={!isOpen}
       ref={modalRef}
       className={cn(
         "h-full w-full hidden justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10",
@@ -209,7 +232,11 @@ const AssetModalBody = (
             <label htmlFor="closeModal" className="sr-only">
               Close Modal
             </label>
-            <button id="closeModal" onClick={handleModalExit}>
+            <button
+              id="closeModal"
+              className="p-2 rounded-full"
+              onClick={handleModalExit}
+            >
               <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
             </button>
           </div>
@@ -251,6 +278,7 @@ const AssetModalBody = (
                   onKeyDown={(e) => handleKeyDownSearch(e)}
                 />
                 <DropdownMenu
+                  ref={coinDropdownRef}
                   dropdownId={searchDropdownId}
                   key="searchResults"
                   className="w-[461px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
@@ -308,7 +336,9 @@ const AssetModalBody = (
                   id="amount"
                   autoComplete="off"
                   value={value}
-                  onChange={(e) => setValue(parseFloat(e.currentTarget.value))}
+                  onChange={(e) => {
+                    setValue(parseFloat(e.currentTarget.value));
+                  }}
                   onKeyDown={(e) => handleKeyDownCurrencyInput(e)}
                   className="h-11 w-full pl-5 rounded-lg bg-zinc-800/60"
                 />
@@ -317,7 +347,7 @@ const AssetModalBody = (
                 </label>
                 <button
                   id="assetCurrency"
-                  ref={currencyRef}
+                  ref={currencyButtonRef}
                   className={cn(
                     "py-2 pr-2 pl-3 min-w-[5rem] rounded-lg bg-zinc-800/60",
                     isVisibleCurrency && "border-2 border-muted-foreground"
@@ -337,6 +367,7 @@ const AssetModalBody = (
                 </button>
                 <DropdownMenu
                   dropdownId={currencyDropdownId}
+                  ref={currencyDropdownRef}
                   key="addCurrency"
                   className="absolute w-[5rem] top-[52px] right-0 rounded-md bg-dropdown border border-stone-300"
                 >
