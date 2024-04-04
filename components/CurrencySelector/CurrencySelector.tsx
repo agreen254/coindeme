@@ -67,6 +67,7 @@ const CurrencySelector = ({ dropdownId }: Props) => {
             )}
           >
             <button
+              tabIndex={-1}
               className="w-full text-left indent-3 py-1 block"
               onClick={() => {
                 setCurrency(currencyEntries[selectedIndex][0]);

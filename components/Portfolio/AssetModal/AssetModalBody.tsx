@@ -14,6 +14,7 @@ import {
 } from "@/hooks/useDropdownStore";
 import { useForwardRef } from "@/hooks/useForwardRef";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
+import { useModalListener } from "@/hooks/useModalListener";
 import {
   useRef,
   forwardRef,
@@ -25,19 +26,19 @@ import { useState } from "react";
 import { validateAsset } from "@/hooks/useAssetsStore";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
+import AssetModalCurrency from "./Separators/AssetModalCurrency";
+import AssetModalDate from "./Separators/AssetModalDate";
 import { ChevronDown as ChevronDownIcon } from "lucide-react";
 import CloseIcon from "@/Icons/Close";
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
-import Image from "next/image";
-import SearchActivator from "@/components/Search/SearchActivator";
 import {
   HandleNameMatch,
   HandleSymbolMatch,
 } from "@/components/Search/SearchResultsHelpers";
-import AssetModalCurrency from "./Separators/AssetModalCurrency";
-import AssetModalDate from "./Separators/AssetModalDate";
-import { useModalListener } from "@/hooks/useModalListener";
+import Image from "next/image";
+import SearchActivator from "@/components/Search/SearchActivator";
+import { X as XIcon } from "lucide-react";
 
 type Props = {
   isOpen: boolean;
@@ -52,7 +53,7 @@ const AssetModalBody = (
   const [coinId, setCoinId] = useState<string>("");
   const [coinQuery, setCoinQuery] = useState<string>("");
   const [date, setDate] = useState<string>("");
-  const [value, setValue] = useState<number>(0);
+  const [value, setValue] = useState<string>("");
   const [valueCurrency, setValueCurrency] = useState<Currency>("usd");
 
   // search component initializers
@@ -139,8 +140,16 @@ const AssetModalBody = (
         break;
       }
       case "Escape": {
+        setCoinId("");
+        setCoinQuery("");
         resetSearch();
         break;
+      }
+      case "Tab": {
+        if (isVisibleSearch) {
+          e.preventDefault();
+          break;
+        }
       }
     }
   };
@@ -163,10 +172,16 @@ const AssetModalBody = (
   const handleKeyDownCurrencyInput = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
+    if (
+      (e.key >= "0" && e.key <= "9") ||
+      ["Tab", "Backspace", "Escape", "."].includes(e.key)
+    )
+      return;
     if (e.key === "Enter") {
       e.preventDefault();
       handleAddAsset();
     }
+    e.preventDefault();
   };
 
   const handleKeyDownCurrencyMenu = (
@@ -206,16 +221,24 @@ const AssetModalBody = (
         setSelectedIndexCurrency(-1);
         break;
       }
+      case "Tab": {
+        if (isVisibleCurrency) {
+          e.preventDefault();
+          break;
+        }
+      }
     }
   };
 
   const handleModalExit = () => {
     setIsOpen(false);
     setCoinId("");
-    setValue(0);
+    setCoinQuery("");
+    setValue("");
     setDate("");
     forwardedActivatorRef.current?.focus();
   };
+
   useModalListener(modalRef, coinInputRef, isOpen, handleModalExit, [
     coinDropdownRef,
     currencyDropdownRef,
@@ -225,11 +248,11 @@ const AssetModalBody = (
     const isValid = validateAsset({
       coinId: coinId,
       date: new Date(date),
-      value: value,
+      value: parseFloat(value || "0"),
       valueCurrency: valueCurrency,
     });
     if (isValid) {
-      setIsOpen(false);
+      handleModalExit();
       forwardedActivatorRef.current?.focus();
     }
   };
@@ -247,7 +270,7 @@ const AssetModalBody = (
     >
       <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900/70 border border-zinc-800">
         <div className="flex justify-between">
-          <h2 className="text-xl ml-1">Select Coins</h2>
+          <h2 className="text-xl ml-1">Select Coin</h2>
           <label htmlFor="closeModal" className="sr-only">
             Close Modal
           </label>
@@ -280,12 +303,25 @@ const AssetModalBody = (
               ref={clickAwaySearchRef}
               className="w-full relative"
             >
+              <XIcon
+                className={cn(
+                  "absolute right-[12px] top-[12px] w-[18px] h-[18px]",
+                  !coinQuery && "hidden"
+                )}
+                onClick={() => {
+                  resetSearch();
+                  setCoinId("");
+                  setCoinQuery("");
+                }}
+                strokeWidth={2}
+              />
               <label htmlFor="coinSearch" className="sr-only">
                 search coins to declare asset
               </label>
               <SearchActivator
                 ref={coinInputRef}
                 id="coinSearch"
+                type="text"
                 dropdownId={searchDropdownId}
                 autoComplete="off"
                 spellCheck="false"
@@ -345,20 +381,24 @@ const AssetModalBody = (
               className="w-full relative flex gap-x-2 justify-between"
               ref={clickAwayCurrencyRef}
             >
-              <span className="absolute left-2 top-[10px]">
+              <span
+                className={cn(
+                  "absolute text-muted-foreground left-2 top-[10px]",
+                  value && "text-inherit"
+                )}
+              >
                 {currencyMap.get(valueCurrency)}
               </span>
               <label htmlFor="amount" className="sr-only">
                 Enter amount purchased
               </label>
               <input
-                type="number"
+                type="text"
                 id="amount"
+                placeholder="0"
                 autoComplete="off"
                 value={value}
-                onChange={(e) => {
-                  setValue(parseFloat(e.currentTarget.value));
-                }}
+                onChange={(e) => setValue(e.currentTarget.value)}
                 onKeyDown={(e) => handleKeyDownCurrencyInput(e)}
                 className="h-11 w-full pl-5 rounded-lg bg-zinc-800/60"
               />
@@ -424,7 +464,10 @@ const AssetModalBody = (
               <input
                 type="date"
                 id="date"
-                className="h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60"
+                className={cn(
+                  "h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60",
+                  date === "" && "text-muted-foreground"
+                )}
                 placeholder="Purchase date"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -440,7 +483,7 @@ const AssetModalBody = (
             </AssetModalDate>
             <div className="flex justify-between gap-x-4 mt-4 text-center">
               <button
-                className="w-1/2 rounded-md bg-zinc-800/60 h-[45px]"
+                className="w-1/2 rounded-md bg-zinc-800/60 h-[45px] hover:bg-zinc-700/80 transition-colors"
                 onClick={handleModalExit}
               >
                 Cancel

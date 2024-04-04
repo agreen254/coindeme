@@ -70,6 +70,7 @@ const Search = ({ dropdownId }: Props) => {
             >
               <Link
                 href={`/coin/${wrapper.id}`}
+                tabIndex={-1}
                 onClick={resetDropdown}
                 className={cn(
                   "indent-3 py-1 block",
