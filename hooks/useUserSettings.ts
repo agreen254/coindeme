@@ -22,5 +22,5 @@ export const useUserCurrencySetting = () => {
   return useUserSettingsStore((state) => state.currency);
 };
 export const useUserSetCurrency = (currency: Currency) => {
-  return useUserSettingsStore.setState({ currency: currency });
+  useUserSettingsStore.setState({ currency: currency });
 };
