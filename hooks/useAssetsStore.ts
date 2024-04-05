@@ -1,4 +1,7 @@
-import type { AddedAsset } from "@/utils/types";
+import type { AddedAsset, StoredAsset } from "@/utils/types";
+
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 import { addedAssetSchema } from "@/validation/schema";
 import toast from "react-hot-toast";
@@ -13,3 +16,12 @@ export function validateAsset(asset: AddedAsset) {
   toast.success("Asset added");
   return true;
 }
+
+const useAssetsStore = create<StoredAsset[]>()(
+  persist((_) => [], { name: "crypto-stored-assets" })
+);
+
+const useAddAsset = (validatedAsset: AddedAsset) => {
+  const storedAssets = useAssetsStore.getState();
+   
+};

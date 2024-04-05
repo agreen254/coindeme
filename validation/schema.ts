@@ -23,6 +23,8 @@ export const addedAssetSchema = z.object({
 
 export const storedAssetSchema = z.object({
   id: z.string(),
+  date: z.date(),
+  originalCurrency: validCurrenciesSchema,
   values: z.object({
     btc: z.number(),
     eth: z.number(),
