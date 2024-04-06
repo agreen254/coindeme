@@ -9,17 +9,20 @@ import {
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
   globalResponseSchema,
-  wrappedGlobalResponseSchema,
+  historicalRequestSchema,
+  historicalResponseSchema,
   marketSchema,
   marketResponseSchema,
   marketRequest,
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
   marketFetchParamSchema,
+  storedAssetSchema,
 } from "@/validation/schema";
 import { z } from "zod";
 
 export type AddedAsset = z.infer<typeof addedAssetSchema>;
+export type StoredAsset = z.infer<typeof storedAssetSchema>;
 
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
@@ -59,7 +62,9 @@ export type ComparisonData = {
 };
 
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
-export type WrappedGlobalResponse = z.infer<typeof wrappedGlobalResponseSchema>;
+
+export type HistoricalRequest = z.infer<typeof historicalRequestSchema>;
+export type HistoricalResponse = z.infer<typeof historicalResponseSchema>;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
