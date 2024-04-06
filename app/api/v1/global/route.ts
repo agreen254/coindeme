@@ -1,7 +1,7 @@
-import type { GlobalResponse, WrappedGlobalResponse } from "@/utils/types";
+import type { GlobalResponse, GlobalResponseWrapped } from "@/utils/types";
 
 import { getValidationHandler } from "@/validation/handler";
-import { wrappedGlobalResponseSchema } from "@/validation/schema";
+import { globalResponseWrappedSchema } from "@/validation/schema";
 import { NextRequest } from "next/server";
 
 // eslint-disable-next-line
@@ -10,11 +10,11 @@ export async function GET(req: NextRequest) {
 
   // the default response is { data: {...} } so go ahead and unwrap it
   const responseTransformer = (
-    response: WrappedGlobalResponse
+    response: GlobalResponseWrapped
   ): GlobalResponse => response.data;
 
-  return getValidationHandler<WrappedGlobalResponse, GlobalResponse>(
-    wrappedGlobalResponseSchema,
+  return getValidationHandler<GlobalResponseWrapped, GlobalResponse>(
+    globalResponseWrappedSchema,
     urlExtractor,
     responseTransformer
   );

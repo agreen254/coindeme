@@ -5,11 +5,14 @@ import type {
 
 import {
   addedAssetSchema,
+  storedAssetSchema,
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
   globalResponseSchema,
-  wrappedGlobalResponseSchema,
+  historyRequestSchema,
+  historyResponseSchema,
+  globalResponseWrappedSchema,
   marketSchema,
   marketResponseSchema,
   marketRequest,
@@ -20,6 +23,7 @@ import {
 import { z } from "zod";
 
 export type AddedAsset = z.infer<typeof addedAssetSchema>;
+export type StoredAsset = z.infer<typeof storedAssetSchema>;
 
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
@@ -59,7 +63,10 @@ export type ComparisonData = {
 };
 
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
-export type WrappedGlobalResponse = z.infer<typeof wrappedGlobalResponseSchema>;
+export type GlobalResponseWrapped = z.infer<typeof globalResponseWrappedSchema>;
+
+export type HistoryRequest = z.infer<typeof historyRequestSchema>;
+export type HistoryResponse = z.infer<typeof historyResponseSchema>;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;

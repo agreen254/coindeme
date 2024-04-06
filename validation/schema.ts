@@ -1,13 +1,21 @@
 import { lastYear } from "@/utils/lastYear";
 import { z } from "zod";
 
-export const validCurrenciesSchema = z.union([
+export const currenciesUnionSchema = z.union([
   z.literal("usd"),
   z.literal("eur"),
   z.literal("gbp"),
   z.literal("btc"),
   z.literal("eth"),
 ]);
+
+export const currenciesObjectSchema = z.object({
+  btc: z.number(),
+  eth: z.number(),
+  eur: z.number(),
+  gbp: z.number(),
+  usd: z.number(),
+});
 
 export const addedAssetSchema = z.object({
   coinId: z.string().min(1, { message: "No coin selected" }),
@@ -18,24 +26,18 @@ export const addedAssetSchema = z.object({
       message: "Date must be less than a year ago",
     }),
   value: z.number().min(1e-15, { message: "No value entered" }),
-  valueCurrency: validCurrenciesSchema,
+  valueCurrency: currenciesUnionSchema,
 });
 
 export const storedAssetSchema = z.object({
   id: z.string(),
-  values: z.object({
-    btc: z.number(),
-    eth: z.number(),
-    eur: z.number(),
-    gbp: z.number(),
-    usd: z.number(),
-  }),
+  values: currenciesObjectSchema,
 });
 
 // each id represents a selected carousel element
 export const comparisonChartQueriesSchema = z.object({
   ids: z.string().array(),
-  currency: validCurrenciesSchema,
+  currency: currenciesUnionSchema,
   days: z.string(),
 });
 
@@ -65,20 +67,8 @@ export const comparisonChartResponseSchema = z.object({
 export const globalResponseSchema = z.object({
   active_cryptocurrencies: z.number(),
   markets: z.number(),
-  total_market_cap: z.object({
-    btc: z.number(),
-    eth: z.number(),
-    eur: z.number(),
-    gbp: z.number(),
-    usd: z.number(),
-  }),
-  total_volume: z.object({
-    btc: z.number(),
-    eth: z.number(),
-    eur: z.number(),
-    gbp: z.number(),
-    usd: z.number(),
-  }),
+  total_market_cap: currenciesObjectSchema,
+  total_volume: currenciesObjectSchema,
   market_cap_percentage: z.object({
     btc: z.number(),
     eth: z.number(),
@@ -86,7 +76,7 @@ export const globalResponseSchema = z.object({
   market_cap_change_percentage_24h_usd: z.number(),
 });
 
-export const wrappedGlobalResponseSchema = z.object({
+export const globalResponseWrappedSchema = z.object({
   data: globalResponseSchema,
 });
 
@@ -95,9 +85,29 @@ export const marketFetchParamSchema = z.union([
   z.literal("volume"),
 ]);
 
+export const historyRequestSchema = z.object({
+  coinId: z.string(),
+  date: z.string().regex(new RegExp("[0-9]{2}-[0-9]{2}-[0-9]{4}")),
+});
+
+export const historyResponseSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  name: z.string(),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+  }),
+  market_data: z.object({
+    current_price: currenciesObjectSchema,
+    market_cap: currenciesObjectSchema,
+    total_volume: currenciesObjectSchema,
+  }),
+});
+
 export const marketRequest = z.object({
   page: z.number(),
-  currency: validCurrenciesSchema,
+  currency: currenciesUnionSchema,
   fetchParam: marketFetchParamSchema,
   fetchOrder: z.union([z.literal("asc"), z.literal("desc")]),
 });
