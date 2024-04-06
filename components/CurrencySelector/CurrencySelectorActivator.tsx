@@ -2,7 +2,6 @@ import { KeyboardEvent } from "react";
 
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
-import { useDropdownContext } from "@/hooks/useDropdown";
 import {
   useUserCurrencySetting,
   useUserSetCurrency as setCurrency,
@@ -10,44 +9,51 @@ import {
 
 import { ChevronDown as ChevronIcon } from "lucide-react";
 import CoinsIcon from "@/Icons/Coins";
+import {
+  useDropdownResetFromId,
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
 
-const CurrencySelectorActivator = () => {
+type Props = {
+  dropdownId: string;
+};
+
+const CurrencySelectorActivator = ({ dropdownId }: Props) => {
   const currency = useUserCurrencySetting();
   const currencyEntries = Array.from(currencyMap.entries());
 
-  const [isVisible, setIsVisible] = [
-    useDropdownContext((s) => s.menuIsVisible),
-    useDropdownContext((s) => s.setMenuIsVisible),
-  ];
-  const [selectedIndex, setSelectedIndex] = [
-    useDropdownContext((s) => s.menuSelectedIndex),
-    useDropdownContext((s) => s.setMenuSelectedIndex),
-  ];
+  const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
+  const { setIsVisible, setSelectedIndex } =
+    useDropdownSettersFromId(dropdownId);
+  const reset = useDropdownResetFromId(dropdownId);
 
   const handleCurrencyKeyEvents = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex(
-        selectedIndex <= 0 ? currencyEntries.length - 1 : selectedIndex - 1
-      );
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndex(
-        selectedIndex === currencyEntries.length - 1 ? 0 : selectedIndex + 1
-      );
-    }
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (isVisible) setCurrency(currencyEntries[selectedIndex][0]);
-      setIsVisible(!isVisible);
-    }
-
-    if (e.key === "Escape") {
-      e.preventDefault();
-      setIsVisible(false);
+    switch (e.key) {
+      case "ArrowUp": {
+        e.preventDefault();
+        setSelectedIndex(
+          selectedIndex <= 0 ? currencyEntries.length - 1 : selectedIndex - 1
+        );
+        break;
+      }
+      case "ArrowDown": {
+        e.preventDefault();
+        setSelectedIndex(
+          selectedIndex === currencyEntries.length - 1 ? 0 : selectedIndex + 1
+        );
+        break;
+      }
+      case "Enter": {
+        e.preventDefault();
+        if (isVisible) setCurrency(currencyEntries[selectedIndex][0]);
+        setIsVisible(!isVisible);
+        break;
+      }
+      case "Escape": {
+        reset();
+        break;
+      }
     }
   };
 

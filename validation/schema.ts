@@ -1,3 +1,4 @@
+import { lastYear } from "@/utils/lastYear";
 import { z } from "zod";
 
 export const validCurrenciesSchema = z.union([
@@ -7,6 +8,29 @@ export const validCurrenciesSchema = z.union([
   z.literal("btc"),
   z.literal("eth"),
 ]);
+
+export const addedAssetSchema = z.object({
+  coinId: z.string().min(1, { message: "No coin selected" }),
+  date: z
+    .date()
+    .max(new Date(), { message: "Cannot use future dates" })
+    .min(new Date(lastYear()), {
+      message: "Date must be less than a year ago",
+    }),
+  value: z.number().min(1e-15, { message: "No value entered" }),
+  valueCurrency: validCurrenciesSchema,
+});
+
+export const storedAssetSchema = z.object({
+  id: z.string(),
+  values: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
+});
 
 // each id represents a selected carousel element
 export const comparisonChartQueriesSchema = z.object({

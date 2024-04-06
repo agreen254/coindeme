@@ -3,95 +3,124 @@
 import { ChangeEvent, KeyboardEvent } from "react";
 import type { SearchResultWrapper } from "@/utils/types";
 
+import { forwardRef, type ForwardedRef } from "react";
 import { useRouter } from "next/navigation";
-import { useDropdownContext, useResetDropdown } from "@/hooks/useDropdown";
 import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
+import {
+  useDropdownResetFromId,
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
 
-import SearchIcon from "@/Icons/Search";
+interface SearchActivatorProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  searchResults: SearchResultWrapper[];
+  dropdownId: string;
+  localQuery?: string;
+  setLocalQuery?: (_q: string) => void;
+}
 
-type Props = {
-  disabled: boolean;
-  results: SearchResultWrapper[];
-};
+/**
+ * Wrapper for an input element that handles any coin searching functionality.
+ */
+const SearchActivator = forwardRef(
+  (
+    {
+      dropdownId,
+      searchResults,
+      localQuery,
+      setLocalQuery,
+      ...props
+    }: SearchActivatorProps,
+    ref: ForwardedRef<HTMLInputElement>
+  ) => {
+    const router = useRouter();
 
-const SearchActivator = ({ disabled, results }: Props) => {
-  const query = useSearchQuery();
-  const router = useRouter();
-  const { setQuery } = useSearchQueryActions();
-  const setIsUsingMouse = useDropdownContext((s) => s.setIsUsingMouse);
-  const [selectedIndex, setSelectedIndex] = [
-    useDropdownContext((s) => s.menuSelectedIndex),
-    useDropdownContext((s) => s.setMenuSelectedIndex),
-  ];
-  const setMenuIsVisible = useDropdownContext((s) => s.setMenuIsVisible);
+    const navQuery = useSearchQuery();
+    const navSetQuery = useSearchQueryActions().setQuery;
 
-  const resetMenu = useResetDropdown();
-  const resetBarAndMenu = () => {
-    setQuery("");
-    resetMenu();
-  };
+    const isUsingLocal =
+      localQuery !== undefined && setLocalQuery !== undefined;
+    const [query, setQuery] = isUsingLocal
+      ? [localQuery, setLocalQuery]
+      : [navQuery, navSetQuery];
 
-  const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowUp") {
-      // stop the default event of jumping to the front/back of input text
-      e.preventDefault();
-      setIsUsingMouse(false);
-      setSelectedIndex(
-        selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
-      );
-    }
+    const { setIsUsingMouse, setIsVisible, setSelectedIndex } =
+      useDropdownSettersFromId(dropdownId);
+    const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setIsUsingMouse(false);
-      setSelectedIndex(
-        selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
-      );
-    }
+    const resetDropdown = useDropdownResetFromId(dropdownId);
+    const resetSearch = () => {
+      setQuery("");
+      resetDropdown();
+    };
 
-    if (e.key === "Enter") {
-      e.preventDefault();
-      // if there are no results nothing will happen,
-      // otherwise if user hits enter with nothing selected then default to the first result
-      if (results.length > 0) {
-        router.push(
-          selectedIndex === -1
-            ? `/coin/${results[0].id}`
-            : `/coin/${results[selectedIndex].id}`
-        );
-        resetBarAndMenu();
+    const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
+      switch (e.key) {
+        case "ArrowUp": {
+          // stop the default event of jumping to the front/back of input text
+          e.preventDefault();
+          setIsUsingMouse(false);
+          setSelectedIndex(
+            selectedIndex > 0 ? selectedIndex - 1 : searchResults.length - 1
+          );
+          break;
+        }
+        case "ArrowDown": {
+          e.preventDefault();
+          setIsUsingMouse(false);
+          setSelectedIndex(
+            selectedIndex < searchResults.length - 1 ? selectedIndex + 1 : 0
+          );
+          break;
+        }
+        case "Enter": {
+          e.preventDefault();
+          // if there are no results nothing will happen,
+          // otherwise if user hits enter with nothing selected then default to the first result
+          if (
+            searchResults.length > 0 &&
+            searchResults.length > selectedIndex
+          ) {
+            router.push(
+              selectedIndex === -1
+                ? `/coin/${searchResults[0].id}`
+                : `/coin/${searchResults[selectedIndex].id}`
+            );
+            resetSearch();
+          }
+          break;
+        }
+        case "Escape": {
+          resetSearch();
+          break;
+        }
       }
-    }
+    };
 
-    if (e.key === "Escape") {
-      e.preventDefault();
-      resetBarAndMenu();
-    }
-  };
+    const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.currentTarget.value);
+      if (e.currentTarget.value !== "") {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
 
-  const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.currentTarget.value);
-    if (e.currentTarget.value !== "") {
-      setMenuIsVisible(true);
-    } else {
-      setMenuIsVisible(false);
-    }
-  };
-
-  return (
-    <>
+    return (
       <input
+        ref={ref}
         type="search"
-        placeholder={disabled ? "" : "Search..."}
-        value={query}
-        disabled={disabled}
-        className="pr-5 pl-12 py-[9px] w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/50 shadow-[0_-0.5px_0_1px] shadow-zinc-500/60 disabled:cursor-not-allowed"
+        placeholder={props.disabled ? "" : "Search Coins"}
+        value={props.value || query}
         onChange={(e) => handleUpdateQuery(e)}
         onKeyDown={(e) => handleSearchKeyEvents(e)}
+        {...props}
       />
-      <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px]" />
-    </>
-  );
-};
+    );
+  }
+);
 
 export default SearchActivator;
+
+SearchActivator.displayName = "SearchActivator";
