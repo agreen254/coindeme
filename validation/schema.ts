@@ -1,7 +1,7 @@
 import { lastYear } from "@/utils/lastYear";
 import { z } from "zod";
 
-export const currenciesUnionSchema = z.union([
+export const validCurrenciesSchema = z.union([
   z.literal("usd"),
   z.literal("eur"),
   z.literal("gbp"),
@@ -9,16 +9,7 @@ export const currenciesUnionSchema = z.union([
   z.literal("eth"),
 ]);
 
-export const currenciesObjectSchema = z.object({
-  btc: z.number(),
-  eth: z.number(),
-  eur: z.number(),
-  gbp: z.number(),
-  usd: z.number(),
-});
-
 export const addedAssetSchema = z.object({
-  assetId: z.string(),
   coinId: z.string().min(1, { message: "No coin selected" }),
   date: z
     .date()
@@ -27,13 +18,24 @@ export const addedAssetSchema = z.object({
       message: "Date must be less than a year ago",
     }),
   value: z.number().min(1e-15, { message: "No value entered" }),
-  valueCurrency: currenciesUnionSchema,
+  valueCurrency: validCurrenciesSchema,
+});
+
+export const storedAssetSchema = z.object({
+  id: z.string(),
+  values: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
 });
 
 // each id represents a selected carousel element
 export const comparisonChartQueriesSchema = z.object({
   ids: z.string().array(),
-  currency: currenciesUnionSchema,
+  currency: validCurrenciesSchema,
   days: z.string(),
 });
 
@@ -63,8 +65,20 @@ export const comparisonChartResponseSchema = z.object({
 export const globalResponseSchema = z.object({
   active_cryptocurrencies: z.number(),
   markets: z.number(),
-  total_market_cap: currenciesObjectSchema,
-  total_volume: currenciesObjectSchema,
+  total_market_cap: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
+  total_volume: z.object({
+    btc: z.number(),
+    eth: z.number(),
+    eur: z.number(),
+    gbp: z.number(),
+    usd: z.number(),
+  }),
   market_cap_percentage: z.object({
     btc: z.number(),
     eth: z.number(),
@@ -72,35 +86,8 @@ export const globalResponseSchema = z.object({
   market_cap_change_percentage_24h_usd: z.number(),
 });
 
-export const historicalRequestSchema = z.object({
-  id: z.string(),
-
-  // Yes this will accept 'dummy dates' e.g. 01-01-9999,
-  // but the modal coerces dates to be within a year before today.
-  // And, if the user creates a custom server request to get around the validation,
-  // the coingecko api will return an error status.
-  date: z.string().regex(new RegExp("[0-9]{4}-[0-9]{2}-[0-9]{4}"), {
-    message: "Invalid date detected.",
-  }),
-});
-
-export const historicalResponseSchema = z.object({
-  id: z.string(),
-  symbol: z.string(),
-  name: z.string(),
-  image: z.object({
-    thumb: z.string(),
-    small: z.string(),
-  }),
-  market_date: z.object({
-    current_price: currenciesObjectSchema,
-    market_cap: currenciesObjectSchema,
-    total_volume: currenciesObjectSchema,
-  }),
-});
-
-export const storedAssetSchema = historicalResponseSchema.extend({
-  assetId: z.string(),
+export const wrappedGlobalResponseSchema = z.object({
+  data: globalResponseSchema,
 });
 
 export const marketFetchParamSchema = z.union([
@@ -110,7 +97,7 @@ export const marketFetchParamSchema = z.union([
 
 export const marketRequest = z.object({
   page: z.number(),
-  currency: currenciesUnionSchema,
+  currency: validCurrenciesSchema,
   fetchParam: marketFetchParamSchema,
   fetchOrder: z.union([z.literal("asc"), z.literal("desc")]),
 });
