@@ -14,7 +14,6 @@ export const useComparisonChartQueries = ({
   return useQueries({
     queries: ids.map((id) => ({
       retry: false,
-      staleTime: Infinity,
       queryKey: ["comparison", "chart", id, currency, days],
       queryFn: async (): Promise<ComparisonChartResponse> => {
         const response = await fetch(

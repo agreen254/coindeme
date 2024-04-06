@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import Portfolio from "@/components/Portfolio/Portfolio";
+import PortfolioWrapper from "@/components/Portfolio/PortfolioWrapper";
 
 export const metadata: Metadata = {
   title: "My Portfolio",
 };
 
 const PortfolioPage = () => {
-  return <Portfolio />;
+  return <PortfolioWrapper />;
 };
 
 export default PortfolioPage;

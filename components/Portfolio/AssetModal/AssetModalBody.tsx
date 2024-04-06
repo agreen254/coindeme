@@ -1,11 +1,13 @@
-import type { Currency } from "@/utils/types";
+import type { Asset, AssetValidator, Currency } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
+import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
 import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
+import { uid } from "uid";
 import { useClickAway } from "@uidotdev/usehooks";
 import {
   useDropdownResetFromId,
@@ -23,7 +25,7 @@ import {
   type SetStateAction,
 } from "react";
 import { useState } from "react";
-import { validateAsset } from "@/hooks/useAssetsStore";
+import { useAddAsset, validateAsset } from "@/hooks/useAssetsStore";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
@@ -256,16 +258,25 @@ const AssetModalBody = (
     currencyDropdownRef,
   ]);
 
+  const storeAsset = useAddAsset();
   const handleAddAsset = () => {
-    const isValid = validateAsset({
+    const preValid: AssetValidator = {
       coinId: coinId,
       date: new Date(date),
       value: parseFloat(value || "0"),
       valueCurrency: valueCurrency,
-    });
+    };
+
+    const isValid = validateAsset(preValid);
     if (isValid) {
+      const toStore: Asset = {
+        ...preValid,
+        assetId: uid(),
+        date: convertHistoricalDate(preValid.date),
+      };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
+      storeAsset(toStore);
     }
   };
 

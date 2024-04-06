@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
+    "@tanstack/query-sync-storage-persister": "^5.29.0",
     "@tanstack/react-query": "^5.18.0",
+    "@tanstack/react-query-persist-client": "^5.29.0",
     "@uidotdev/usehooks": "^2.4.1",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
@@ -33,6 +35,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "uid": "^2.0.2",
     "zod": "^3.22.4",
     "zustand": "^4.5.0"
   },

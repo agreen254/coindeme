@@ -17,7 +17,7 @@ export const currenciesObjectSchema = z.object({
   usd: z.number(),
 });
 
-export const addedAssetSchema = z.object({
+export const assetValidatorSchema = z.object({
   coinId: z.string().min(1, { message: "No coin selected" }),
   date: z
     .date()
@@ -29,9 +29,12 @@ export const addedAssetSchema = z.object({
   valueCurrency: currenciesUnionSchema,
 });
 
-export const storedAssetSchema = z.object({
-  id: z.string(),
-  values: currenciesObjectSchema,
+export const assetSchema = z.object({
+  assetId: z.string(),
+  coinId: z.string(),
+  date: z.string(),
+  value: z.number(),
+  valueCurrency: currenciesUnionSchema,
 });
 
 // each id represents a selected carousel element
@@ -86,8 +89,9 @@ export const marketFetchParamSchema = z.union([
 ]);
 
 export const historyRequestSchema = z.object({
+  assetId: z.string(),
   coinId: z.string(),
-  date: z.string().regex(new RegExp("[0-9]{2}-[0-9]{2}-[0-9]{4}")),
+  date: z.string(),
 });
 
 export const historyResponseSchema = z.object({
@@ -103,6 +107,11 @@ export const historyResponseSchema = z.object({
     market_cap: currenciesObjectSchema,
     total_volume: currenciesObjectSchema,
   }),
+});
+
+export const assetHistorySchema = historyResponseSchema.extend({
+  assetId: z.string(),
+  lastUpdated: z.string(),
 });
 
 export const marketRequest = z.object({
