@@ -2,6 +2,7 @@ import type { Asset, AssetValidator, Currency } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
+import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
 import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
 import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
@@ -80,8 +81,9 @@ const AssetModalBody = (
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
     (coin) => coin.id === coinId
   );
-  const coinImageUrl = coinInfo?.image || "";
-  const coinSymbol = coinInfo?.symbol || "";
+  const coinName = coinInfo?.name ?? "";
+  const coinImageUrl = coinInfo?.image ?? "";
+  const coinSymbol = coinInfo?.symbol ?? "";
 
   // refs
   const coinInputRef = useRef<HTMLInputElement>(null);
@@ -260,23 +262,26 @@ const AssetModalBody = (
 
   const storeAsset = useAddAsset();
   const handleAddAsset = () => {
-    const preValid: AssetValidator = {
+    const maybeAsset: AssetValidator = {
+      coinName: coinName,
       coinId: coinId,
+      coinImage: coinImageUrl,
+      coinSymbol: coinSymbolFromId(coinId, searchTargets),
       date: new Date(date),
       value: parseFloat(value || "0"),
       valueCurrency: valueCurrency,
     };
 
-    const isValid = validateAsset(preValid);
+    const isValid = validateAsset(maybeAsset);
     if (isValid) {
-      const toStore: Asset = {
-        ...preValid,
+      const asset: Asset = {
+        ...maybeAsset,
         assetId: uid(),
-        date: convertHistoricalDate(preValid.date),
+        date: convertHistoricalDate(maybeAsset.date),
       };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
-      storeAsset(toStore);
+      storeAsset(asset);
     }
   };
 

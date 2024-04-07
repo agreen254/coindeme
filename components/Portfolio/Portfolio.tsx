@@ -4,6 +4,7 @@ import { useAssetStore } from "@/hooks/useAssetsStore";
 import { useAssetsQuery } from "@/hooks/useAssetsQuery";
 
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
+import AssetDisplay from "./AssetDisplay";
 
 const Portfolio = () => {
   const store = useAssetStore();
@@ -19,7 +20,13 @@ const Portfolio = () => {
         <AssetModalWrapper />
       </div>
       <p className="italic mt-12 text-muted-foreground">No assets found.</p>
-      {data && data.map((ele) => <p key={ele.assetId}>{ele.name}</p>)}
+      {store.assets.map((asset) => (
+        <AssetDisplay
+          key={asset.assetId}
+          asset={asset}
+          history={data.find((item) => item.assetId === asset.assetId)}
+        />
+      ))}
     </div>
   );
 };

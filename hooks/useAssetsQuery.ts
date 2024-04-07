@@ -11,7 +11,7 @@ export const useAssetsQuery = (
   store: AssetStore
 ): UseQueryResult<AssetHistory, Error>[] => {
   return useQueries({
-    queries: store.assetsNoHistory.map(
+    queries: store.assets.map(
       (asset) =>
         <UseQueryOptions>{
           queryKey: ["asset", asset.assetId],

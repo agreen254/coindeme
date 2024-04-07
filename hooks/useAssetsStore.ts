@@ -6,15 +6,13 @@ import { persist } from "zustand/middleware";
 import toast from "react-hot-toast";
 
 export type AssetStore = {
-  assetsNoHistory: Asset[];
-  assetsWithHistory: AssetHistory[];
+  assets: Asset[];
 };
 
 export const useAssetStore = create<AssetStore>()(
   persist(
     (_) => ({
-      assetsNoHistory: [],
-      assetsWithHistory: [],
+      assets: [],
     }),
     {
       name: "crypto-assets",
@@ -23,15 +21,9 @@ export const useAssetStore = create<AssetStore>()(
 );
 
 export const useAddAsset = () => {
-  const assets = useAssetStore.getState().assetsNoHistory;
+  const assets = useAssetStore.getState().assets;
   return (asset: Asset) =>
-    useAssetStore.setState({ assetsNoHistory: [...assets, asset] });
-};
-
-export const useAddHistoricalData = (asset: AssetHistory) => {
-  const assets = useAssetStore.getState().assetsWithHistory;
-  return () =>
-    useAssetStore.setState({ assetsWithHistory: [...assets, asset] });
+    useAssetStore.setState({ assets: [...assets, asset] });
 };
 
 export function validateAsset(asset: AssetValidator) {

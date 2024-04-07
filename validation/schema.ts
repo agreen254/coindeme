@@ -18,7 +18,10 @@ export const currenciesObjectSchema = z.object({
 });
 
 export const assetValidatorSchema = z.object({
+  coinName: z.string(),
   coinId: z.string().min(1, { message: "No coin selected" }),
+  coinImage: z.string(),
+  coinSymbol: z.string(),
   date: z
     .date()
     .max(new Date(), { message: "Cannot use future dates" })
@@ -29,13 +32,9 @@ export const assetValidatorSchema = z.object({
   valueCurrency: currenciesUnionSchema,
 });
 
-export const assetSchema = z.object({
-  assetId: z.string(),
-  coinId: z.string(),
-  date: z.string(),
-  value: z.number(),
-  valueCurrency: currenciesUnionSchema,
-});
+export const assetSchema = assetValidatorSchema
+  .omit({ date: true })
+  .extend({ assetId: z.string(), date: z.string() });
 
 // each id represents a selected carousel element
 export const comparisonChartQueriesSchema = z.object({
