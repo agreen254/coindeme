@@ -108,9 +108,11 @@ export const historyResponseSchema = z.object({
   }),
 });
 
-export const assetHistorySchema = historyResponseSchema.extend({
+export const assetHistorySchema = z.object({
   assetId: z.string(),
-  lastUpdated: z.string(),
+  current_price: currenciesObjectSchema,
+  market_cap: currenciesObjectSchema,
+  total_volume: currenciesObjectSchema,
 });
 
 export const marketRequest = z.object({

@@ -1,3 +1,5 @@
+"use client";
+
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 
@@ -5,6 +7,9 @@ import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persist
 import { renderErrorToast } from "@/components/Toast/ErrorToast";
 import { PersistGate } from "@/components/PersistGate";
 
+/**
+ * This provider allows the fetched history data to persist in the local storage. 
+ */
 const TanstackPersistProvider = ({
   children,
 }: {

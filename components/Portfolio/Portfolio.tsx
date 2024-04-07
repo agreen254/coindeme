@@ -1,15 +1,14 @@
 "use client";
 
-import { useAssetStore } from "@/hooks/useAssetsStore";
-import { useAssetsQuery } from "@/hooks/useAssetsQuery";
+import { useAssetStore } from "@/hooks/useAssetStore";
+import { useAssetQueries } from "@/hooks/useAssetQueries";
 
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
 import AssetDisplay from "./AssetDisplay";
 
 const Portfolio = () => {
-  const store = useAssetStore();
-  const response = useAssetsQuery(store);
-  const data = response.flatMap((res) => (res.data ? [res.data] : []));
+  const assets = useAssetStore().assets;
+  const response = useAssetQueries(assets);
 
   return (
     <div className="flex flex-col items-center">
@@ -19,14 +18,16 @@ const Portfolio = () => {
         </div>
         <AssetModalWrapper />
       </div>
-      <p className="italic mt-12 text-muted-foreground">No assets found.</p>
-      {store.assets.map((asset) => (
-        <AssetDisplay
-          key={asset.assetId}
-          asset={asset}
-          history={data.find((item) => item.assetId === asset.assetId)}
-        />
-      ))}
+      {/* <p className="italic mt-12 text-muted-foreground">No assets found.</p> */}
+      <div className="flex flex-col gap-y-10 mt-10 mb-[50vh]">
+        {response.map((res, idx) => (
+          <AssetDisplay
+            key={assets[idx].assetId}
+            asset={assets[idx]}
+            response={res}
+          />
+        ))}
+      </div>
     </div>
   );
 };

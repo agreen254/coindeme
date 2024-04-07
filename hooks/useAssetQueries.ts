@@ -1,4 +1,4 @@
-import type { AssetStore } from "./useAssetsStore";
+import type { Asset } from "@/utils/types";
 import type { AssetHistory, HistoryRequest } from "@/utils/types";
 
 import {
@@ -7,11 +7,11 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 
-export const useAssetsQuery = (
-  store: AssetStore
+export const useAssetQueries = (
+  assets: Asset[]
 ): UseQueryResult<AssetHistory, Error>[] => {
   return useQueries({
-    queries: store.assets.map(
+    queries: assets.map(
       (asset) =>
         <UseQueryOptions>{
           queryKey: ["asset", asset.assetId],
@@ -38,9 +38,12 @@ export const useAssetsQuery = (
           meta: {
             errorMessage: `Failed to fetch ${asset.coinId} ${asset.date}:`,
           },
-          retry: false,
+          retry: true,
           refetchOnMount: false,
+          retryOnMount: true,
           refetchOnWindowFocus: false,
+          retryDelay: (attempt) =>
+            Math.min(attempt > 1 ? 2 ** (attempt * 1000) : 1000, 30 * 1000), // exponential backoff
         }
     ),
   });

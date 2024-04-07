@@ -26,7 +26,7 @@ import {
   type SetStateAction,
 } from "react";
 import { useState } from "react";
-import { useAddAsset, validateAsset } from "@/hooks/useAssetsStore";
+import { useAddAsset, validateAsset } from "@/hooks/useAssetStore";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";

@@ -1,3 +1,5 @@
+"use client";
+
 import { useIsRestoring } from "@tanstack/react-query";
 
 type Props = {

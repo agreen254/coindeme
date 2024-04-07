@@ -1,7 +1,7 @@
 import type { Asset, AssetHistory } from "./types";
-import { useAssetsQuery } from "@/hooks/useAssetsQuery";
+import { useAssetQueries } from "@/hooks/useAssetQueries";
 
-type Query = ReturnType<typeof useAssetsQuery>;
+type Query = ReturnType<typeof useAssetQueries>;
 
 /**
  * Method to merge the initially injected asset data with the historical response data.
