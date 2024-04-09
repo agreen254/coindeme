@@ -7,7 +7,7 @@ import { useAssetQueries } from "@/hooks/useAssetQueries";
 
 import { AnimatePresence } from "framer-motion";
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
-import AssetDisplay from "./AssetDisplay";
+import AssetDisplay from "./AssetDisplay/AssetDisplay";
 
 const Portfolio = () => {
   const assets = useAssetStore().assets;
@@ -19,7 +19,7 @@ const Portfolio = () => {
     <div className="flex flex-col items-center">
       <div className="flex w-[1296px] justify-between items-start">
         <div>
-          <h2 className="text-2xl">Your Assets</h2>
+          <h2 className="text-4xl">Your Assets</h2>
         </div>
         <AssetModalWrapper />
       </div>
