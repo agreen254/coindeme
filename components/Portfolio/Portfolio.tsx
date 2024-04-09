@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useAssetStore } from "@/hooks/useAssetStore";
 import { useAssetQueries } from "@/hooks/useAssetQueries";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
+// import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import { AnimatePresence } from "framer-motion";
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
