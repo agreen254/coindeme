@@ -296,7 +296,7 @@ const AssetModalBody = (
         isOpen && "flex"
       )}
     >
-      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900/70 border border-zinc-800">
+      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900 border border-zinc-800">
         <div className="flex justify-between">
           <h2 className="text-xl ml-1">Select Coin</h2>
           <label htmlFor="closeModal" className="sr-only">

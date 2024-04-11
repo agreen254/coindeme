@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
   function urlExtractor(body: Asset) {
     const { coinId, date } = body;
     return composeFetchUrl({
-      head: "     https://api.coingecko.com/api/v3/coins               ",
-      body: `     /${coinId}/history?date=${date}                      `,
-      tail: `     &x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}  `,
+      head: "    https://api.coingecko.com/api/v3/coins               ",
+      body: `    /${coinId}/history?date=${date}                      `,
+      tail: `    &x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}  `,
     });
   }
 

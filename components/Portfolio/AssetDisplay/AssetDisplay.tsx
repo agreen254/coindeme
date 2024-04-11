@@ -1,37 +1,55 @@
 import type { Asset } from "@/utils/types";
 
 import { currencyMap } from "@/utils/maps";
+import { extractDate } from "@/utils/extractDate";
+import { getAssetDisplays } from "@/utils/assetDisplayHelpers";
 import { useAssetQueries } from "@/hooks/useAssetQueries";
 import { useId } from "react";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import { SquarePen as SquarePenIcon } from "lucide-react";
 import Image from "next/image";
 
-type Element = ReturnType<typeof useAssetQueries>[number];
-
 type Props = {
-  response: Element;
+  historyResponse: ReturnType<typeof useAssetQueries>[number];
+  marketResponse: ReturnType<typeof useMarketQuery>;
   asset: Asset;
 };
 
-const AssetDisplay = ({ response, asset }: Props) => {
-  const { coinName, coinSymbol, coinImage, date, value, valueCurrency } = asset;
+const AssetDisplay = ({ historyResponse, marketResponse, asset }: Props) => {
   const editButtonId = useId();
 
-  if (response.isLoading) return <></>;
+  const {
+    coinName,
+    coinSymbol,
+    coinImage,
+    date: _date,
+    valueCurrency,
+  } = asset;
+  const date = extractDate(_date);
+
+  const {
+    circulatingVsMaxSupply,
+    currentAssetChangePercent,
+    currentAssetValue,
+    currentCoinPrice,
+    marketCapVsVolume,
+    twentyFourPercent,
+  } = getAssetDisplays({ asset, historyResponse, marketResponse });
+
   return (
     <div className="w-[1296px] flex rounded-xl border box-border border-zinc-700/80 shadow-md shadow-zinc-700/30">
-      <div className="p-4 pr-2 bg-teal-950/70 rounded-l-xl">
+      <div className="pl-5 pt-6 pr-2 bg-teal-950/70 rounded-l-xl">
         <Image
           alt={`${coinName} logo`}
           src={coinImage}
           className="inline"
-          height={60}
-          width={60}
+          height={55}
+          width={55}
           priority
         />
       </div>
-      <div className="relative w-[380px] flex flex-col justify-around py-6 gap-y-3 bg-teal-950/70">
+      <div className="relative w-[380px] flex flex-col justify-start pb-6 pt-8 gap-y-3 bg-teal-950/70">
         <label htmlFor={editButtonId} className="sr-only">
           edit this asset
         </label>
@@ -47,34 +65,36 @@ const AssetDisplay = ({ response, asset }: Props) => {
           </span>
         </div>
         <div>
-          <p className="text-3xl">
+          <p className="text-4xl mb-3">
             <span>
               {currencyMap.get(valueCurrency)}
-              {value}
+              {currentAssetValue}
             </span>
-            <span>{/* caret icon with percentage change */}</span>
+            <span className="ml-1">{currentAssetChangePercent}</span>
           </p>
-          <p className="text-lg text-muted-foreground/50">Purchased {date}</p>
+          <p className="text-lg text-muted-foreground/50">
+            Purchased {date.toLocaleString("en-US", { dateStyle: "medium" })}
+          </p>
         </div>
       </div>
-      <div className="w-[916px] rounded-r-xl grid grid-cols-2 p-6 gap-x-6 place-items-center box-border bg-zinc-900/70 text-sm">
+      <div className="w-[916px] rounded-r-xl grid grid-cols-2 p-6 gap-x-6 place-items-center box-border bg-zinc-900/70">
         <div className="w-full space-y-4">
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">$800</p>
-            <p className="text-muted-foreground">Current Price</p>
+            <p className="text-xl">{currentCoinPrice}</p>
+            <p className="text-muted-foreground">Current Coin Price</p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">44%</p>
+            <p className="text-xl">{marketCapVsVolume}</p>
             <p className="text-muted-foreground">Market Cap vs. Volume</p>
           </div>
         </div>
         <div className="w-full space-y-4">
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">5%</p>
+            <p className="text-xl">{twentyFourPercent}</p>
             <p className="text-muted-foreground">24h%</p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">10%</p>
+            <p className="text-xl">{circulatingVsMaxSupply}</p>
             <p className="text-muted-foreground">
               Circulating Supply vs. Max Supply
             </p>

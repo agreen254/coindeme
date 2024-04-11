@@ -36,6 +36,25 @@ export const assetSchema = assetValidatorSchema
   .omit({ date: true })
   .extend({ assetId: z.string(), date: z.string() });
 
+export const coinRequestSchema = z.object({
+  id: z.string(),
+});
+
+export const coinResponseSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  name: z.string(),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+  }),
+  market_data: z.object({
+    current_price: currenciesObjectSchema,
+    market_cap: currenciesObjectSchema,
+    total_volume: currenciesObjectSchema,
+  }),
+});
+
 // each id represents a selected carousel element
 export const comparisonChartQueriesSchema = z.object({
   ids: z.string().array(),
@@ -93,20 +112,7 @@ export const historyRequestSchema = z.object({
   date: z.string(),
 });
 
-export const historyResponseSchema = z.object({
-  id: z.string(),
-  symbol: z.string(),
-  name: z.string(),
-  image: z.object({
-    thumb: z.string(),
-    small: z.string(),
-  }),
-  market_data: z.object({
-    current_price: currenciesObjectSchema,
-    market_cap: currenciesObjectSchema,
-    total_volume: currenciesObjectSchema,
-  }),
-});
+export const historyResponseSchema = coinResponseSchema;
 
 export const assetHistorySchema = z.object({
   assetId: z.string(),
