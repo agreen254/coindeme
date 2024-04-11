@@ -1,15 +1,19 @@
-import type { Asset, AssetHistory, HistoryResponse } from "@/utils/types";
+import type {
+  AssetHistory,
+  CoinHistoryRequest,
+  CoinHistoryResponse,
+} from "@/utils/types";
 
 import { composeFetchUrl } from "@/utils/composeFetchUrl";
 import {
-  historyRequestSchema,
-  historyResponseSchema,
+  coinHistoryRequestSchema,
+  coinHistoryResponseSchema,
 } from "@/validation/schema";
 import { NextRequest } from "next/server";
 import { postValidationHandler } from "@/validation/handler";
 
 export async function POST(req: NextRequest) {
-  function urlExtractor(body: Asset) {
+  function urlExtractor(body: CoinHistoryRequest) {
     const { coinId, date } = body;
     return composeFetchUrl({
       head: "    https://api.coingecko.com/api/v3/coins               ",
@@ -19,8 +23,8 @@ export async function POST(req: NextRequest) {
   }
 
   function responseTransformer(
-    body: Asset,
-    response: HistoryResponse
+    body: CoinHistoryRequest,
+    response: CoinHistoryResponse
   ): AssetHistory {
     return {
       assetId: body.assetId,
@@ -30,10 +34,14 @@ export async function POST(req: NextRequest) {
     };
   }
 
-  return postValidationHandler<Asset, HistoryResponse, AssetHistory>(
+  return postValidationHandler<
+    CoinHistoryRequest,
+    CoinHistoryResponse,
+    AssetHistory
+  >(
     req,
-    historyRequestSchema,
-    historyResponseSchema,
+    coinHistoryRequestSchema,
+    coinHistoryResponseSchema,
     urlExtractor,
     responseTransformer
   );

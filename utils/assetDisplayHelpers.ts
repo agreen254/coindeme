@@ -1,39 +1,42 @@
-import type { Asset } from "./types";
+import type { Asset, Currency } from "./types";
 
-import { useAssetQueries } from "@/hooks/useAssetQueries";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { flatMarketRes } from "./flatMarketRes";
+import {
+  useAssetCurrentQueries,
+  useAssetHistoryQueries,
+} from "@/hooks/useAssetQueries";
 
 type Props = {
-  historyResponse: ReturnType<typeof useAssetQueries>[number];
-  marketResponse: ReturnType<typeof useMarketQuery>;
   asset: Asset;
+  currency: Currency;
+  currentResponse: ReturnType<typeof useAssetCurrentQueries>[number];
+  historyResponse: ReturnType<typeof useAssetHistoryQueries>[number];
 };
 
 type Result = {
+  circulatingVsMaxSupply: string;
   currentAssetChangePercent: string;
   currentAssetValue: string;
   currentCoinPrice: string;
-  twentyFourPercent: string;
   marketCapVsVolume: string;
-  circulatingVsMaxSupply: string;
+  twentyFourPercent: string;
 };
 
 export function getAssetDisplays({
   asset,
+  currency = "usd",
+  currentResponse,
   historyResponse,
-  marketResponse,
 }: Props): Result {
-  const numCoins = historyResponse.data
-    ? asset.value / historyResponse.data.current_price.usd
-    : null;
-  const currentAssetStats = flatMarketRes(marketResponse.data?.pages)?.find(
-    (coin) => coin.id === asset.coinId
-  );
+  function getNumCoins() {
+    if (!historyResponse.data) return null;
+    return asset.value / historyResponse.data?.current_price[currency];
+  }
+  const numCoins = getNumCoins();
+  const currentAssetStats = currentResponse.data;
 
   const currentAssetValue =
     numCoins && currentAssetStats
-      ? (numCoins * currentAssetStats.current_price).toString()
+      ? (numCoins * currentAssetStats.current_price[currency]).toString()
       : "-";
   const currentAssetChangePercent =
     currentAssetValue !== "-"
@@ -42,14 +45,19 @@ export function getAssetDisplays({
           asset.value
         ).toString() + "%"
       : "";
+
   const twentyFourPercent = currentAssetStats
     ? currentAssetStats.price_change_percentage_24h.toString() + "%"
     : "-";
+
   const currentCoinPrice = currentAssetStats
-    ? currentAssetStats.current_price.toString()
+    ? currentAssetStats.current_price[currency].toString()
     : "-";
   const marketCapVsVolume = currentAssetStats
-    ? (currentAssetStats.market_cap / currentAssetStats.total_volume).toString()
+    ? (
+        currentAssetStats.market_cap[currency] /
+        currentAssetStats.total_volume[currency]
+      ).toString()
     : "-";
   const circulatingVsMaxSupply =
     currentAssetStats && currentAssetStats.max_supply

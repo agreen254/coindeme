@@ -4,22 +4,26 @@ import { motion } from "framer-motion";
 import { extractDate } from "@/utils/extractDate";
 import { sort } from "fast-sort";
 import { useAssetStore } from "@/hooks/useAssetStore";
-import { useAssetQueries } from "@/hooks/useAssetQueries";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
+import {
+  useAssetCurrentQueries,
+  useAssetHistoryQueries,
+} from "@/hooks/useAssetQueries";
 
 import { AnimatePresence } from "framer-motion";
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
 import AssetDisplay from "./AssetDisplay/AssetDisplay";
+import { ErrorBoundary } from "react-error-boundary";
 
 const Portfolio = () => {
   const assets = useAssetStore().assets;
   const sortedAssets = sort(assets).by([
     { asc: (asset) => asset.coinName },
     { asc: (asset) => extractDate(asset.date) },
+    { desc: (asset) => asset.value },
   ]);
 
-  const assetResponse = useAssetQueries(sortedAssets);
-  const marketResponse = useMarketQuery("usd", "market_cap", "desc");
+  const assetHistoryResponse = useAssetHistoryQueries(sortedAssets);
+  const assetCurrentResponse = useAssetCurrentQueries(sortedAssets);
 
   return (
     <div className="flex flex-col items-center">
@@ -39,11 +43,13 @@ const Portfolio = () => {
               exit={{ opacity: 0 }}
               transition={{ delay: 0.02 * idx }}
             >
-              <AssetDisplay
-                asset={asset}
-                historyResponse={assetResponse[idx]}
-                marketResponse={marketResponse}
-              />
+              <ErrorBoundary fallback={<p>Failed to render asset.</p>}>
+                <AssetDisplay
+                  asset={asset}
+                  currentResponse={assetCurrentResponse[idx]}
+                  historyResponse={assetHistoryResponse[idx]}
+                />
+              </ErrorBoundary>
             </motion.div>
           </AnimatePresence>
         ))}

@@ -36,11 +36,49 @@ export const assetSchema = assetValidatorSchema
   .omit({ date: true })
   .extend({ assetId: z.string(), date: z.string() });
 
-export const coinRequestSchema = z.object({
-  id: z.string(),
+export const assetHistorySchema = z.object({
+  assetId: z.string(),
+  current_price: currenciesObjectSchema,
+  market_cap: currenciesObjectSchema,
+  total_volume: currenciesObjectSchema,
 });
 
-export const coinResponseSchema = z.object({
+export const assetCurrentSchema = assetHistorySchema.extend({
+  price_change_percentage_24h: z.number(),
+  circulating_supply: z.number(),
+  total_supply: z.number().nullable(),
+  max_supply: z.number().nullable(),
+});
+
+export const coinCurrentRequestSchema = z.object({
+  assetId: z.string(),
+  coinId: z.string(),
+});
+
+export const coinCurrentResponseSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  name: z.string(),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+  }),
+  market_data: z.object({
+    current_price: currenciesObjectSchema,
+    market_cap: currenciesObjectSchema,
+    total_volume: currenciesObjectSchema,
+    price_change_percentage_24h: z.number(),
+    circulating_supply: z.number(),
+    total_supply: z.number().nullable(),
+    max_supply: z.number().nullable(),
+  }),
+});
+
+export const coinHistoryRequestSchema = coinCurrentRequestSchema.extend({
+  date: z.string(),
+});
+
+export const coinHistoryResponseSchema = z.object({
   id: z.string(),
   symbol: z.string(),
   name: z.string(),
@@ -105,21 +143,6 @@ export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),
 ]);
-
-export const historyRequestSchema = z.object({
-  assetId: z.string(),
-  coinId: z.string(),
-  date: z.string(),
-});
-
-export const historyResponseSchema = coinResponseSchema;
-
-export const assetHistorySchema = z.object({
-  assetId: z.string(),
-  current_price: currenciesObjectSchema,
-  market_cap: currenciesObjectSchema,
-  total_volume: currenciesObjectSchema,
-});
 
 export const marketRequest = z.object({
   page: z.number(),

@@ -3,30 +3,28 @@ import type { Asset } from "@/utils/types";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/extractDate";
 import { getAssetDisplays } from "@/utils/assetDisplayHelpers";
-import { useAssetQueries } from "@/hooks/useAssetQueries";
+import {
+  useAssetCurrentQueries,
+  useAssetHistoryQueries,
+} from "@/hooks/useAssetQueries";
 import { useId } from "react";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 
 import { SquarePen as SquarePenIcon } from "lucide-react";
 import Image from "next/image";
 
 type Props = {
-  historyResponse: ReturnType<typeof useAssetQueries>[number];
-  marketResponse: ReturnType<typeof useMarketQuery>;
   asset: Asset;
+  currentResponse: ReturnType<typeof useAssetCurrentQueries>[number];
+  historyResponse: ReturnType<typeof useAssetHistoryQueries>[number];
 };
 
-const AssetDisplay = ({ historyResponse, marketResponse, asset }: Props) => {
+const AssetDisplay = ({ asset, currentResponse, historyResponse }: Props) => {
   const editButtonId = useId();
 
-  const {
-    coinName,
-    coinSymbol,
-    coinImage,
-    date: _date,
-    valueCurrency,
-  } = asset;
-  const date = extractDate(_date);
+  const { coinName, coinSymbol, coinImage, date, valueCurrency } = asset;
+  const displayDate = extractDate(date).toLocaleString("en-US", {
+    dateStyle: "medium",
+  });
 
   const {
     circulatingVsMaxSupply,
@@ -35,7 +33,12 @@ const AssetDisplay = ({ historyResponse, marketResponse, asset }: Props) => {
     currentCoinPrice,
     marketCapVsVolume,
     twentyFourPercent,
-  } = getAssetDisplays({ asset, historyResponse, marketResponse });
+  } = getAssetDisplays({
+    asset,
+    currency: "usd",
+    currentResponse,
+    historyResponse,
+  });
 
   return (
     <div className="w-[1296px] flex rounded-xl border box-border border-zinc-700/80 shadow-md shadow-zinc-700/30">
@@ -73,7 +76,7 @@ const AssetDisplay = ({ historyResponse, marketResponse, asset }: Props) => {
             <span className="ml-1">{currentAssetChangePercent}</span>
           </p>
           <p className="text-lg text-muted-foreground/50">
-            Purchased {date.toLocaleString("en-US", { dateStyle: "medium" })}
+            Purchased {displayDate}
           </p>
         </div>
       </div>
