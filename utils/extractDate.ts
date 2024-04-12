@@ -3,5 +3,5 @@
  */
 export function extractDate(dateStr: string) {
   const [day, month, year] = dateStr.split("-");
-  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day) + 1);
 }

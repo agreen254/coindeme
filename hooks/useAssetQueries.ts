@@ -47,6 +47,11 @@ export const useAssetHistoryQueries = (
           refetchOnMount: false,
           retryOnMount: true,
           refetchOnWindowFocus: false,
+
+          // Once the historical data is fetched, never need to refetch it.
+          // Must be sure to remove from the cache if user deletes asset.
+          gcTime: Infinity,
+          staleTime: Infinity,
         }
     ),
   });

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { extractDate } from "@/utils/extractDate";
 import { sort } from "fast-sort";
 import { useAssetStore } from "@/hooks/useAssetStore";
@@ -9,7 +8,6 @@ import {
   useAssetHistoryQueries,
 } from "@/hooks/useAssetQueries";
 
-import { AnimatePresence } from "framer-motion";
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
 import AssetDisplay from "./AssetDisplay/AssetDisplay";
 import { ErrorBoundary } from "react-error-boundary";
@@ -33,25 +31,21 @@ const Portfolio = () => {
         </div>
         <AssetModalWrapper />
       </div>
-      {/* <p className="italic mt-12 text-muted-foreground">No assets found.</p> */}
+      {assets.length === 0 && (
+        <p className="italic mt-12 text-muted-foreground">No assets found.</p>
+      )}
       <div className="flex flex-col gap-y-10 mt-10 mb-[50vh]">
         {sortedAssets.map((asset, idx) => (
-          <AnimatePresence key={asset.assetId}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.02 * idx }}
-            >
-              <ErrorBoundary fallback={<p>Failed to render asset.</p>}>
-                <AssetDisplay
-                  asset={asset}
-                  currentResponse={assetCurrentResponse[idx]}
-                  historyResponse={assetHistoryResponse[idx]}
-                />
-              </ErrorBoundary>
-            </motion.div>
-          </AnimatePresence>
+          <ErrorBoundary
+            key={asset.assetId}
+            fallback={<p>Failed to render asset.</p>}
+          >
+            <AssetDisplay
+              asset={asset}
+              currentResponse={assetCurrentResponse[idx]}
+              historyResponse={assetHistoryResponse[idx]}
+            />
+          </ErrorBoundary>
         ))}
       </div>
     </div>
