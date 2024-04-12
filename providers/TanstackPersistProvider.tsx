@@ -8,7 +8,10 @@ import { useState } from "react";
 import { PersistGate } from "@/components/PersistGate";
 
 /**
- * This provider allows the fetched history data to persist in the local storage.
+ * Queries that should be stored in the local storage require a different provider component.
+ * 
+ * This component takes a 'persister':
+ * https://tanstack.com/query/latest/docs/framework/react/plugins/persistQueryClient
  */
 const TanstackPersistProvider = ({
   children,
