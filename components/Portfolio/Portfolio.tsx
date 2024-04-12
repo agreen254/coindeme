@@ -11,6 +11,7 @@ import {
 import AssetModalWrapper from "./AssetModal/AssetModalWrapper";
 import AssetDisplay from "./AssetDisplay/AssetDisplay";
 import { ErrorBoundary } from "react-error-boundary";
+import AssetDisplaySkeleton from "./AssetDisplay/AssetDisplaySkeleton";
 
 const Portfolio = () => {
   const assets = useAssetStore().assets;
@@ -22,6 +23,9 @@ const Portfolio = () => {
 
   const assetHistoryResponse = useAssetHistoryQueries(sortedAssets);
   const assetCurrentResponse = useAssetCurrentQueries(sortedAssets);
+
+  const isMissingData = (i: number) =>
+    !assetCurrentResponse[i].data || !assetHistoryResponse[i].data;
 
   return (
     <div className="flex flex-col items-center">
@@ -40,11 +44,16 @@ const Portfolio = () => {
             key={asset.assetId}
             fallback={<p>Failed to render asset.</p>}
           >
-            <AssetDisplay
-              asset={asset}
-              currentResponse={assetCurrentResponse[idx]}
-              historyResponse={assetHistoryResponse[idx]}
-            />
+            {isMissingData(idx) ? (
+              <AssetDisplaySkeleton asset={asset} />
+            ) : (
+              <AssetDisplay
+                asset={asset}
+                currency="usd"
+                currentResponse={assetCurrentResponse[idx].data!}
+                historyResponse={assetHistoryResponse[idx].data!}
+              />
+            )}
           </ErrorBoundary>
         ))}
       </div>
