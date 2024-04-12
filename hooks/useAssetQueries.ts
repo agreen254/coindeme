@@ -91,6 +91,9 @@ export const useAssetCurrentQueries = (
           refetchOnMount: false,
           retryOnMount: true,
           refetchOnWindowFocus: false,
+
+          // should refetch current data daily
+          staleTime: 1000 * 60 * 60 * 24
         }
     ),
   });
