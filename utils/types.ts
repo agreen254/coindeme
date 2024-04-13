@@ -4,14 +4,18 @@ import type {
 } from "@tanstack/react-query";
 
 import {
-  addedAssetSchema,
-  storedAssetSchema,
+  assetSchema,
+  assetValidatorSchema,
+  assetHistorySchema,
+  assetCurrentSchema,
+  coinCurrentRequestSchema,
+  coinCurrentResponseSchema,
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
   globalResponseSchema,
-  historyRequestSchema,
-  historyResponseSchema,
+  coinHistoryRequestSchema,
+  coinHistoryResponseSchema,
   globalResponseWrappedSchema,
   marketSchema,
   marketResponseSchema,
@@ -22,8 +26,10 @@ import {
 } from "@/validation/schema";
 import { z } from "zod";
 
-export type AddedAsset = z.infer<typeof addedAssetSchema>;
-export type StoredAsset = z.infer<typeof storedAssetSchema>;
+export type AssetValidator = z.infer<typeof assetValidatorSchema>;
+export type Asset = z.infer<typeof assetSchema>;
+export type AssetHistory = z.infer<typeof assetHistorySchema>;
+export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 
 const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
 export type Currency = (typeof validCurrencies)[number];
@@ -48,6 +54,9 @@ export type ChartColorSet = {
   endColor: Color;
 };
 
+export type CoinCurrentRequest = z.infer<typeof coinCurrentRequestSchema>;
+export type CoinCurrentResponse = z.infer<typeof coinCurrentResponseSchema>;
+
 export type ComparisonChartQueries = z.infer<
   typeof comparisonChartQueriesSchema
 >;
@@ -65,8 +74,8 @@ export type ComparisonData = {
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
 export type GlobalResponseWrapped = z.infer<typeof globalResponseWrappedSchema>;
 
-export type HistoryRequest = z.infer<typeof historyRequestSchema>;
-export type HistoryResponse = z.infer<typeof historyResponseSchema>;
+export type CoinHistoryRequest = z.infer<typeof coinHistoryRequestSchema>;
+export type CoinHistoryResponse = z.infer<typeof coinHistoryResponseSchema>;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;

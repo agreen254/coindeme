@@ -1,11 +1,14 @@
-import type { Currency } from "@/utils/types";
+import type { Asset, AssetValidator, Currency } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
+import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
+import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
 import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
+import { uid } from "uid";
 import { useClickAway } from "@uidotdev/usehooks";
 import {
   useDropdownResetFromId,
@@ -23,7 +26,7 @@ import {
   type SetStateAction,
 } from "react";
 import { useState } from "react";
-import { validateAsset } from "@/hooks/useAssetsStore";
+import { useAddAsset, validateAsset } from "@/hooks/useAssetStore";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
@@ -78,8 +81,9 @@ const AssetModalBody = (
   const coinInfo = flatMarketRes(market.data?.pages)?.find(
     (coin) => coin.id === coinId
   );
-  const coinImageUrl = coinInfo?.image || "";
-  const coinSymbol = coinInfo?.symbol || "";
+  const coinName = coinInfo?.name ?? "";
+  const coinImageUrl = coinInfo?.image ?? "";
+  const coinSymbol = coinInfo?.symbol ?? "";
 
   // refs
   const coinInputRef = useRef<HTMLInputElement>(null);
@@ -256,16 +260,28 @@ const AssetModalBody = (
     currencyDropdownRef,
   ]);
 
+  const storeAsset = useAddAsset();
   const handleAddAsset = () => {
-    const isValid = validateAsset({
+    const maybeAsset: AssetValidator = {
+      coinName: coinName,
       coinId: coinId,
+      coinImage: coinImageUrl,
+      coinSymbol: coinSymbolFromId(coinId, searchTargets),
       date: new Date(date),
       value: parseFloat(value || "0"),
       valueCurrency: valueCurrency,
-    });
+    };
+
+    const isValid = validateAsset(maybeAsset);
     if (isValid) {
+      const asset: Asset = {
+        ...maybeAsset,
+        assetId: uid(),
+        date: convertHistoricalDate(maybeAsset.date),
+      };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
+      storeAsset(asset);
     }
   };
 
@@ -280,7 +296,7 @@ const AssetModalBody = (
         isOpen && "flex"
       )}
     >
-      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900/70 border border-zinc-800">
+      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900 border border-zinc-800">
         <div className="flex justify-between">
           <h2 className="text-xl ml-1">Select Coin</h2>
           <label htmlFor="closeModal" className="sr-only">

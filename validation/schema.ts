@@ -17,8 +17,11 @@ export const currenciesObjectSchema = z.object({
   usd: z.number(),
 });
 
-export const addedAssetSchema = z.object({
+export const assetValidatorSchema = z.object({
+  coinName: z.string(),
   coinId: z.string().min(1, { message: "No coin selected" }),
+  coinImage: z.string(),
+  coinSymbol: z.string(),
   date: z
     .date()
     .max(new Date(), { message: "Cannot use future dates" })
@@ -29,9 +32,65 @@ export const addedAssetSchema = z.object({
   valueCurrency: currenciesUnionSchema,
 });
 
-export const storedAssetSchema = z.object({
+export const assetSchema = assetValidatorSchema
+  .omit({ date: true })
+  .extend({ assetId: z.string(), date: z.string() });
+
+export const assetHistorySchema = z.object({
+  assetId: z.string(),
+  current_price: currenciesObjectSchema,
+  market_cap: currenciesObjectSchema,
+  total_volume: currenciesObjectSchema,
+});
+
+export const assetCurrentSchema = assetHistorySchema.extend({
+  price_change_percentage_24h: z.number(),
+  circulating_supply: z.number(),
+  total_supply: z.number().nullable(),
+  max_supply: z.number().nullable(),
+});
+
+export const coinCurrentRequestSchema = z.object({
+  assetId: z.string(),
+  coinId: z.string(),
+});
+
+export const coinCurrentResponseSchema = z.object({
   id: z.string(),
-  values: currenciesObjectSchema,
+  symbol: z.string(),
+  name: z.string(),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+  }),
+  market_data: z.object({
+    current_price: currenciesObjectSchema,
+    market_cap: currenciesObjectSchema,
+    total_volume: currenciesObjectSchema,
+    price_change_percentage_24h: z.number(),
+    circulating_supply: z.number(),
+    total_supply: z.number().nullable(),
+    max_supply: z.number().nullable(),
+  }),
+});
+
+export const coinHistoryRequestSchema = coinCurrentRequestSchema.extend({
+  date: z.string(),
+});
+
+export const coinHistoryResponseSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  name: z.string(),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+  }),
+  market_data: z.object({
+    current_price: currenciesObjectSchema,
+    market_cap: currenciesObjectSchema,
+    total_volume: currenciesObjectSchema,
+  }),
 });
 
 // each id represents a selected carousel element
@@ -84,26 +143,6 @@ export const marketFetchParamSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),
 ]);
-
-export const historyRequestSchema = z.object({
-  coinId: z.string(),
-  date: z.string().regex(new RegExp("[0-9]{2}-[0-9]{2}-[0-9]{4}")),
-});
-
-export const historyResponseSchema = z.object({
-  id: z.string(),
-  symbol: z.string(),
-  name: z.string(),
-  image: z.object({
-    thumb: z.string(),
-    small: z.string(),
-  }),
-  market_data: z.object({
-    current_price: currenciesObjectSchema,
-    market_cap: currenciesObjectSchema,
-    total_volume: currenciesObjectSchema,
-  }),
-});
 
 export const marketRequest = z.object({
   page: z.number(),

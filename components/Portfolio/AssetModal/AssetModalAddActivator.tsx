@@ -14,7 +14,7 @@ const AssetModalAddActivator = forwardRef(
     return (
       <button
         ref={ref}
-        className="px-5 py-3 w-[244px] font-medium bg-teal-700 shadow-[0_0_20px_8px] shadow-market-teal/15 border border-white/0 rounded-md focus:outline-none focus:border-stone-300"
+        className="px-5 py-[10px] w-[256px] font-medium bg-teal-700 shadow-[0_0_20px_8px] shadow-market-teal/15 border border-white/0 rounded-md focus:outline-none focus:border-stone-300"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         Add Asset
