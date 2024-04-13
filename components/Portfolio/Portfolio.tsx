@@ -23,8 +23,7 @@ const Portfolio = () => {
 
   const assetHistoryResponse = useAssetHistoryQueries(sortedAssets);
   const assetCurrentResponse = useAssetCurrentQueries(sortedAssets);
-
-  const isMissingData = (i: number) =>
+  const assetIsMissingResponse = (i: number) =>
     !assetCurrentResponse[i].data || !assetHistoryResponse[i].data;
 
   return (
@@ -44,14 +43,14 @@ const Portfolio = () => {
             key={asset.assetId}
             fallback={<p>Failed to render asset.</p>}
           >
-            {isMissingData(idx) ? (
+            {assetIsMissingResponse(idx) ? (
               <AssetDisplaySkeleton asset={asset} />
             ) : (
               <AssetDisplay
                 asset={asset}
                 currency="usd"
-                currentResponse={assetCurrentResponse[idx].data!}
-                historyResponse={assetHistoryResponse[idx].data!}
+                assetCurrent={assetCurrentResponse[idx].data!}
+                assetHistory={assetHistoryResponse[idx].data!}
               />
             )}
           </ErrorBoundary>

@@ -1,32 +1,35 @@
 import type {
   Asset,
-  CoinCurrentQueryUnit,
-  CoinHistoryQueryUnit,
+  AssetCurrent,
+  AssetHistory,
   Currency,
 } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/extractDate";
-import { getAssetDisplayData } from "@/utils/assetListHelpers";
+import { assetDisplayData } from "@/utils/assetDisplayData";
 import { useId } from "react";
 
-import { SquarePen as SquarePenIcon } from "lucide-react";
+import CaretIcon from "@/Icons/Caret";
 import Image from "next/image";
 import { Infinity as InfinityIcon } from "lucide-react";
+import ProgressWidget from "@/components/ProgressWidget";
+import { SquarePen as SquarePenIcon } from "lucide-react";
 
 type Props = {
   asset: Asset;
+  assetCurrent: AssetCurrent;
+  assetHistory: AssetHistory;
   currency: Currency;
-  currentResponse: CoinCurrentQueryUnit;
-  historyResponse: CoinHistoryQueryUnit;
 };
 
+// Extend AssetCurrent to include market_cap_change_percentage_24h
 const AssetDisplay = ({
   asset,
   currency,
-  currentResponse,
-  historyResponse,
+  assetCurrent,
+  assetHistory,
 }: Props) => {
   const editButtonId = useId();
 
@@ -36,13 +39,13 @@ const AssetDisplay = ({
   });
 
   const {
-    circVsMaxSupply,
+    circVsTotalSupply,
     currentPrice,
     currentPriceChange24h,
     currentValue,
     currentValueChangePercent,
     marketCapVsVolume,
-  } = getAssetDisplayData(asset, "usd", currentResponse, historyResponse);
+  } = assetDisplayData(asset, "usd", assetCurrent, assetHistory);
 
   return (
     <div className="w-[1296px] flex rounded-xl border box-border border-zinc-700/80 shadow-md shadow-zinc-700/30">
@@ -108,30 +111,77 @@ const AssetDisplay = ({
             <p className="text-xl">
               {currencyMap.get(currency)}
               {currentPrice < 0.01
-                ? currentPrice.toExponential(3)
+                ? currentPrice.toExponential(2)
                 : currentPrice.toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
             </p>
-            <p className="text-muted-foreground/50">Current Coin Price</p>
+            <p className="text-sm text-muted-foreground/50">
+              Current Coin Price
+            </p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">{marketCapVsVolume}</p>
-            <p className="text-muted-foreground/50">Market Cap vs. Volume</p>
+            <div className="flex items-center text-xl">
+              <span>{Math.round(marketCapVsVolume) + "%"}</span>
+              <ProgressWidget
+                containerClassName="w-full ml-4 mr-2 bg-white/20"
+                progressClassName="bg-white/80"
+                progressPercentage={marketCapVsVolume}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground/50">
+              Market Cap vs. Volume
+            </p>
           </div>
         </div>
         <div className="w-full space-y-4">
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">{currentPriceChange24h}%</p>
-            <p className="text-muted-foreground/50">24h%</p>
+            <p
+              className={cn(
+                "text-xl",
+                currentPriceChange24h > 0
+                  ? "text-market-up"
+                  : "text-market-down"
+              )}
+            >
+              <span>
+                <CaretIcon
+                  className={cn(
+                    "w-4 h-4 mr-1 inline",
+                    currentPriceChange24h > 0
+                      ? "fill-market-up"
+                      : "fill-market-down rotate-180"
+                  )}
+                />
+              </span>
+              <span>
+                {Math.abs(currentPriceChange24h).toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+                %
+              </span>
+            </p>
+            <p className="text-sm text-muted-foreground/50">24h%</p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">
-              {circVsMaxSupply || <InfinityIcon className="w-6 h-6 inline" />}
-            </p>
-            <p className="text-muted-foreground/50">
-              Circulating Supply vs. Max Supply
+            <div className="flex items-center text-xl">
+              <span>
+                {circVsTotalSupply ? (
+                  Math.round(circVsTotalSupply) + "%"
+                ) : (
+                  <InfinityIcon className="w-6 h-6 inline" />
+                )}
+              </span>
+              <ProgressWidget
+                containerClassName="w-full ml-4 mr-2 bg-white/20"
+                progressClassName="bg-white/80"
+                progressPercentage={circVsTotalSupply ?? 100}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground/50">
+              Circulating Supply vs. Total Supply
             </p>
           </div>
         </div>

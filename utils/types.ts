@@ -62,9 +62,6 @@ export type ChartColorSet = {
 export type CoinCurrentRequest = z.infer<typeof coinCurrentRequestSchema>;
 export type CoinCurrentResponse = z.infer<typeof coinCurrentResponseSchema>;
 export type CoinCurrentQuery = ReturnType<typeof useAssetCurrentQueries>;
-export type CoinCurrentQueryUnit = NonNullable<
-  CoinCurrentQuery[number]["data"]
->;
 
 export type ComparisonChartQueries = z.infer<
   typeof comparisonChartQueriesSchema
@@ -86,9 +83,6 @@ export type GlobalResponseWrapped = z.infer<typeof globalResponseWrappedSchema>;
 export type CoinHistoryRequest = z.infer<typeof coinHistoryRequestSchema>;
 export type CoinHistoryResponse = z.infer<typeof coinHistoryResponseSchema>;
 export type CoinHistoryQuery = ReturnType<typeof useAssetHistoryQueries>;
-export type CoinHistoryQueryUnit = NonNullable<
-  CoinHistoryQuery[number]["data"]
->;
 
 export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;

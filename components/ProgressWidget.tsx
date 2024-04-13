@@ -6,7 +6,7 @@ type Props = {
   progressPercentage: number;
 };
 
-const NavProgressWidget = ({
+const ProgressWidget = ({
   containerClassName,
   progressClassName,
   progressPercentage,
@@ -21,4 +21,4 @@ const NavProgressWidget = ({
   );
 };
 
-export default NavProgressWidget;
+export default ProgressWidget;

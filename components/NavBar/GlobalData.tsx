@@ -12,7 +12,7 @@ import CaretIcon from "@/Icons/Caret";
 import ExchangeIcon from "@/Icons/Exchange";
 import { HandCoins as HandCoinsIcon } from "lucide-react";
 import Image from "next/image";
-import NavProgressWidget from "./NavProgressWidget";
+import ProgressWidget from "../ProgressWidget";
 
 const GlobalData = () => {
   const { data, isPending } = useGlobalData();
@@ -67,7 +67,7 @@ const GlobalData = () => {
       <span className="w-[1px] h-6 bg-white/10" />
       <span className="flex items-center">
         {currencySymbol + formatPriceValue(total_volume[currency])}
-        <NavProgressWidget
+        <ProgressWidget
           containerClassName="w-16 ml-2 bg-white/20"
           progressClassName="bg-white"
           progressPercentage={
@@ -86,7 +86,7 @@ const GlobalData = () => {
           priority
         />
         {formatPriceChangePercentage(btc_market_percentage)}%
-        <NavProgressWidget
+        <ProgressWidget
           containerClassName="w-16 ml-2 bg-white/20"
           progressClassName="bg-bitcoin"
           progressPercentage={btc_market_percentage}
@@ -103,7 +103,7 @@ const GlobalData = () => {
           priority
         />
         {formatPriceChangePercentage(eth_market_percentage)}%
-        <NavProgressWidget
+        <ProgressWidget
           containerClassName="w-16 ml-2 bg-white/20"
           progressClassName="bg-eth"
           progressPercentage={eth_market_percentage}

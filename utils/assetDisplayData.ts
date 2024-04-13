@@ -1,12 +1,12 @@
 import type {
   Asset,
-  CoinCurrentQueryUnit,
-  CoinHistoryQueryUnit,
+  AssetCurrent,
+  AssetHistory,
   Currency,
 } from "./types";
 
 type Result = {
-  circVsMaxSupply: number | null;
+  circVsTotalSupply: number | null;
   currentPrice: number;
   currentPriceChange24h: number;
   currentValue: number;
@@ -14,13 +14,14 @@ type Result = {
   marketCapVsVolume: number;
 };
 
-export function getAssetDisplayData(
+export function assetDisplayData(
   asset: Asset,
   currency: Currency,
-  cData: CoinCurrentQueryUnit,
-  hData: CoinHistoryQueryUnit
+  cData: AssetCurrent,
+  hData: AssetHistory
 ): Result {
-  // make sure we use the currency the user-submitted value here
+  // make sure we use the same currency that the user submitted here
+  // the initial value is only referring to that specific currency
   const numCoins = asset.value / hData.current_price[asset.valueCurrency];
 
   const currentPrice = cData.current_price[currency];
@@ -30,14 +31,14 @@ export function getAssetDisplayData(
   const currentValueChangePercent =
     ((currentValue - asset.value) * 100) / asset.value;
 
-  const circVsMaxSupply = cData.max_supply
-    ? cData.circulating_supply / cData.max_supply
+  const circVsTotalSupply = cData.total_supply
+    ? (cData.circulating_supply * 100) / cData.total_supply
     : null;
   const marketCapVsVolume =
     cData.market_cap[currency] / cData.total_volume[currency];
 
   return {
-    circVsMaxSupply,
+    circVsTotalSupply,
     currentPrice,
     currentValue,
     marketCapVsVolume,
