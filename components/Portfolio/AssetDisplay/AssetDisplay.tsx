@@ -1,5 +1,11 @@
 import type { Asset, AssetCurrent, AssetHistory } from "@/utils/types";
 
+import CaretIcon from "@/Icons/Caret";
+import Image from "next/image";
+import { Infinity as InfinityIcon } from "lucide-react";
+import ProgressWidget from "@/components/ProgressWidget";
+import { SquarePen as SquarePenIcon } from "lucide-react";
+
 import { useId } from "react";
 import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
@@ -7,12 +13,6 @@ import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/extractDate";
 import { localeFormat } from "@/utils/formatHelpers";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import CaretIcon from "@/Icons/Caret";
-import Image from "next/image";
-import { Infinity as InfinityIcon } from "lucide-react";
-import ProgressWidget from "@/components/ProgressWidget";
-import { SquarePen as SquarePenIcon } from "lucide-react";
 
 type Props = {
   asset: Asset;
