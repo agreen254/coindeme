@@ -1,22 +1,18 @@
-import type {
-  Asset,
-  AssetCurrent,
-  AssetHistory,
-} from "@/utils/types";
+import type { Asset, AssetCurrent, AssetHistory } from "@/utils/types";
 
+import { useId } from "react";
 import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/extractDate";
 import { localeFormat } from "@/utils/formatHelpers";
-import { useId } from "react";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CaretIcon from "@/Icons/Caret";
 import Image from "next/image";
 import { Infinity as InfinityIcon } from "lucide-react";
 import ProgressWidget from "@/components/ProgressWidget";
 import { SquarePen as SquarePenIcon } from "lucide-react";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 type Props = {
   asset: Asset;
@@ -44,28 +40,34 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
 
   const currentValue = (() => {
     const value = maybeDisplayData?.currentValue;
-    if (!value) return placeholder;
-    return <span>{currencyMap.get(currency) + localeFormat(value)}</span>;
+    return value ? (
+      <span>{currencyMap.get(currency) + localeFormat(value)}</span>
+    ) : (
+      placeholder
+    );
   })();
 
   const currentValueChangePercent = (() => {
     const change = maybeDisplayData?.currentValueChangePercent;
-    if (!change) return "";
-    return (
+    return change ? (
       <span className={cn(change > 0 ? "text-market-up" : "text-market-down")}>
         ( {change > 0 && "+"}
         {localeFormat(change)}% )
       </span>
+    ) : (
+      <></>
     );
   })();
 
   const currentPrice = (() => {
     const price = maybeDisplayData?.currentPrice;
     if (!price) return placeholder;
-    if (price < 0.01) {
-      return <span>{currencyMap.get(currency) + price.toExponential(2)}</span>;
-    } else
-      return <span>{currencyMap.get(currency) + localeFormat(price)}</span>;
+
+    return price < 0.01 ? (
+      <span>{currencyMap.get(currency) + price.toExponential(2)}</span>
+    ) : (
+      <span>{currencyMap.get(currency) + localeFormat(price)}</span>
+    );
   })();
 
   const currentPriceChange24h = (() => {
@@ -93,6 +95,7 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   const marketCapVsVolume = (() => {
     const ratio = maybeDisplayData?.marketCapVsVolume;
     const change = maybeDisplayData?.currentPriceChange24h;
+
     if (!ratio || !change) return placeholder;
     return (
       <>
@@ -119,7 +122,12 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   const circVsTotalSupply = (() => {
     const ratio = maybeDisplayData?.circVsTotalSupply;
     const priceChange = maybeDisplayData?.currentPriceChange24h;
-    if (typeof ratio === "undefined" || !priceChange) return placeholder;
+
+    // The ratio is nullable, so need to distinguish between having actually received null value
+    // or the undefined case where no value is received
+    if (typeof ratio === "undefined" || typeof priceChange === "undefined") {
+      return placeholder;
+    }
 
     const displayNum = ratio ? (
       <span
