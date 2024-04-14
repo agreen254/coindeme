@@ -1,9 +1,4 @@
-import type {
-  Asset,
-  AssetCurrent,
-  AssetHistory,
-  Currency,
-} from "./types";
+import type { Asset, AssetCurrent, AssetHistory, Currency } from "./types";
 
 type Result = {
   circVsTotalSupply: number | null;
@@ -17,9 +12,15 @@ type Result = {
 export function assetDisplayData(
   asset: Asset,
   currency: Currency,
-  cData: AssetCurrent,
-  hData: AssetHistory
-): Result {
+  cData: AssetCurrent | undefined,
+  hData: AssetHistory | undefined
+): Result | null {
+  if (!cData || !hData) return null;
+
+  const adjustedValue =
+    (asset.value * hData.current_price[currency]) /
+    hData.current_price[asset.valueCurrency]
+
   // make sure we use the same currency that the user submitted here
   // the initial value is only referring to that specific currency
   const numCoins = asset.value / hData.current_price[asset.valueCurrency];
@@ -29,7 +30,7 @@ export function assetDisplayData(
 
   const currentValue = numCoins * cData.current_price[currency];
   const currentValueChangePercent =
-    ((currentValue - asset.value) * 100) / asset.value;
+    ((currentValue - adjustedValue) * 100) / adjustedValue;
 
   const circVsTotalSupply = cData.total_supply
     ? (cData.circulating_supply * 100) / cData.total_supply

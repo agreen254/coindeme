@@ -15,7 +15,7 @@ const ProgressWidget = ({
     <div className={cn("h-[6px] rounded-[2px]", containerClassName)}>
       <div
         className={cn("h-full rounded-[2px]", progressClassName)}
-        style={{ width: `${progressPercentage}%` }}
+        style={{ width: `${progressPercentage <= 100 ? progressPercentage : 100}%` }}
       ></div>
     </div>
   );

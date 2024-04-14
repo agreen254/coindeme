@@ -2,13 +2,13 @@ import type {
   Asset,
   AssetCurrent,
   AssetHistory,
-  Currency,
 } from "@/utils/types";
 
+import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/extractDate";
-import { assetDisplayData } from "@/utils/assetDisplayData";
+import { localeFormat } from "@/utils/formatHelpers";
 import { useId } from "react";
 
 import CaretIcon from "@/Icons/Caret";
@@ -16,36 +16,138 @@ import Image from "next/image";
 import { Infinity as InfinityIcon } from "lucide-react";
 import ProgressWidget from "@/components/ProgressWidget";
 import { SquarePen as SquarePenIcon } from "lucide-react";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 type Props = {
   asset: Asset;
-  assetCurrent: AssetCurrent;
-  assetHistory: AssetHistory;
-  currency: Currency;
+  assetCurrent: AssetCurrent | undefined;
+  assetHistory: AssetHistory | undefined;
 };
 
-// Extend AssetCurrent to include market_cap_change_percentage_24h
-const AssetDisplay = ({
-  asset,
-  currency,
-  assetCurrent,
-  assetHistory,
-}: Props) => {
-  const editButtonId = useId();
-
+const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   const { coinName, coinSymbol, coinImage, date } = asset;
+  const currency = useUserCurrencySetting();
+
+  const editButtonId = useId();
   const displayDate = extractDate(date).toLocaleString("en-US", {
     dateStyle: "medium",
   });
 
-  const {
-    circVsTotalSupply,
-    currentPrice,
-    currentPriceChange24h,
-    currentValue,
-    currentValueChangePercent,
-    marketCapVsVolume,
-  } = assetDisplayData(asset, "usd", assetCurrent, assetHistory);
+  const maybeDisplayData = assetDisplayData(
+    asset,
+    currency,
+    assetCurrent,
+    assetHistory
+  );
+
+  const placeholder = <span className="animate-pulse">--</span>;
+
+  const currentValue = (() => {
+    const value = maybeDisplayData?.currentValue;
+    if (!value) return placeholder;
+    return <span>{currencyMap.get(currency) + localeFormat(value)}</span>;
+  })();
+
+  const currentValueChangePercent = (() => {
+    const change = maybeDisplayData?.currentValueChangePercent;
+    if (!change) return "";
+    return (
+      <span className={cn(change > 0 ? "text-market-up" : "text-market-down")}>
+        ( {change > 0 && "+"}
+        {localeFormat(change)}% )
+      </span>
+    );
+  })();
+
+  const currentPrice = (() => {
+    const price = maybeDisplayData?.currentPrice;
+    if (!price) return placeholder;
+    if (price < 0.01) {
+      return <span>{currencyMap.get(currency) + price.toExponential(2)}</span>;
+    } else
+      return <span>{currencyMap.get(currency) + localeFormat(price)}</span>;
+  })();
+
+  const currentPriceChange24h = (() => {
+    const change = maybeDisplayData?.currentPriceChange24h;
+    if (!change) return placeholder;
+    return (
+      <>
+        <span>
+          <CaretIcon
+            className={cn(
+              "w-4 h-4 mr-1 inline",
+              change > 0 ? "fill-market-up" : "fill-market-down rotate-180"
+            )}
+          />
+        </span>
+        <span
+          className={cn(change > 0 ? "text-market-up" : "text-market-down")}
+        >
+          {localeFormat(Math.abs(change))}%
+        </span>
+      </>
+    );
+  })();
+
+  const marketCapVsVolume = (() => {
+    const ratio = maybeDisplayData?.marketCapVsVolume;
+    const change = maybeDisplayData?.currentPriceChange24h;
+    if (!ratio || !change) return placeholder;
+    return (
+      <>
+        <span
+          className={cn(change > 0 ? "text-market-up" : "text-market-down")}
+        >
+          {Math.round(ratio)}%
+        </span>
+        <ProgressWidget
+          containerClassName={cn(
+            "w-full ml-4 mr-2",
+            change > 0 ? "bg-market-up/20" : "bg-market-down/20"
+          )}
+          progressClassName={cn(
+            "bg-market-down",
+            change > 0 ? "bg-market-up" : "bg-market-down"
+          )}
+          progressPercentage={ratio}
+        />
+      </>
+    );
+  })();
+
+  const circVsTotalSupply = (() => {
+    const ratio = maybeDisplayData?.circVsTotalSupply;
+    const priceChange = maybeDisplayData?.currentPriceChange24h;
+    if (typeof ratio === "undefined" || !priceChange) return placeholder;
+
+    const displayNum = ratio ? (
+      <span
+        className={cn(priceChange > 0 ? "text-market-up" : "text-market-down")}
+      >
+        {Math.round(ratio)}%
+      </span>
+    ) : (
+      <InfinityIcon className="w-6 h-6 inline" />
+    );
+
+    return (
+      <>
+        {displayNum}
+        <ProgressWidget
+          containerClassName={cn(
+            "w-full ml-4 mr-2",
+            priceChange > 0 ? "bg-market-up/20" : "bg-market-down/20"
+          )}
+          progressClassName={cn(
+            "bg-market-down",
+            priceChange > 0 ? "bg-market-up" : "bg-market-down"
+          )}
+          progressPercentage={ratio ?? 100}
+        />
+      </>
+    );
+  })();
 
   return (
     <div className="w-[1296px] flex rounded-xl border box-border border-zinc-700/80 shadow-md shadow-zinc-700/30">
@@ -67,7 +169,9 @@ const AssetDisplay = ({
           <SquarePenIcon className="w-6 h-6" />
         </button>
         <div className="flex items-center">
-          <span className="text-3xl">
+          <span
+            className={cn("text-3xl", !maybeDisplayData && "animate-pulse")}
+          >
             {coinName}
             <span className="text-2xl ml-1 text-muted-foreground font-semibold">
               {coinSymbol}
@@ -76,29 +180,8 @@ const AssetDisplay = ({
         </div>
         <div className="flex flex-col h-full justify-center">
           <p className="text-3xl">
-            <span className="font-medium">
-              {currencyMap.get(currency)}
-              {currentValue.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </span>
-            <span className="ml-2 text-xl">
-              <span
-                className={cn(
-                  currentValueChangePercent > 0
-                    ? "text-market-up"
-                    : "text-market-down"
-                )}
-              >
-                ( {currentValueChangePercent > 0 && "+"}
-                {currentValueChangePercent.toLocaleString("en-US", {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                })}
-                % )
-              </span>
-            </span>
+            <span className="font-medium">{currentValue}</span>
+            <span className="ml-2 text-xl">{currentValueChangePercent}</span>
           </p>
           <p className="text-muted-foreground/50 mb-6">
             Purchased {displayDate}
@@ -108,28 +191,13 @@ const AssetDisplay = ({
       <div className="w-[916px] rounded-r-xl grid grid-cols-2 p-6 gap-x-6 place-items-center box-border bg-zinc-900/70">
         <div className="w-full space-y-4">
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p className="text-xl">
-              {currencyMap.get(currency)}
-              {currentPrice < 0.01
-                ? currentPrice.toExponential(2)
-                : currentPrice.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-            </p>
+            <p className="text-xl">{currentPrice}</p>
             <p className="text-sm text-muted-foreground/50">
               Current Coin Price
             </p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <div className="flex items-center text-xl">
-              <span>{Math.round(marketCapVsVolume) + "%"}</span>
-              <ProgressWidget
-                containerClassName="w-full ml-4 mr-2 bg-white/20"
-                progressClassName="bg-white/80"
-                progressPercentage={marketCapVsVolume}
-              />
-            </div>
+            <div className="flex items-center text-xl">{marketCapVsVolume}</div>
             <p className="text-sm text-muted-foreground/50">
               Market Cap vs. Volume
             </p>
@@ -137,49 +205,11 @@ const AssetDisplay = ({
         </div>
         <div className="w-full space-y-4">
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <p
-              className={cn(
-                "text-xl",
-                currentPriceChange24h > 0
-                  ? "text-market-up"
-                  : "text-market-down"
-              )}
-            >
-              <span>
-                <CaretIcon
-                  className={cn(
-                    "w-4 h-4 mr-1 inline",
-                    currentPriceChange24h > 0
-                      ? "fill-market-up"
-                      : "fill-market-down rotate-180"
-                  )}
-                />
-              </span>
-              <span>
-                {Math.abs(currentPriceChange24h).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-                %
-              </span>
-            </p>
+            <p className="text-xl">{currentPriceChange24h}</p>
             <p className="text-sm text-muted-foreground/50">24h%</p>
           </div>
           <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
-            <div className="flex items-center text-xl">
-              <span>
-                {circVsTotalSupply ? (
-                  Math.round(circVsTotalSupply) + "%"
-                ) : (
-                  <InfinityIcon className="w-6 h-6 inline" />
-                )}
-              </span>
-              <ProgressWidget
-                containerClassName="w-full ml-4 mr-2 bg-white/20"
-                progressClassName="bg-white/80"
-                progressPercentage={circVsTotalSupply ?? 100}
-              />
-            </div>
+            <div className="flex items-center text-xl">{circVsTotalSupply}</div>
             <p className="text-sm text-muted-foreground/50">
               Circulating Supply vs. Total Supply
             </p>
