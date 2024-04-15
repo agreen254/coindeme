@@ -42,8 +42,8 @@ const Portfolio = () => {
           >
             <AssetDisplay
               asset={asset}
-              currentResponse={assetCurrentResponse[idx]}
-              historyResponse={assetHistoryResponse[idx]}
+              assetCurrent={assetCurrentResponse[idx].data}
+              assetHistory={assetHistoryResponse[idx].data}
             />
           </ErrorBoundary>
         ))}

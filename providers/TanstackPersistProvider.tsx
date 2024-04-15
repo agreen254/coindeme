@@ -6,6 +6,7 @@ import { renderErrorToast } from "@/components/Toast/ErrorToast";
 import { useState } from "react";
 
 import { PersistGate } from "@/components/PersistGate";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 /**
  * Queries that should be stored in the local storage require a different provider component.
@@ -50,6 +51,7 @@ const TanstackPersistProvider = ({
       persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
     >
       <PersistGate>{children}</PersistGate>
+      <ReactQueryDevtools buttonPosition="bottom-left" initialIsOpen={false} />
     </PersistQueryClientProvider>
   );
 };

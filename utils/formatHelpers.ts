@@ -1,3 +1,10 @@
+export function localeFormat(value: number) {
+  return value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 /**
  * Shortens very long coin names that will cause styling issues in the market table.
  */

@@ -6,7 +6,7 @@ type Props = {
   progressPercentage: number;
 };
 
-const NavProgressWidget = ({
+const ProgressWidget = ({
   containerClassName,
   progressClassName,
   progressPercentage,
@@ -15,10 +15,10 @@ const NavProgressWidget = ({
     <div className={cn("h-[6px] rounded-[2px]", containerClassName)}>
       <div
         className={cn("h-full rounded-[2px]", progressClassName)}
-        style={{ width: `${progressPercentage}%` }}
+        style={{ width: `${progressPercentage <= 100 ? progressPercentage : 100}%` }}
       ></div>
     </div>
   );
 };
 
-export default NavProgressWidget;
+export default ProgressWidget;
