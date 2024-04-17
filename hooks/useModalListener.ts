@@ -18,7 +18,7 @@ export const useModalListener = (
 ) =>
   useEffect(() => {
     const handleModalExit = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && dropdownRefs?.every((ref) => !ref.current))
+      if (isOpen && e.key === "Escape" && dropdownRefs?.every((ref) => !ref.current))
         handleExit();
     };
     document.addEventListener("keydown", handleModalExit);

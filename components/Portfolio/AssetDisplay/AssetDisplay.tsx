@@ -1,12 +1,11 @@
 import type { Asset, AssetCurrent, AssetHistory } from "@/utils/types";
 
+import AssetModalWrapper from "../AssetModal/AssetModalWrapper";
 import CaretIcon from "@/Icons/Caret";
 import Image from "next/image";
 import { Infinity as InfinityIcon } from "lucide-react";
 import ProgressWidget from "@/components/ProgressWidget";
-import { SquarePen as SquarePenIcon } from "lucide-react";
 
-import { useId } from "react";
 import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
@@ -24,7 +23,6 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   const { coinName, coinSymbol, coinImage, date } = asset;
   const currency = useUserCurrencySetting();
 
-  const editButtonId = useId();
   const displayDate = extractDate(date).toLocaleString("en-US", {
     dateStyle: "medium",
   });
@@ -170,12 +168,7 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
         />
       </div>
       <div className="relative min-w-[380px] w-[380px] flex flex-col justify-start pb-6 pt-4 gap-y-3 bg-teal-950/70">
-        <label htmlFor={editButtonId} className="sr-only">
-          edit this asset
-        </label>
-        <button id={editButtonId} className="absolute top-3 right-4">
-          <SquarePenIcon className="w-6 h-6" />
-        </button>
+        <AssetModalWrapper role="edit" initialData={asset} />
         <div className="flex items-center">
           <span
             className={cn("text-3xl", !maybeDisplayData && "animate-pulse")}

@@ -29,7 +29,7 @@ const Portfolio = () => {
         <div>
           <h2 className="text-4xl">Your Assets</h2>
         </div>
-        <AssetModalWrapper />
+        <AssetModalWrapper role="add" />
       </div>
       {assets.length === 0 && (
         <p className="italic mt-12 text-muted-foreground">No assets found.</p>

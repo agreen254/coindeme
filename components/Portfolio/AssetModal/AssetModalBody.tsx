@@ -1,33 +1,5 @@
 import type { Asset, AssetValidator, Currency } from "@/utils/types";
 
-import { cn } from "@/utils/cn";
-import { coinNameFromId } from "@/utils/coinNameFromId";
-import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
-import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
-import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
-import { currencyEntries, currencyMap } from "@/utils/maps";
-import { flatMarketRes } from "@/utils/flatMarketRes";
-import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
-import { uid } from "uid";
-import { useClickAway } from "@uidotdev/usehooks";
-import {
-  useDropdownResetFromId,
-  useDropdownSettersFromId,
-  useDropdownUnitFromId,
-} from "@/hooks/useDropdownStore";
-import { useForwardRef } from "@/hooks/useForwardRef";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useModalListener } from "@/hooks/useModalListener";
-import {
-  useRef,
-  forwardRef,
-  type ForwardedRef,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
-import { useState } from "react";
-import { useAddAsset, validateAsset } from "@/hooks/useAssetStore";
-
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
 import AssetModalDate from "./Separators/AssetModalDate";
@@ -43,13 +15,42 @@ import Image from "next/image";
 import SearchActivator from "@/components/Search/SearchActivator";
 import { X as XIcon } from "lucide-react";
 
+import {
+  useRef,
+  forwardRef,
+  type ForwardedRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { useState } from "react";
+import { useAddAsset, validateAsset } from "@/hooks/useAssetStore";
+import { useClickAway } from "@uidotdev/usehooks";
+import {
+  useDropdownResetFromId,
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
+import { useForwardRef } from "@/hooks/useForwardRef";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
+import { useModalListener } from "@/hooks/useModalListener";
+import { cn } from "@/utils/cn";
+import { coinNameFromId } from "@/utils/coinNameFromId";
+import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
+import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
+import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
+import { currencyEntries, currencyMap } from "@/utils/maps";
+import { flatMarketRes } from "@/utils/flatMarketRes";
+import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
+import { uid } from "uid";
+
 type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  initialData?: Asset;
 };
 
 /**
- * This modal allows users to add [__TODO__: or edit] assets. It is designed to be keyboard-friendly
+ * This modal allows users to add or edit assets. It is designed to be keyboard-friendly
  * and uses refs to keep track of focus states.
  *
  * Assets follow the asset schema defined in the validation folder.
@@ -57,19 +58,22 @@ type Props = {
  *
  * The dropdown menus have a context to store each state based on unique IDs defined in the wrapper component.
  *
- * __TODO__: allow passing of stored assets into the modal for editing. Only keep one modal component in the DOM and
- * inject data as needed. Do not have separate modal instances for individual assets in the portfolio.
+ * Render each modal along with the asset; consider refactoring to one global modal if there is a significant performance hit.
  */
 const AssetModalBody = (
-  { isOpen, setIsOpen }: Props,
+  { isOpen, setIsOpen, initialData }: Props,
   activatorRef: ForwardedRef<HTMLButtonElement>
 ) => {
   // form state initializers
-  const [coinId, setCoinId] = useState<string>("");
+  const [coinId, setCoinId] = useState<string>(initialData?.coinId || "");
   const [coinQuery, setCoinQuery] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [value, setValue] = useState<string>("");
-  const [valueCurrency, setValueCurrency] = useState<Currency>("usd");
+  const [date, setDate] = useState<string>(initialData?.date || "");
+  const [value, setValue] = useState<string>(
+    initialData?.value.toString() || ""
+  );
+  const [valueCurrency, setValueCurrency] = useState<Currency>(
+    initialData?.valueCurrency || "usd"
+  );
 
   // search component initializers
   const market = useMarketQuery("usd", "market_cap", "desc");
@@ -136,7 +140,7 @@ const AssetModalBody = (
       case "Enter": {
         e.preventDefault();
         if (!isVisibleSearch) {
-          handleAddAsset();
+          handleAsset();
           break;
         }
         // if there are no results nothing will happen,
@@ -195,7 +199,7 @@ const AssetModalBody = (
       return;
     if (e.key === "Enter") {
       e.preventDefault();
-      handleAddAsset();
+      handleAsset();
     }
     e.preventDefault();
   };
@@ -260,8 +264,8 @@ const AssetModalBody = (
     currencyDropdownRef,
   ]);
 
-  const storeAsset = useAddAsset();
-  const handleAddAsset = () => {
+  const handleAddAsset = useAddAsset();
+  const handleAsset = () => {
     const maybeAsset: AssetValidator = {
       coinName: coinName,
       coinId: coinId,
@@ -276,12 +280,12 @@ const AssetModalBody = (
     if (isValid) {
       const asset: Asset = {
         ...maybeAsset,
-        assetId: uid(),
+        assetId: initialData?.assetId || uid(),
         date: convertHistoricalDate(maybeAsset.date),
       };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
-      storeAsset(asset);
+      handleAddAsset(asset);
     }
   };
 
@@ -500,7 +504,7 @@ const AssetModalBody = (
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    handleAddAsset();
+                    handleAsset();
                   }
                 }}
                 onChange={(e) => {
@@ -519,12 +523,12 @@ const AssetModalBody = (
               <button
                 className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
                 onClick={() => {
-                  handleAddAsset();
+                  handleAsset();
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     e.preventDefault();
-                    handleAddAsset();
+                    handleAsset();
                   }
                 }}
               >

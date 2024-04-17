@@ -22,8 +22,16 @@ export const useAssetStore = create<AssetStore>()(
 
 export const useAddAsset = () => {
   const assets = useAssetStore.getState().assets;
-  return (asset: Asset) =>
-    useAssetStore.setState({ assets: [...assets, asset] });
+  return (newAsset: Asset) => {
+    useAssetStore.setState({
+      assets: [
+        ...assets.filter(
+          (storedAsset) => storedAsset.assetId !== newAsset.assetId
+        ),
+        newAsset,
+      ],
+    });
+  };
 };
 
 export function validateAsset(asset: AssetValidator) {
