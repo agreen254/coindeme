@@ -7,6 +7,7 @@ import { useMarketTableMode } from "@/hooks/useMarketTable";
 import { ErrorBoundary } from "react-error-boundary";
 import MarketTableInfiniteWrapper from "./MarketTableInfiniteWrapper";
 import MarketTablePaginatedWrapper from "./MarketTablePaginatedWrapper";
+import MarketTableSwapMode from "./MarketTableSwapMode";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -24,6 +25,7 @@ const MarketTableMainWrapper = ({ queryResult }: Props) => {
           </h2>
         }
       >
+        <MarketTableSwapMode />
         {tableMode === "paginated" ? (
           <MarketTablePaginatedWrapper queryResult={queryResult} />
         ) : (

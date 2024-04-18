@@ -18,7 +18,6 @@ import {
 import Loader from "../Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
-import MarketTableSwapMode from "./MarketTableSwapMode";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -66,7 +65,6 @@ const MarketTablePaginatedWrapper = ({
   return (
     <div>
       <div className="flex flex-col items-center mb-12">
-        <MarketTableSwapMode />
         <MarketTableCaption
           disableNextPage={disableNextPage}
           disablePreviousPage={disablePreviousPage}

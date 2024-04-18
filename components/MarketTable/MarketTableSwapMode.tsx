@@ -25,7 +25,7 @@ const MarketTableSwapMode = () => {
   return (
     <div className="flex justify-end mb-2">
       <button
-        className="px-3 py-2 translate-x-[640px] hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors"
+        className="px-3 py-2 mr-4 hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors"
         onClick={handleTableMode}
       >
         Swap View
