@@ -49,7 +49,7 @@ const MarketTableBody = ({ data, currency, initialIdx }: Props) => {
                 height={30}
                 priority
               />
-              <span>{formatLongName(name)}</span>{" "}
+              <span>{formatLongName(name, 22, symbol)}</span>{" "}
               <span className="text-gray-400 text-sm uppercase font-semibold">
                 {symbol.trim()}
               </span>
