@@ -28,7 +28,7 @@ const AssetModalEditActivator = (
   editButtonRef: ForwardedRef<HTMLButtonElement>
 ) => {
   const editButtonId = useId();
-  const injectData = useAssetModalInjectData(
+  const injectSelectedAssetData = useAssetModalInjectData(
     asset
       ? {
           assetId: asset.assetId,
@@ -51,7 +51,7 @@ const AssetModalEditActivator = (
         ref={editButtonRef}
         className="absolute top-3 right-4 p-1 rounded-md border-2 border-white/0 focus:outline-none focus:border-stone-500"
         onClick={() => {
-          if (!isOpen) injectData();
+          if (!isOpen) injectSelectedAssetData();
           setIsOpen((prev) => !prev);
         }}
       >
