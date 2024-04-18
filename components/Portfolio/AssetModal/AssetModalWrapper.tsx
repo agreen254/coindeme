@@ -42,6 +42,7 @@ const AssetModalWrapper = ({ role, initialData }: Props) => {
         isOpen={modalIsOpen}
         setIsOpen={setModalIsOpen}
       />
+
       <AssetModalBody
         ref={activatorRef}
         isOpen={modalIsOpen}

@@ -5,13 +5,15 @@ import CaretIcon from "@/Icons/Caret";
 import Image from "next/image";
 import { Infinity as InfinityIcon } from "lucide-react";
 import ProgressWidget from "@/components/ProgressWidget";
+import { FileX2 as DeleteIcon } from "lucide-react";
 
+import { useDeleteAsset } from "@/hooks/useAssets";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/dateHelpers";
 import { localeFormat } from "@/utils/formatHelpers";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 type Props = {
   asset: Asset;
@@ -22,6 +24,7 @@ type Props = {
 const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   const { coinName, coinSymbol, coinImage, date } = asset;
   const currency = useUserCurrencySetting();
+  const deleteAsset = useDeleteAsset(asset.assetId, asset.date);
 
   const displayDate = extractDate(date).toLocaleString("en-US", {
     dateStyle: "medium",
@@ -169,6 +172,12 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
       </div>
       <div className="relative min-w-[380px] w-[380px] flex flex-col justify-start pb-6 pt-4 gap-y-3 bg-teal-950/70">
         <AssetModalWrapper role="edit" initialData={asset} />
+        <button
+          className="absolute top-12 right-4 p-1 rounded-md border-2 border-white/0 focus:outline-none focus:border-stone-500"
+          onClick={deleteAsset}
+        >
+          <DeleteIcon className="w-6 h-6" />
+        </button>
         <div className="flex items-center">
           <span
             className={cn("text-3xl", !maybeDisplayData && "animate-pulse")}

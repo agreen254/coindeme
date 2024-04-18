@@ -293,7 +293,7 @@ const AssetModalBody = (
       };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
-      updateAssets(asset);
+      updateAssets(asset, !!assetId);
     }
   };
 
@@ -305,7 +305,7 @@ const AssetModalBody = (
       ref={modalRef}
       className={cn(
         "h-full w-full hidden justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10",
-        isOpen && "flex"
+        isOpen && "flex flex-col"
       )}
     >
       <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900 border border-zinc-800">
@@ -369,7 +369,10 @@ const AssetModalBody = (
                 spellCheck="false"
                 disabled={!searchTargets || !!assetId}
                 searchResults={searchResults}
-                className={cn("h-11 w-full p-2 rounded-lg bg-zinc-800/60", !!assetId && "text-muted-foreground")}
+                className={cn(
+                  "h-11 w-full p-2 rounded-lg bg-zinc-800/60",
+                  !!assetId && "text-muted-foreground"
+                )}
                 localQuery={coinQuery}
                 setLocalQuery={setCoinQuery}
                 onKeyDown={(e) => handleKeyDownSearch(e)}
@@ -542,7 +545,7 @@ const AssetModalBody = (
                   }
                 }}
               >
-                Add Asset
+                {assetId ? "Confirm Edit" : "Add Asset"}
               </button>
             </div>
           </div>
