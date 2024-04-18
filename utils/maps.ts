@@ -7,7 +7,6 @@ export const comparisonChartsTimeSelectorsMap = new Map<string, string>([
   ["1M", "31"],
   ["6M", "180"],
   ["1Y", "365"],
-  ["MAX", "max"],
 ]);
 
 export const currencyMap = new Map<Currency, string>([
