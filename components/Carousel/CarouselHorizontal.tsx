@@ -72,7 +72,11 @@ const CarouselHorizontal = ({
   return (
     <div className="flex justify-center w-table-xl">
       <div className="flex items-center mr-4 mb-3">
+        <label htmlFor="scrollPrev" className="sr-only">
+          Scroll carousel backward
+        </label>
         <button
+          id="scrollPrev"
           className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
@@ -91,7 +95,11 @@ const CarouselHorizontal = ({
         </div>
       </div>
       <div className="flex items-center mb-3 ml-4">
+        <label htmlFor="scrollNext" className="sr-only">
+          Scroll carousel forward
+        </label>
         <button
+          id="scrollNext"
           className="w-10 h-10 p-2 rounded-full border-2 border-teal-900 hover:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
