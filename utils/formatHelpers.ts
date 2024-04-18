@@ -8,8 +8,9 @@ export function localeFormat(value: number) {
 /**
  * Shortens very long coin names that will cause styling issues in the market table.
  */
-export function formatLongName(name: string, maxLen: number = 18) {
-  if (name.length >= maxLen) {
+export function formatLongName(name: string, maxLen: number = 18, symbol?: string) {
+  const symbolLen = symbol?.length ?? 0;
+  if (name.length + symbolLen >= maxLen) {
     return name.slice(0, 14).trim() + "...";
   } else {
     return name;
