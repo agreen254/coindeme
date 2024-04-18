@@ -1,4 +1,4 @@
-import type { Asset, AssetHistory, AssetValidator } from "@/utils/types";
+import type { Asset, AssetValidator } from "@/utils/types";
 
 import { assetValidatorSchema } from "@/validation/schema";
 import { create } from "zustand";
@@ -20,7 +20,7 @@ export const useAssetStore = create<AssetStore>()(
   )
 );
 
-export const useAddAsset = () => {
+export const useUpdateAssets = () => {
   const assets = useAssetStore.getState().assets;
   return (newAsset: Asset) => {
     useAssetStore.setState({

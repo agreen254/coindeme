@@ -1,4 +1,4 @@
-import { lastYear } from "@/utils/lastYear";
+import { lastYear } from "@/utils/dateHelpers";
 import { z } from "zod";
 
 export const currenciesUnionSchema = z.union([

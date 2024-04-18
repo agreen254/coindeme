@@ -19,7 +19,14 @@ export const useAssetHistoryQueries = (
     queries: assets.map(
       (asset) =>
         <UseQueryOptions>{
-          queryKey: ["asset", "history", asset.assetId],
+          // be sure to include the date in the query key;
+          // changes in value don't require a new api call but date changes do
+          queryKey: [
+            "asset",
+            "history",
+            asset.assetId,
+            asset.date,
+          ],
           queryFn: async (): Promise<AssetHistory> => {
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/history`,
@@ -93,7 +100,7 @@ export const useAssetCurrentQueries = (
           refetchOnWindowFocus: false,
 
           // should refetch current data daily
-          staleTime: 1000 * 60 * 60 * 24
+          staleTime: 1000 * 60 * 60 * 24,
         }
     ),
   });

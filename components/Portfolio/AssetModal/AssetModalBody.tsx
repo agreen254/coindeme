@@ -1,4 +1,6 @@
-import type { Asset, AssetValidator, Currency } from "@/utils/types";
+"use client";
+
+import type { Asset, AssetValidator } from "@/utils/types";
 
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
@@ -22,8 +24,17 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { useState } from "react";
-import { useAddAsset, validateAsset } from "@/hooks/useAssetStore";
+import { useUpdateAssets, validateAsset } from "@/hooks/useAssets";
+import {
+  useAssetModalActions,
+  useAssetModalDefault,
+  useAssetModalAssetId,
+  useAssetModalCoinId,
+  useAssetModalCoinQuery,
+  useAssetModalDate,
+  useAssetModalValue,
+  useAssetModalValueCurrency,
+} from "@/hooks/useAssetModal";
 import { useClickAway } from "@uidotdev/usehooks";
 import {
   useDropdownResetFromId,
@@ -36,7 +47,7 @@ import { useModalListener } from "@/hooks/useModalListener";
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
-import { convertHistoricalDate } from "@/utils/convertHistoricalDate";
+import { convertHistoricalDate } from "@/utils/dateHelpers";
 import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
@@ -46,7 +57,6 @@ import { uid } from "uid";
 type Props = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  initialData?: Asset;
 };
 
 /**
@@ -61,19 +71,20 @@ type Props = {
  * Render each modal along with the asset; consider refactoring to one global modal if there is a significant performance hit.
  */
 const AssetModalBody = (
-  { isOpen, setIsOpen, initialData }: Props,
+  { isOpen, setIsOpen }: Props,
   activatorRef: ForwardedRef<HTMLButtonElement>
 ) => {
-  // form state initializers
-  const [coinId, setCoinId] = useState<string>(initialData?.coinId || "");
-  const [coinQuery, setCoinQuery] = useState<string>("");
-  const [date, setDate] = useState<string>(initialData?.date || "");
-  const [value, setValue] = useState<string>(
-    initialData?.value.toString() || ""
-  );
-  const [valueCurrency, setValueCurrency] = useState<Currency>(
-    initialData?.valueCurrency || "usd"
-  );
+  const [assetId, coinId, coinQuery, date, value, valueCurrency] = [
+    useAssetModalAssetId(),
+    useAssetModalCoinId(),
+    useAssetModalCoinQuery(),
+    useAssetModalDate(),
+    useAssetModalValue(),
+    useAssetModalValueCurrency(),
+  ];
+  const { setCoinId, setCoinQuery, setDate, setValue, setValueCurrency } =
+    useAssetModalActions();
+  const restoreModalDefaults = useAssetModalDefault();
 
   // search component initializers
   const market = useMarketQuery("usd", "market_cap", "desc");
@@ -252,10 +263,7 @@ const AssetModalBody = (
 
   const handleModalExit = () => {
     setIsOpen(false);
-    setCoinId("");
-    setCoinQuery("");
-    setValue("");
-    setDate("");
+    restoreModalDefaults();
     forwardedActivatorRef.current?.focus();
   };
 
@@ -264,7 +272,7 @@ const AssetModalBody = (
     currencyDropdownRef,
   ]);
 
-  const handleAddAsset = useAddAsset();
+  const updateAssets = useUpdateAssets();
   const handleAsset = () => {
     const maybeAsset: AssetValidator = {
       coinName: coinName,
@@ -280,12 +288,12 @@ const AssetModalBody = (
     if (isValid) {
       const asset: Asset = {
         ...maybeAsset,
-        assetId: initialData?.assetId || uid(),
+        assetId: assetId || uid(),
         date: convertHistoricalDate(maybeAsset.date),
       };
       handleModalExit();
       forwardedActivatorRef.current?.focus();
-      handleAddAsset(asset);
+      updateAssets(asset);
     }
   };
 
@@ -302,7 +310,9 @@ const AssetModalBody = (
     >
       <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900 border border-zinc-800">
         <div className="flex justify-between">
-          <h2 className="text-xl ml-1">Select Coin</h2>
+          <h2 className="text-xl ml-1">
+            {assetId ? "Edit Asset" : "Add Asset"}
+          </h2>
           <label htmlFor="closeModal" className="sr-only">
             Close Modal
           </label>
@@ -338,7 +348,7 @@ const AssetModalBody = (
               <XIcon
                 className={cn(
                   "absolute right-[12px] top-[12px] w-[18px] h-[18px]",
-                  !coinQuery && "hidden"
+                  (!coinQuery || !!assetId) && "hidden"
                 )}
                 onClick={() => {
                   resetSearch();
@@ -357,9 +367,9 @@ const AssetModalBody = (
                 dropdownId={searchDropdownId}
                 autoComplete="off"
                 spellCheck="false"
-                disabled={!searchTargets}
+                disabled={!searchTargets || !!assetId}
                 searchResults={searchResults}
-                className="h-11 w-full p-2 rounded-lg bg-zinc-800/60"
+                className={cn("h-11 w-full p-2 rounded-lg bg-zinc-800/60", !!assetId && "text-muted-foreground")}
                 localQuery={coinQuery}
                 setLocalQuery={setCoinQuery}
                 onKeyDown={(e) => handleKeyDownSearch(e)}

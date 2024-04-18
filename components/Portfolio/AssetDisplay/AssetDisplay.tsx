@@ -9,7 +9,7 @@ import ProgressWidget from "@/components/ProgressWidget";
 import { assetDisplayData } from "@/utils/assetDisplayData";
 import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
-import { extractDate } from "@/utils/extractDate";
+import { extractDate } from "@/utils/dateHelpers";
 import { localeFormat } from "@/utils/formatHelpers";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 

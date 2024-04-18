@@ -36,12 +36,16 @@ const AssetModalWrapper = ({ role, initialData }: Props) => {
     </DropdownProvider>
   ) : (
     <DropdownProvider initialUnits={dropdownUnits}>
-      <AssetModalEditActivator ref={activatorRef} setIsOpen={setModalIsOpen} />
+      <AssetModalEditActivator
+        ref={activatorRef}
+        asset={initialData}
+        isOpen={modalIsOpen}
+        setIsOpen={setModalIsOpen}
+      />
       <AssetModalBody
         ref={activatorRef}
         isOpen={modalIsOpen}
         setIsOpen={setModalIsOpen}
-        initialData={initialData}
       />
     </DropdownProvider>
   );
