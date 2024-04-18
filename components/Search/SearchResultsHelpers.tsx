@@ -3,11 +3,18 @@ import type { SearchResultWrapper } from "@/utils/types";
 import fuzzysort from "fuzzysort";
 
 const HighlightMatchedChars = (result: Fuzzysort.Result) => {
-  return fuzzysort.highlight(result, (m, i) => (
-    <span key={result + "highlight" + i} className="font-bold text-menu-highlight">
-      {m}
-    </span>
-  ));
+  try {
+    return fuzzysort.highlight(result, (m, i) => (
+      <span
+        key={result + "highlight" + i}
+        className="font-bold text-menu-highlight"
+      >
+        {m}
+      </span>
+    ));
+  } catch {
+    return result.target;
+  }
 };
 
 export const HandleNameMatch = (wrapper: SearchResultWrapper) => {
