@@ -2,7 +2,7 @@ import type {
   Currency,
   MarketRequest,
   MarketFetchParam,
-  MarketResponse,
+  MarketResponsePaginated,
 } from "@/utils/types";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ export const useMarketQuery = (
     // we want a large stale time so api request are more spaced out
     staleTime: 300 * 1000,
 
-    queryFn: async ({ pageParam }): Promise<MarketResponse> => {
+    queryFn: async ({ pageParam }): Promise<MarketResponsePaginated> => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/table`,
         {

@@ -1,4 +1,4 @@
-import type { MarketResponse } from "./types";
+import type { MarketResponsePaginated } from "./types";
 
 /**
  * Removes the pagination information from the InfiniteQueryResponse,
@@ -6,6 +6,6 @@ import type { MarketResponse } from "./types";
  * 
  * change this to work on the entire response object...
  */
-export function flatMarketRes(res: MarketResponse[] | undefined) {
+export function flatMarketRes(res: MarketResponsePaginated[] | undefined) {
   return res?.map((ele) => ele.market).flat();
 }

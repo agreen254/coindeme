@@ -17,8 +17,8 @@ import {
   coinHistoryRequestSchema,
   coinHistoryResponseSchema,
   globalResponseWrappedSchema,
-  marketSchema,
   marketResponseSchema,
+  marketResponsePaginatedSchema,
   marketRequest,
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
@@ -84,12 +84,12 @@ export type CoinHistoryRequest = z.infer<typeof coinHistoryRequestSchema>;
 export type CoinHistoryResponse = z.infer<typeof coinHistoryResponseSchema>;
 export type CoinHistoryQuery = ReturnType<typeof useAssetHistoryQueries>;
 
-export type Market = z.infer<typeof marketSchema>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
 export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
 export type MarketFetchParam = z.infer<typeof marketFetchParamSchema>;
 export type MarketTableMode = "infinite" | "paginated";
 export type MarketResponse = z.infer<typeof marketResponseSchema>;
+export type MarketResponsePaginated = z.infer<typeof marketResponsePaginatedSchema>;
 export type MarketRequest = z.infer<typeof marketRequest>;
 
 const marketTableSortFields = [
@@ -104,7 +104,7 @@ const marketTableSortFields = [
 export type MarketTableSortField = (typeof marketTableSortFields)[number];
 
 export type MarketQueryResult = UseInfiniteQueryResult<
-  InfiniteData<MarketResponse, unknown>,
+  InfiniteData<MarketResponsePaginated, unknown>,
   Error
 >;
 

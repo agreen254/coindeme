@@ -1,6 +1,6 @@
-import { Market } from "../types";
+import { MarketResponse } from "../types";
 
-export const sampleMarketTable: Market = [
+export const sampleMarketTable: MarketResponse = [
   {
     id: "bitcoin",
     symbol: "btc",

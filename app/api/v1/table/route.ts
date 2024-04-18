@@ -1,7 +1,11 @@
-import type { Market, MarketRequest, MarketResponse } from "@/utils/types";
+import type {
+  MarketRequest,
+  MarketResponse,
+  MarketResponsePaginated,
+} from "@/utils/types";
 
 import { composeFetchUrl } from "@/utils/composeFetchUrl";
-import { marketRequest, marketSchema } from "@/validation/schema";
+import { marketRequest, marketResponseSchema } from "@/validation/schema";
 import { NextRequest } from "next/server";
 import { postValidationHandler } from "@/validation/handler";
 
@@ -19,19 +23,17 @@ export async function POST(req: NextRequest) {
   // make sure the information for the next page is contained in the response
   const responseTransfomer = (
     body: MarketRequest,
-    response: Market
-  ): MarketResponse => {
+    response: MarketResponse
+  ): MarketResponsePaginated => {
     return {
       market: response,
       nextPage: body.page + 1,
     };
   };
 
-  return postValidationHandler<MarketRequest, Market, MarketResponse>(
-    req,
-    marketRequest,
-    marketSchema,
-    urlExtractor,
-    responseTransfomer
-  );
+  return postValidationHandler<
+    MarketRequest,
+    MarketResponse,
+    MarketResponsePaginated
+  >(req, marketRequest, marketResponseSchema, urlExtractor, responseTransfomer);
 }

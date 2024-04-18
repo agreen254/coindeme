@@ -199,8 +199,8 @@ export const marketElementWithIdxSchema = marketElementNoIdxSchema.extend({
   called_index: z.number(),
 });
 
-export const marketSchema = z.array(marketElementNoIdxSchema);
-export const marketResponseSchema = z.object({
-  market: marketSchema,
+export const marketResponseSchema = z.array(marketElementNoIdxSchema);
+export const marketResponsePaginatedSchema = z.object({
+  market: marketResponseSchema,
   nextPage: z.number(),
 });

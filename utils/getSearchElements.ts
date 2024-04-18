@@ -1,19 +1,19 @@
 import type {
-  Market,
   MarketResponse,
+  MarketResponsePaginated,
   SearchTargets,
   SearchResultWrapper,
 } from "./types";
 
 import fuzzysort from "fuzzysort";
 
-export function getSearchTargets(data: MarketResponse[] | undefined) {
+export function getSearchTargets(data: MarketResponsePaginated[] | undefined) {
   return data?.reduce((res: SearchTargets, current) => {
     return [...res, ...parseOnePage(current.market)];
   }, []);
 }
 
-export function parseOnePage(data: Market) {
+export function parseOnePage(data: MarketResponse) {
   return data.reduce((res: SearchTargets, mkt) => {
     return [
       ...res,
