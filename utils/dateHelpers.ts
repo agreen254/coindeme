@@ -8,7 +8,7 @@ export function extractDate(date: string) {
 
 /**
  * The input date is using UTC at midnight, but the date shown to the user should be in the user's locale.
- * If we just convert to a locale string without accounting for this, the date will go down a day if the time zone is a positive shift.
+ * If we just convert to a locale string without accounting for this, the date will go down a day if the time zone shifts back from UTC.
  */
 export function convertHistoricalDate(date: Date) {
   return new Date(date.valueOf() + date.getTimezoneOffset() * 60 * 1000)
