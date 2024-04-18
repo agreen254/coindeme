@@ -1,4 +1,4 @@
-import type { GlobalResponse } from "@/utils/types";
+import type { GlobalResponseUnwrapped } from "@/utils/types";
 
 import { useQuery } from "@tanstack/react-query";
 
@@ -6,7 +6,7 @@ export const useGlobalData = () => {
   return useQuery({
     retry: 0,
     queryKey: ["global"],
-    queryFn: async (): Promise<GlobalResponse> => {
+    queryFn: async (): Promise<GlobalResponseUnwrapped> => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/global`
       );

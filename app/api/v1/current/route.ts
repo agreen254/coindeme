@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // do not keep unused data from the response
+  // this will be going in local storage, so remove any un-needed properties from the response
   function responseTransformer(
     body: CoinCurrentRequest,
     response: CoinCurrentResponse

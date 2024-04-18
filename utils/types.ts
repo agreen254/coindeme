@@ -13,10 +13,10 @@ import {
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
-  globalResponseSchema,
+  globalResponseUnwrappedSchema,
   coinHistoryRequestSchema,
   coinHistoryResponseSchema,
-  globalResponseWrappedSchema,
+  globalResponseSchema,
   marketResponseSchema,
   marketResponsePaginatedSchema,
   marketRequest,
@@ -77,8 +77,8 @@ export type ComparisonData = {
   values: number[][];
 };
 
+export type GlobalResponseUnwrapped = z.infer<typeof globalResponseUnwrappedSchema>;
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
-export type GlobalResponseWrapped = z.infer<typeof globalResponseWrappedSchema>;
 
 export type CoinHistoryRequest = z.infer<typeof coinHistoryRequestSchema>;
 export type CoinHistoryResponse = z.infer<typeof coinHistoryResponseSchema>;

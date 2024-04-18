@@ -1,7 +1,7 @@
-import type { GlobalResponse, GlobalResponseWrapped } from "@/utils/types";
+import type { GlobalResponseUnwrapped, GlobalResponse } from "@/utils/types";
 
 import { getValidationHandler } from "@/validation/handler";
-import { globalResponseWrappedSchema } from "@/validation/schema";
+import { globalResponseSchema } from "@/validation/schema";
 import { NextRequest } from "next/server";
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -18,11 +18,11 @@ export async function GET(req: NextRequest) {
 
   // the default response is { data: {...} } so go ahead and unwrap it
   const responseTransformer = (
-    response: GlobalResponseWrapped
-  ): GlobalResponse => response.data;
+    response: GlobalResponse
+  ): GlobalResponseUnwrapped => response.data;
 
-  return getValidationHandler<GlobalResponseWrapped, GlobalResponse>(
-    globalResponseWrappedSchema,
+  return getValidationHandler<GlobalResponse, GlobalResponseUnwrapped>(
+    globalResponseSchema,
     urlExtractor,
     responseTransformer
   );

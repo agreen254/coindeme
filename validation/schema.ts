@@ -123,7 +123,7 @@ export const comparisonChartResponseSchema = z.object({
   total_volumes: z.array(z.array(z.number().nullable()).length(2)),
 });
 
-export const globalResponseSchema = z.object({
+export const globalResponseUnwrappedSchema = z.object({
   active_cryptocurrencies: z.number(),
   markets: z.number(),
   total_market_cap: currenciesObjectSchema,
@@ -135,8 +135,8 @@ export const globalResponseSchema = z.object({
   market_cap_change_percentage_24h_usd: z.number(),
 });
 
-export const globalResponseWrappedSchema = z.object({
-  data: globalResponseSchema,
+export const globalResponseSchema = z.object({
+  data: globalResponseUnwrappedSchema,
 });
 
 export const marketFetchParamSchema = z.union([
