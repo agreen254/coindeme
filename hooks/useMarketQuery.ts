@@ -17,7 +17,7 @@ export const useMarketQuery = (
     retry: false,
 
     // unique keys will create independent caches so unrelated data is not mixed together
-    queryKey: ["market", fetchParam, fetchOrder],
+    queryKey: ["market", currency, fetchParam, fetchOrder],
 
     // all pages are refetched to avoid updates that can cause duplication issues
     // we want a large stale time so api request are more spaced out
