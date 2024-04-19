@@ -1,5 +1,5 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
-import type { OverlappedVolumeData } from "../types";
+import type { Currency, OverlappedVolumeData } from "../types";
 
 import { arrayOfNs } from "../arrayHelpers";
 import {
@@ -12,6 +12,7 @@ import {
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
+import { getCurrencySymbol } from "../getCurrencySymbol";
 import { sort } from "fast-sort";
 import { formatPriceValue } from "../formatHelpers";
 
@@ -48,68 +49,75 @@ export function volumeComparisonGradient(
   return gradient;
 }
 
-export const chartOptionsStacked: ChartOptions<"bar"> = {
-  plugins: {
-    legend: {
-      position: "top",
-      align: "end",
-    },
-    tooltip: {
-      backgroundColor: tooltipBackgroundColor,
-      borderColor: tooltipBorderColor,
-      borderWidth: 1,
-      caretPadding: 6,
-      yAlign: "bottom",
-    },
-  },
-  interaction: {
-    intersect: false,
-    mode: "index",
-  },
-  maintainAspectRatio: false,
-  responsive: true,
-  scales: {
-    x: {
-      border: {
-        display: false,
+export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
+  const currencySymbol = getCurrencySymbol(currency);
+
+  return {
+    plugins: {
+      legend: {
+        position: "top",
+        align: "end",
       },
-      grid: {
-        drawOnChartArea: false,
+      tooltip: {
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
+        borderWidth: 1,
+        caretPadding: 6,
+        yAlign: "bottom",
       },
-      ticks: {
-        callback: function (val, idx) {
-          const label = this.getLabelForValue(val as number);
-          return handleTicksXAxis(label, idx);
+    },
+    interaction: {
+      intersect: false,
+      mode: "index",
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        border: {
+          display: false,
         },
-      },
-      stacked: true,
-    },
-    y: {
-      border: {
-        display: false,
-      },
-      grid: {
-        drawOnChartArea: true,
-        color: gridColor,
-      },
-      ticks: {
-        callback: function (val, idx) {
-          return handleTicksYAxis(val as number, idx);
+        grid: {
+          drawOnChartArea: false,
         },
+        ticks: {
+          callback: function (val, idx) {
+            const label = this.getLabelForValue(val as number);
+            return handleTicksXAxis(label, idx);
+          },
+        },
+        stacked: true,
       },
-      stacked: true,
+      y: {
+        border: {
+          display: false,
+        },
+        grid: {
+          drawOnChartArea: true,
+          color: gridColor,
+        },
+        ticks: {
+          callback: function (val, idx) {
+            return currencySymbol + handleTicksYAxis(val as number, idx);
+          },
+        },
+        stacked: true,
+      },
     },
-  },
-};
+  };
+}
 
 /**
  * The options object needs to be generated dynamically because of the callbacks depending on the chart data.
  */
 export function getOptionsOverlapped(
+  currency: Currency,
   overlapValues: OverlappedVolumeData[][],
   xValues: number[],
   carouselSelected: string[]
 ): ChartOptions<"bar"> {
+  const currencySymbol = getCurrencySymbol(currency);
+
   return {
     plugins: {
       legend: {
@@ -165,9 +173,9 @@ export function getOptionsOverlapped(
             }
 
             if (label) {
-              label = `${
-                overlapValues[dataIdx][datasetIdx].name
-              }: ${formatPriceValue(sumVolume)}`;
+              label = `${overlapValues[dataIdx][datasetIdx].name}: ${
+                currencySymbol + formatPriceValue(sumVolume)
+              }`;
             }
 
             return label;
@@ -223,7 +231,7 @@ export function getOptionsOverlapped(
         },
         ticks: {
           callback: function (val, idx) {
-            return handleTicksYAxis(val as number, idx);
+            return currencySymbol + handleTicksYAxis(val as number, idx);
           },
         },
         stacked: true,

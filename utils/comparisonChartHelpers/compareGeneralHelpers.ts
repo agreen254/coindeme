@@ -70,7 +70,7 @@ export function handleTicksXAxis(label: string, index: number) {
   return formattedDate;
 }
 
-export function handleTicksYAxis(value: number, index: number) {
+export function handleTicksYAxis(value: number, index: number = 0) {
   if (value === 0) return 0; // don't want '0.00e0'
   return formatPriceValue(value);
 }

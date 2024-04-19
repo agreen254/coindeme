@@ -7,6 +7,7 @@ import { isDefined } from "@/utils/isDefined";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CarouselClearButton from "../Carousel/CarouselClearButton";
 import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
@@ -15,11 +16,12 @@ import VolumeChartSwitcher from "./VolumeChartSwitcher";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
 
 const ComparisonChartsWrapper = () => {
+  const currency = useUserCurrencySetting();
   const selected = useCarouselSelectedElements();
   const queryTime = useComparisonChartTime();
   const queryRequest: ComparisonChartQueries = {
     ids: selected,
-    currency: "usd",
+    currency: currency,
     days: queryTime,
   };
   const chartRes = useComparisonChartQueries(queryRequest);
