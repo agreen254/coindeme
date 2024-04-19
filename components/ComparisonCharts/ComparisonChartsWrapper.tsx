@@ -8,6 +8,7 @@ import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 
+import CarouselClearButton from "../Carousel/CarouselClearButton";
 import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
 import VolumeChartSwitcher from "./VolumeChartSwitcher";
@@ -27,7 +28,10 @@ const ComparisonChartsWrapper = () => {
   const pulseChartBackground = chartRes.some((res) => res.isLoading);
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      <CarouselClearButton className="ml-4 mb-2 px-3 py-2 hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors disabled:cursor-not-allowed">
+        Clear Selection
+      </CarouselClearButton>
       <div className="flex w-full h-[550px] justify-center gap-x-4">
         <div
           className={cn(
