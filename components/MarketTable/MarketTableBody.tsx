@@ -2,7 +2,7 @@
 
 import type { MarketElementWithIdx } from "@/utils/types";
 
-import { currencyMap } from "@/utils/maps";
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 
 import Image from "next/image";
@@ -59,7 +59,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
               </span>
             </TD>
             <TD className="font-mono">
-              {currencyMap.get(currency)}
+              {getCurrencySymbol(currency)}
               {current_price < 0.01
                 ? formatSmallNum(current_price)
                 : current_price.toLocaleString("en-US")}
