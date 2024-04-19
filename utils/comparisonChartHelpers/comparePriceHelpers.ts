@@ -1,5 +1,7 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
+import type { Currency } from "../types";
 
+import { getCurrencySymbol } from "../getCurrencySymbol";
 import {
   gridColor,
   handleGradientColorStops,
@@ -42,65 +44,69 @@ export function priceComparisonGradient(
   return gradient;
 }
 
-export const priceComparisonOptions: ChartOptions<"line"> = {
-  elements: {
-    point: {
-      radius: 0,
-      hoverRadius: 10,
-      hoverBorderWidth: 2,
-    },
-    line: {
-      fill: true,
-      tension: 0.1,
-    },
-  },
-  plugins: {
-    legend: {
-      position: "top",
-      align: "end",
-    },
-    tooltip: {
-      backgroundColor: tooltipBackgroundColor,
-      borderColor: tooltipBorderColor,
-      borderWidth: 1,
-      caretPadding: 14,
-      position: "nearest",
-      yAlign: "bottom",
-    },
-  },
-  interaction: {
-    intersect: false,
-    mode: "index",
-  },
-  maintainAspectRatio: false,
-  responsive: true,
-  scales: {
-    x: {
-      border: {
-        display: false,
+export function getOptions(currency: Currency): ChartOptions<"line"> {
+  const currencySymbol = getCurrencySymbol(currency);
+
+  return {
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 10,
+        hoverBorderWidth: 2,
       },
-      grid: {
-        drawOnChartArea: false,
+      line: {
+        fill: true,
+        tension: 0.1,
       },
-      ticks: {
-        callback: function (val, idx) {
-          const label = this.getLabelForValue(val as number);
-          return handleTicksXAxis(label, idx);
+    },
+    plugins: {
+      legend: {
+        position: "top",
+        align: "end",
+      },
+      tooltip: {
+        backgroundColor: tooltipBackgroundColor,
+        borderColor: tooltipBorderColor,
+        borderWidth: 1,
+        caretPadding: 14,
+        position: "nearest",
+        yAlign: "bottom",
+      },
+    },
+    interaction: {
+      intersect: false,
+      mode: "index",
+    },
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      x: {
+        border: {
+          display: false,
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function (val, idx) {
+            const label = this.getLabelForValue(val as number);
+            return handleTicksXAxis(label, idx);
+          },
+        },
+      },
+      y: {
+        border: {
+          display: false,
+        },
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          callback: function (val, idx) {
+            return currencySymbol + handleTicksYAxis(val as number, idx);
+          },
         },
       },
     },
-    y: {
-      border: {
-        display: false,
-      },
-      grid: {
-        color: gridColor,
-      },
-      ticks: {
-        callback: function (val, idx) {
-          return handleTicksYAxis(val as number, idx);
-        },
-      },
-    },
-  },
-};
+  };
+}

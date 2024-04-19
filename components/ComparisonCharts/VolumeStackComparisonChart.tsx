@@ -1,13 +1,16 @@
+"use client";
+
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import {
-  chartOptionsStacked,
+  getOptionsStacked,
   volumeComparisonGradient,
 } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { Bar } from "react-chartjs-2";
 
@@ -16,6 +19,7 @@ type Props = {
 };
 
 const VolumeStackComparisonChart = ({ chartData }: Props) => {
+  const currency = useUserCurrencySetting();
   const coinLabels = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "total_volumes");
 
@@ -34,7 +38,7 @@ const VolumeStackComparisonChart = ({ chartData }: Props) => {
     }),
   };
 
-  return <Bar data={volumeChartData} options={chartOptionsStacked} />;
+  return <Bar data={volumeChartData} options={getOptionsStacked(currency)} />;
 };
 
 export default VolumeStackComparisonChart;

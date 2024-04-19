@@ -1,15 +1,14 @@
 import type { MarketElementNoIdx } from "@/utils/types";
 
 import { cn } from "@/utils/cn";
-import {
-  formatLongName,
-  formatPriceValue,
-} from "@/utils/formatHelpers";
+import { currencyMap } from "@/utils/maps";
+import { formatLongName, formatPriceValue } from "@/utils/formatHelpers";
 import {
   useCarouselActions,
   useCarouselCardIsSelected,
   useCarouselHasMaxSelected,
 } from "@/hooks/useCarousel";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import Image from "next/image";
 import PricePercentageChange from "../PricePercentageChange";
@@ -19,6 +18,7 @@ type Props = {
 };
 
 const CarouselElement = ({ coinData }: Props) => {
+  const currency = useUserCurrencySetting();
   const {
     id,
     name,
@@ -28,7 +28,7 @@ const CarouselElement = ({ coinData }: Props) => {
     price_change_percentage_24h,
   } = coinData;
 
-  const currency = "$";
+  const currencySymbol = currencyMap.get(currency);
 
   const { handleSelect } = useCarouselActions();
   const hasMaxSelected = useCarouselHasMaxSelected();
@@ -73,7 +73,7 @@ const CarouselElement = ({ coinData }: Props) => {
           </span>
           <span className="flex w-full space-x-4 text-sm">
             <span>
-              {currency}
+              {currencySymbol}
               {formatPriceValue(current_price)}
             </span>
             <span className="font-semibold">

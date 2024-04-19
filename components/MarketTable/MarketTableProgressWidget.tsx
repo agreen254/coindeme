@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/utils/cn";
-import { currencyMap } from "@/utils/maps";
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { Circle as CircleIcon, Infinity as InfinityIcon } from "lucide-react";
 
@@ -14,7 +17,7 @@ const MarketTableProgressWidget = ({
   rightNumber,
   isGaining,
 }: Props) => {
-  const currency = "usd";
+  const currency = useUserCurrencySetting();
 
   const percentFull = () => {
     if (leftNumber && rightNumber) {
@@ -24,7 +27,7 @@ const MarketTableProgressWidget = ({
 
   const formatNumber = (n: number | null) => {
     return n ? (
-      currencyMap.get(currency) +
+      getCurrencySymbol(currency) +
         Intl.NumberFormat("en-US", {
           notation: "compact",
           maximumFractionDigits: 1,

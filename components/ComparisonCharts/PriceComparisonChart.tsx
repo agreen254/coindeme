@@ -5,9 +5,10 @@ import type { ComparisonChartResponse } from "@/utils/types";
 
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
-import { priceComparisonOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
+import { getOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { Line } from "react-chartjs-2";
 
@@ -16,6 +17,7 @@ type Props = {
 };
 
 const PriceComparisonChart = ({ chartData }: Props) => {
+  const currency = useUserCurrencySetting();
   const selectedCoins = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "prices");
 
@@ -34,7 +36,7 @@ const PriceComparisonChart = ({ chartData }: Props) => {
     }),
   };
 
-  return <Line data={priceChartData} options={priceComparisonOptions} />;
+  return <Line data={priceChartData} options={getOptions(currency)} />;
 };
 
 export default PriceComparisonChart;

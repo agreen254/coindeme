@@ -7,6 +7,7 @@ import {
   formatPriceValue,
 } from "@/utils/formatHelpers";
 import { useGlobalData } from "@/hooks/useGlobalData";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CaretIcon from "@/Icons/Caret";
 import ExchangeIcon from "@/Icons/Exchange";
@@ -16,8 +17,8 @@ import ProgressWidget from "../ProgressWidget";
 
 const GlobalData = () => {
   const { data, isPending } = useGlobalData();
-  const currency = "usd";
-  const currencySymbol = currencyMap.get("usd");
+  const currency = useUserCurrencySetting();
+  const currencySymbol = currencyMap.get(currency);
 
   if (isPending || !data)
     return <div className="flex h-[52px] border-y border-white/10"></div>;

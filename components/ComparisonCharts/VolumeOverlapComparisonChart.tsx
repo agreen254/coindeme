@@ -1,3 +1,5 @@
+"use client";
+
 import type { ChartData } from "chart.js";
 import type { ComparisonChartResponse } from "@/utils/types";
 
@@ -9,6 +11,7 @@ import {
   overlapData,
 } from "@/utils/comparisonChartHelpers/compareVolumeHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { Bar } from "react-chartjs-2";
 
@@ -17,6 +20,7 @@ type Props = {
 };
 
 const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
+  const currency = useUserCurrencySetting();
   const coinLabels = useCarouselSelectedElements();
   const { label: x, values } = prepareComparisonData(
     chartData,
@@ -49,7 +53,7 @@ const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
   return (
     <Bar
       data={volumeChartData}
-      options={getOptionsOverlapped(overlapValues, x, coinLabels)}
+      options={getOptionsOverlapped(currency, overlapValues, x, coinLabels)}
     />
   );
 };

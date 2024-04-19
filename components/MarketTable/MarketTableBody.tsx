@@ -1,5 +1,8 @@
-import type { Currency, MarketElementWithIdx } from "@/utils/types";
+"use client";
 
+import type { MarketElementWithIdx } from "@/utils/types";
+
+import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 
 import Image from "next/image";
@@ -7,14 +10,15 @@ import PricePercentageChange from "../PricePercentageChange";
 import MarketTableProgressWidget from "./MarketTableProgressWidget";
 import MarketTableSparkline from "./MarketTableSparkline";
 import { default as TD } from "./MarketTableBodyCell";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 type Props = {
   data: MarketElementWithIdx[];
-  currency?: Currency;
   initialIdx?: number;
 };
 
-const MarketTableBody = ({ data, currency, initialIdx }: Props) => {
+const MarketTableBody = ({ data, initialIdx }: Props) => {
+  const currency = useUserCurrencySetting();
   const isGaining = (n: number | null) => (n ?? 0) > 0;
 
   return (
@@ -55,7 +59,7 @@ const MarketTableBody = ({ data, currency, initialIdx }: Props) => {
               </span>
             </TD>
             <TD className="font-mono">
-              {currency || "$"}
+              {getCurrencySymbol(currency)}
               {current_price < 0.01
                 ? formatSmallNum(current_price)
                 : current_price.toLocaleString("en-US")}
