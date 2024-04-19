@@ -1,8 +1,8 @@
 "use client";
 
-import { extractDate } from "@/utils/extractDate";
+import { extractDate } from "@/utils/dateHelpers";
 import { sort } from "fast-sort";
-import { useAssetStore } from "@/hooks/useAssetStore";
+import { useAssetStore } from "@/hooks/useAssets";
 import {
   useAssetCurrentQueries,
   useAssetHistoryQueries,
@@ -29,7 +29,7 @@ const Portfolio = () => {
         <div>
           <h2 className="text-4xl">Your Assets</h2>
         </div>
-        <AssetModalWrapper />
+        <AssetModalWrapper role="add" />
       </div>
       {assets.length === 0 && (
         <p className="italic mt-12 text-muted-foreground">No assets found.</p>
