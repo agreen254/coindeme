@@ -5,6 +5,7 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
 import ComparisonChartsWrapper from "@/components/ComparisonCharts/ComparisonChartsWrapper";
+import ConverterWrapper from "@/components/Converter/ConverterWrapper";
 import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center gap-y-4">
       <CarouselWrapper axis="x" queryResult={queryResult} />
+      <ConverterWrapper />
       <div className="flex justify-between w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
       </div>
