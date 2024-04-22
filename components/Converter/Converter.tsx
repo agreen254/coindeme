@@ -36,11 +36,11 @@ const Converter = ({ converterKeys }: Props) => {
     (coin) => coin.id === coinTwoId
   );
 
-  // convert one amount to the other based on which input is active
   const [coinOneInputIsActive, setCoinOneInputIsActive] =
     useState<boolean>(false);
   const [coinTwoInputIsActive, setCoinTwoInputIsActive] =
     useState<boolean>(false);
+
   useEffect(() => {
     // pre-populate btc to eth conversion when response loads
     if (response.data && !coinOneInputIsActive && !coinTwoInputIsActive) {
@@ -49,12 +49,12 @@ const Converter = ({ converterKeys }: Props) => {
       );
     }
 
+    // convert one amount to the other based on which input is active
     if (response.data && coinOneInputIsActive) {
       setCoinTwoAmount(
         convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
       );
     }
-
     if (response.data && coinTwoInputIsActive) {
       setCoinOneAmount(
         convertCoinAmount(coinTwoAmount, coinTwoData, coinOneData)
