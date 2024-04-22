@@ -44,27 +44,15 @@ const Converter = ({ converterKeys }: Props) => {
 
   // effect for implementing the conversion
   useEffect(() => {
-    const updateCoinTwoAmount = () =>
+    if (response.data && coinOneIsActive) {
       setCoinTwoAmount(
         convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
       );
-    const updateCoinOneAmount = () =>
+    }
+    if (response.data && coinTwoIsActive) {
       setCoinOneAmount(
         convertCoinAmount(coinTwoAmount, coinTwoData, coinOneData)
       );
-
-    // this occurs when the market data response has initially loaded, or a user has manually
-    // changed a coin's ID
-    if (response.data && !coinOneIsActive && !coinTwoIsActive) {
-      coinOneIsActive ? updateCoinTwoAmount() : updateCoinOneAmount();
-    }
-
-    // convert one amount to the other based on which amount input is active
-    if (response.data && coinOneIsActive) {
-      updateCoinTwoAmount();
-    }
-    if (response.data && coinTwoIsActive) {
-      updateCoinOneAmount();
     }
   }, [
     response,
