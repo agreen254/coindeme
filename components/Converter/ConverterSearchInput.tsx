@@ -8,9 +8,6 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "../Search/SearchActivator";
 
-import { cn } from "@/utils/cn";
-import { coinNameFromId } from "@/utils/coinNameFromId";
-import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
@@ -20,15 +17,27 @@ import {
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
 
+import { cn } from "@/utils/cn";
+import { coinNameFromId } from "@/utils/coinNameFromId";
+import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+
 type Props = {
   dropdownId: string;
   coinId: string;
   setCoinId: React.Dispatch<React.SetStateAction<string>>;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
+  activeIdHandler: () => void;
 };
 
-const ConverterSearchInput = ({ dropdownId, coinId, setCoinId, query, setQuery }: Props) => {
+const ConverterSearchInput = ({
+  dropdownId,
+  coinId,
+  setCoinId,
+  query,
+  setQuery,
+  activeIdHandler,
+}: Props) => {
   const currency = useUserCurrencySetting();
   const market = useMarketQuery(currency, "market_cap", "desc");
 
@@ -49,6 +58,7 @@ const ConverterSearchInput = ({ dropdownId, coinId, setCoinId, query, setQuery }
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    activeIdHandler();
     switch (e.key) {
       case "ArrowUp": {
         e.preventDefault();
@@ -88,6 +98,7 @@ const ConverterSearchInput = ({ dropdownId, coinId, setCoinId, query, setQuery }
         break;
       }
       case "Tab": {
+        setQuery(name);
         if (isVisible) {
           e.preventDefault();
           break;
