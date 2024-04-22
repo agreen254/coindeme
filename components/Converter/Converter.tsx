@@ -1,12 +1,10 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
 import { ArrowRightLeft as SwitchIcon } from "lucide-react";
 import ConverterSearchInput from "./ConverterSearchInput";
 import Image from "next/image";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
 import { convertCoinAmount } from "@/utils/convertCoinAmount";
 import { flatMarketRes } from "@/utils/flatMarketRes";
@@ -25,7 +23,7 @@ const Converter = ({ converterKeys }: Props) => {
   const response = useMarketQuery(currency, "market_cap", "desc");
 
   const [coinOneId, setCoinOneId] = useState<string>("bitcoin");
-  const [coinOneAmount, setCoinOneAmount] = useState<number>(0);
+  const [coinOneAmount, setCoinOneAmount] = useState<number>(1);
   const [coinOneQuery, setCoinOneQuery] = useState<string>("Bitcoin");
   const coinOneData = flatMarketRes(response.data?.pages)?.find(
     (coin) => coin.id === coinOneId
@@ -38,12 +36,19 @@ const Converter = ({ converterKeys }: Props) => {
     (coin) => coin.id === coinTwoId
   );
 
+  // convert one amount to the other based on which input is active
   const [coinOneInputIsActive, setCoinOneInputIsActive] =
     useState<boolean>(false);
   const [coinTwoInputIsActive, setCoinTwoInputIsActive] =
     useState<boolean>(false);
-
   useEffect(() => {
+    // pre-populate btc to eth conversion when response loads
+    if (response.data && !coinOneInputIsActive && !coinTwoInputIsActive) {
+      setCoinTwoAmount(
+        convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
+      );
+    }
+
     if (response.data && coinOneInputIsActive) {
       setCoinTwoAmount(
         convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
@@ -133,20 +138,15 @@ const Converter = ({ converterKeys }: Props) => {
             : "Loading..."}
         </p>
       </div>
-      {response.data && (
-        <AnimatePresence key="converterSwapButton">
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ ease: "easeIn", duration: 0.2 }}
-            className="absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100 focus:outline-menu-highlight/70"
-            onClick={swapPositions}
-          >
-            <SwitchIcon strokeWidth={1} className="h-8 w-8 text-stone-100" />
-          </motion.button>
-        </AnimatePresence>
-      )}
+      <button
+        className={cn(
+          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100 focus:outline-menu-highlight/70",
+          !response.data && "animate-pulse"
+        )}
+        onClick={swapPositions}
+      >
+        <SwitchIcon strokeWidth={1} className="h-8 w-8 text-stone-100" />
+      </button>
       <div
         className={cn(
           "flex relative flex-col p-4 w-1/2 bg-zinc-900/70 border border-zinc-800 rounded-lg",
