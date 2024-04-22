@@ -12,6 +12,7 @@ import { convertCoinAmount } from "@/utils/convertCoinAmount";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { formatPriceValue } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
+import { roundDigits } from "@/utils/formatHelpers";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
@@ -108,7 +109,7 @@ const Converter = ({ converterKeys }: Props) => {
                 type="number"
                 min={0}
                 className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
-                value={coinOneAmount}
+                value={roundDigits(coinOneAmount, 5)}
                 onChange={(e) => {
                   setCoinTwoInputIsActive(false);
                   setCoinOneInputIsActive(true);
@@ -176,7 +177,7 @@ const Converter = ({ converterKeys }: Props) => {
                 min={0}
                 className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
                 // https://github.com/facebook/react/issues/9402#issuecomment-447891987
-                value={coinTwoAmount}
+                value={roundDigits(coinTwoAmount, 5)}
                 onChange={(e) => {
                   setCoinOneInputIsActive(false);
                   setCoinTwoInputIsActive(true);

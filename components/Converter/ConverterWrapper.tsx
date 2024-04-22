@@ -1,3 +1,5 @@
+"use client";
+
 import DropdownProvider from "@/providers/DropdownProvider";
 import Converter from "./Converter";
 
