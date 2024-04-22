@@ -69,7 +69,9 @@ const Converter = ({ converterKeys }: Props) => {
   }, [
     response,
     coinOneAmount,
+    coinOneIsActive,
     coinTwoAmount,
+    coinTwoIsActive,
     setCoinOneAmount,
     setCoinTwoAmount,
   ]);
