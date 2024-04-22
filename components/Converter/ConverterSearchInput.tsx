@@ -110,7 +110,7 @@ const ConverterSearchInput = ({
   return (
     <>
       <label htmlFor="coinSearch" className="sr-only">
-        search coins to declare asset
+        search coins
       </label>
       <SearchActivator
         id="coinSearch"

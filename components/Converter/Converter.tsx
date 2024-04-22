@@ -1,5 +1,7 @@
 "use client";
 
+import type { MarketElementNoIdx } from "@/utils/types";
+
 import { ArrowRightLeft as SwapIcon } from "lucide-react";
 import ConverterSearchInput from "./ConverterSearchInput";
 import Image from "next/image";
@@ -42,6 +44,31 @@ const Converter = ({ converterKeys }: Props) => {
     (coin) => coin.id === coinTwoId
   );
 
+  const conversionLabel = (data: MarketElementNoIdx) => {
+    return `1 ${data.symbol.toUpperCase()} = ${getCurrencySymbol(
+      currency
+    )}${formatPriceValue(
+      data.current_price,
+      2,
+      "standard"
+    )} ${currency.toUpperCase()}`;
+  };
+
+  const swapPositions = () => {
+    const [idOne, idTwo] = [coinOneId, coinTwoId];
+    const [amountOne, amountTwo] = [coinOneAmount, coinTwoAmount];
+    const [queryOne, queryTwo] = [coinOneQuery, coinTwoQuery];
+
+    setCoinOneId(idTwo);
+    setCoinOneAmount(amountTwo);
+
+    setCoinTwoId(idOne);
+    setCoinTwoAmount(amountOne);
+
+    setCoinOneQuery(queryTwo);
+    setCoinTwoQuery(queryOne);
+  };
+
   // effect for implementing the conversion
   useEffect(() => {
     if (response.data && coinOneIsActive) {
@@ -64,27 +91,12 @@ const Converter = ({ converterKeys }: Props) => {
     setCoinTwoAmount,
   ]);
 
-  const swapPositions = () => {
-    const [idOne, idTwo] = [coinOneId, coinTwoId];
-    const [amountOne, amountTwo] = [coinOneAmount, coinTwoAmount];
-    const [queryOne, queryTwo] = [coinOneQuery, coinTwoQuery];
-
-    setCoinOneId(idTwo);
-    setCoinOneAmount(amountTwo);
-
-    setCoinTwoId(idOne);
-    setCoinTwoAmount(amountOne);
-
-    setCoinOneQuery(queryTwo);
-    setCoinTwoQuery(queryOne);
-  };
-
   return (
     <div className="flex relative w-[1467px] gap-6">
       <div
         className={cn(
           "flex relative flex-col p-4 w-1/2 bg-zinc-900/70 border border-zinc-800 rounded-lg",
-          response.isLoading && "animate-pulse"
+          response.isPending && "animate-pulse"
         )}
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
@@ -109,8 +121,12 @@ const Converter = ({ converterKeys }: Props) => {
                   setCoinTwoIsActive(false);
                 }}
               />
+              <label htmlFor="coinOneInput" className="sr-only">
+                input first coin amount 
+              </label>
               <input
                 placeholder="0"
+                id="coinOneInput"
                 type="number"
                 min={0}
                 className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
@@ -127,21 +143,13 @@ const Converter = ({ converterKeys }: Props) => {
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinOneData
-            ? `1 ${coinOneData.symbol.toUpperCase()} = ${getCurrencySymbol(
-                currency
-              )}${formatPriceValue(
-                coinOneData.current_price,
-                2,
-                "standard"
-              )} ${currency.toUpperCase()}`
-            : "Loading..."}
+          {coinOneData ? conversionLabel(coinOneData) : "Loading..."}
         </p>
       </div>
       <button
         className={cn(
           "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100 focus:outline-menu-highlight/70",
-          !response.data && "animate-pulse"
+          response.isPending && "animate-pulse"
         )}
         onClick={swapPositions}
       >
@@ -150,7 +158,7 @@ const Converter = ({ converterKeys }: Props) => {
       <div
         className={cn(
           "flex relative flex-col p-4 w-1/2 bg-zinc-900/70 border border-zinc-800 rounded-lg",
-          response.isFetching && "animate-pulse"
+          response.isPending && "animate-pulse"
         )}
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
@@ -175,8 +183,12 @@ const Converter = ({ converterKeys }: Props) => {
                   setCoinTwoIsActive(true);
                 }}
               />
+              <label htmlFor="coinTwoInput" className="sr-only">
+                input second coin amount
+              </label>
               <input
                 placeholder="0"
+                id="coinTwoInput"
                 type="number"
                 min={0}
                 className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
@@ -193,15 +205,7 @@ const Converter = ({ converterKeys }: Props) => {
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinTwoData
-            ? `1 ${coinTwoData.symbol.toUpperCase()} = ${getCurrencySymbol(
-                currency
-              )}${formatPriceValue(
-                coinTwoData.current_price,
-                2,
-                "standard"
-              )} ${currency.toUpperCase()}`
-            : "Loading..."}
+          {coinTwoData ? conversionLabel(coinTwoData) : "Loading..."}
         </p>
       </div>
     </div>
