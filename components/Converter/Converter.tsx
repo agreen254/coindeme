@@ -2,13 +2,13 @@
 
 import { AnimatePresence } from "framer-motion";
 import { ArrowRightLeft as SwitchIcon } from "lucide-react";
-import ConverterAmountInput from "./ConverterAmountInput";
 import ConverterSearchInput from "./ConverterSearchInput";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/utils/cn";
+import { convertCoinAmount } from "@/utils/convertCoinAmount";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { formatPriceValue } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
@@ -23,17 +23,59 @@ const Converter = ({ converterKeys }: Props) => {
   const currency = useUserCurrencySetting();
   const response = useMarketQuery(currency, "market_cap", "desc");
 
-  const [idOne, setIdOne] = useState<string>("bitcoin");
-  const [amountOne, setAmountOne] = useState<number>(0);
-  const coinOne = flatMarketRes(response.data?.pages)?.find(
-    (coin) => coin.id === idOne
+  const [coinOneId, setCoinOneId] = useState<string>("bitcoin");
+  const [coinOneAmount, setCoinOneAmount] = useState<number>(0);
+  const [coinOneQuery, setCoinOneQuery] = useState<string>("Bitcoin");
+  const coinOneData = flatMarketRes(response.data?.pages)?.find(
+    (coin) => coin.id === coinOneId
   );
 
-  const [idTwo, setIdTwo] = useState<string>("ethereum");
-  const [amountTwo, setAmountTwo] = useState<number>(0);
-  const coinTwo = flatMarketRes(response.data?.pages)?.find(
-    (coin) => coin.id === idTwo
+  const [coinTwoId, setCoinTwoId] = useState<string>("ethereum");
+  const [coinTwoAmount, setCoinTwoAmount] = useState<number>(0);
+  const [coinTwoQuery, setCoinTwoQuery] = useState<string>("Ethereum");
+  const coinTwoData = flatMarketRes(response.data?.pages)?.find(
+    (coin) => coin.id === coinTwoId
   );
+
+  const [coinOneInputIsActive, setCoinOneInputIsActive] =
+    useState<boolean>(false);
+  const [coinTwoInputIsActive, setCoinTwoInputIsActive] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (response.data && coinOneInputIsActive) {
+      setCoinTwoAmount(
+        convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
+      );
+    }
+
+    if (response.data && coinTwoInputIsActive) {
+      setCoinOneAmount(
+        convertCoinAmount(coinTwoAmount, coinTwoData, coinOneData)
+      );
+    }
+  }, [
+    response,
+    coinOneAmount,
+    coinTwoAmount,
+    setCoinOneAmount,
+    setCoinTwoAmount,
+  ]);
+
+  const swapPositions = () => {
+    const [idOne, idTwo] = [coinOneId, coinTwoId];
+    const [amountOne, amountTwo] = [coinOneAmount, coinTwoAmount];
+    const [queryOne, queryTwo] = [coinOneQuery, coinTwoQuery];
+
+    setCoinOneId(idTwo);
+    setCoinOneAmount(amountTwo);
+
+    setCoinTwoId(idOne);
+    setCoinTwoAmount(amountOne);
+
+    setCoinOneQuery(queryTwo);
+    setCoinTwoQuery(queryOne);
+  };
 
   return (
     <div className="flex relative w-[1467px] gap-6">
@@ -45,23 +87,33 @@ const Converter = ({ converterKeys }: Props) => {
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinOne ? (
+          {coinOneData ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinOne.image}
-                alt={`${coinOne.name} logo`}
+                src={coinOneData.image}
+                alt={`${coinOneData.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[0]}
-                coinId={idOne}
-                setCoinId={setIdOne}
+                coinId={coinOneId}
+                setCoinId={setCoinOneId}
+                query={coinOneQuery}
+                setQuery={setCoinOneQuery}
               />
-              <ConverterAmountInput
-                amount={amountOne}
-                setAmount={setAmountOne}
+              <input
+                placeholder="0"
+                type="number"
+                min={0}
+                className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
+                value={coinOneAmount}
+                onChange={(e) => {
+                  setCoinTwoInputIsActive(false);
+                  setCoinOneInputIsActive(true);
+                  setCoinOneAmount(parseFloat(e.currentTarget.value || "0"));
+                }}
               />
             </>
           ) : (
@@ -69,11 +121,13 @@ const Converter = ({ converterKeys }: Props) => {
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinOne
-            ? `1 ${coinOne.symbol.toUpperCase()} = ${getCurrencySymbol(
+          {coinOneData
+            ? `1 ${coinOneData.symbol.toUpperCase()} = ${getCurrencySymbol(
                 currency
               )}${formatPriceValue(
-                coinOne.current_price
+                coinOneData.current_price,
+                2,
+                "standard"
               )} ${currency.toUpperCase()}`
             : "Loading..."}
         </p>
@@ -85,7 +139,8 @@ const Converter = ({ converterKeys }: Props) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ ease: "easeIn", duration: 0.2 }}
-            className="absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100"
+            className="absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100 focus:outline-menu-highlight/70"
+            onClick={swapPositions}
           >
             <SwitchIcon strokeWidth={1} className="h-8 w-8 text-stone-100" />
           </motion.button>
@@ -99,23 +154,34 @@ const Converter = ({ converterKeys }: Props) => {
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinTwo ? (
+          {coinTwoData ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinTwo.image}
-                alt={`${coinTwo.name} logo`}
+                src={coinTwoData.image}
+                alt={`${coinTwoData.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[1]}
-                coinId={idTwo}
-                setCoinId={setIdTwo}
+                coinId={coinTwoId}
+                setCoinId={setCoinTwoId}
+                query={coinTwoQuery}
+                setQuery={setCoinTwoQuery}
               />
-              <ConverterAmountInput
-                amount={amountTwo}
-                setAmount={setAmountTwo}
+              <input
+                placeholder="0"
+                type="number"
+                min={0}
+                className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
+                // https://github.com/facebook/react/issues/9402#issuecomment-447891987
+                value={coinTwoAmount}
+                onChange={(e) => {
+                  setCoinOneInputIsActive(false);
+                  setCoinTwoInputIsActive(true);
+                  setCoinTwoAmount(parseFloat(e.currentTarget.value || "0"));
+                }}
               />
             </>
           ) : (
@@ -123,11 +189,13 @@ const Converter = ({ converterKeys }: Props) => {
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinTwo
-            ? `1 ${coinTwo.symbol.toUpperCase()} = ${getCurrencySymbol(
+          {coinTwoData
+            ? `1 ${coinTwoData.symbol.toUpperCase()} = ${getCurrencySymbol(
                 currency
               )}${formatPriceValue(
-                coinTwo.current_price
+                coinTwoData.current_price,
+                2,
+                "standard"
               )} ${currency.toUpperCase()}`
             : "Loading..."}
         </p>

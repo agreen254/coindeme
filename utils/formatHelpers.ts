@@ -8,7 +8,11 @@ export function localeFormat(value: number) {
 /**
  * Shortens very long coin names that will cause styling issues in the market table.
  */
-export function formatLongName(name: string, maxLen: number = 18, symbol?: string) {
+export function formatLongName(
+  name: string,
+  maxLen: number = 18,
+  symbol?: string
+) {
   const symbolLen = symbol?.length ?? 0;
   if (name.length + symbolLen >= maxLen) {
     return name.slice(0, 14).trim() + "...";
@@ -33,11 +37,15 @@ export function formatPriceChangePercentage(price: number) {
  * 100_000 -> 100k
  * 2_000_000 -> 2M
  */
-export function formatPriceValue(price: number, numTrailing: number = 2) {
+export function formatPriceValue(
+  price: number,
+  numTrailing: number = 2,
+  notation: Intl.NumberFormatOptions["notation"] = "compact"
+) {
   return price < 0.01
     ? formatSmallNum(price)
     : Intl.NumberFormat("en-US", {
-        notation: "compact",
+        notation: notation,
         maximumFractionDigits: numTrailing,
       }).format(price);
 }

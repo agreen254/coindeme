@@ -8,7 +8,6 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "../Search/SearchActivator";
 
-import { useState } from "react";
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
@@ -25,9 +24,11 @@ type Props = {
   dropdownId: string;
   coinId: string;
   setCoinId: React.Dispatch<React.SetStateAction<string>>;
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ConverterSearchInput = ({ dropdownId, coinId, setCoinId }: Props) => {
+const ConverterSearchInput = ({ dropdownId, coinId, setCoinId, query, setQuery }: Props) => {
   const currency = useUserCurrencySetting();
   const market = useMarketQuery(currency, "market_cap", "desc");
 
@@ -37,7 +38,6 @@ const ConverterSearchInput = ({ dropdownId, coinId, setCoinId }: Props) => {
 
   const targets = getSearchTargets(market.data?.pages);
   const name = coinNameFromId(coinId, targets);
-  const [query, setQuery] = useState<string>(name);
   const results = targets ? getSearchResults(targets, query) : [];
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
@@ -69,7 +69,6 @@ const ConverterSearchInput = ({ dropdownId, coinId, setCoinId }: Props) => {
       case "Enter": {
         e.preventDefault();
         if (!isVisible) {
-          // setQuery(e.currentTarget.value);
           break;
         }
         // if there are no results nothing will happen,
@@ -102,7 +101,6 @@ const ConverterSearchInput = ({ dropdownId, coinId, setCoinId }: Props) => {
       <label htmlFor="coinSearch" className="sr-only">
         search coins to declare asset
       </label>
-      {/* <Image className="inline" /> */}
       <SearchActivator
         id="coinSearch"
         type="text"
