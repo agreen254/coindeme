@@ -12,21 +12,32 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { cn } from "@/utils/cn";
 import { convertCoinAmount } from "@/utils/convertCoinAmount";
-import { flatMarketRes } from "@/utils/flatMarketRes";
 import { formatPriceValue } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { roundDigits } from "@/utils/formatHelpers";
 
 type Props = {
   converterKeys: string[];
+  response: ReturnType<typeof useMarketQuery>;
+  coinOneId: string;
+  coinTwoId: string;
+  coinOneData: MarketElementNoIdx | undefined;
+  coinTwoData: MarketElementNoIdx | undefined;
+  setCoinOneId: React.Dispatch<React.SetStateAction<string>>;
+  setCoinTwoId: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Converter = ({ converterKeys }: Props) => {
+const Converter = ({
+  converterKeys,
+  coinOneId,
+  coinTwoId,
+  coinOneData,
+  coinTwoData,
+  setCoinOneId,
+  setCoinTwoId,
+  response,
+}: Props) => {
   const currency = useUserCurrencySetting();
-  const response = useMarketQuery(currency, "market_cap", "desc");
-
-  const [coinOneId, setCoinOneId] = useState<string>("bitcoin");
-  const [coinTwoId, setCoinTwoId] = useState<string>("ethereum");
 
   const [coinOneAmount, setCoinOneAmount] = useState<number>(1);
   const [coinTwoAmount, setCoinTwoAmount] = useState<number>(0);
@@ -36,13 +47,6 @@ const Converter = ({ converterKeys }: Props) => {
 
   const [coinOneQuery, setCoinOneQuery] = useState<string>("Bitcoin");
   const [coinTwoQuery, setCoinTwoQuery] = useState<string>("Ethereum");
-
-  const coinOneData = flatMarketRes(response.data?.pages)?.find(
-    (coin) => coin.id === coinOneId
-  );
-  const coinTwoData = flatMarketRes(response.data?.pages)?.find(
-    (coin) => coin.id === coinTwoId
-  );
 
   const conversionLabel = (data: MarketElementNoIdx) => {
     return `1 ${data.symbol.toUpperCase()} = ${getCurrencySymbol(
@@ -122,7 +126,7 @@ const Converter = ({ converterKeys }: Props) => {
                 }}
               />
               <label htmlFor="coinOneInput" className="sr-only">
-                input first coin amount 
+                input first coin amount
               </label>
               <input
                 placeholder="0"
