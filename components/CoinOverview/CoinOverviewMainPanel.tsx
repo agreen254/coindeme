@@ -7,7 +7,6 @@ import { cn } from "@/utils/cn";
 
 import CoinOverviewCategoriesCarousel from "./CoinOverviewCategoriesCarousel";
 
-
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
 };
