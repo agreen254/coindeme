@@ -1,4 +1,9 @@
+"use client";
+
+import { useCoinQuery } from "@/hooks/useCoinQuery";
+
 import CoinOverviewDescription from "@/components/CoinOverview/CoinOverviewDescription";
+import CoinOverviewCategoriesCarousel from "@/components/CoinOverview/CoinOverviewCategoriesCarousel";
 
 type Props = {
   params: {
@@ -7,9 +12,12 @@ type Props = {
 };
 
 const CoinPage = ({ params: { id } }: Props) => {
+  const response = useCoinQuery(id);
+
   return (
-    <div className="w-full flex justify-center">
-      <CoinOverviewDescription id={id} />
+    <div className="w-full flex flex-col items-center">
+      <CoinOverviewDescription response={response} />
+      <CoinOverviewCategoriesCarousel response={response} />
     </div>
   );
 };

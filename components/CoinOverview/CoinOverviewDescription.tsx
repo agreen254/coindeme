@@ -8,11 +8,10 @@ import parse from "html-react-parser";
 import { cn } from "@/utils/cn";
 
 type Props = {
-  id: string;
+  response: ReturnType<typeof useCoinQuery>;
 };
 
-const CoinOverviewDescription = ({ id }: Props) => {
-  const response = useCoinQuery(id);
+const CoinOverviewDescription = ({ response }: Props) => {
   const description = response.data?.description.en;
 
   const [canExpand, setCanExpand] = useState<boolean>(false);
