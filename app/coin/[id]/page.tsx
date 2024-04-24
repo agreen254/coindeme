@@ -3,7 +3,7 @@
 import { useCoinQuery } from "@/hooks/useCoinQuery";
 
 import CoinOverviewDescription from "@/components/CoinOverview/CoinOverviewDescription";
-import CoinOverviewCategoriesCarousel from "@/components/CoinOverview/CoinOverviewCategoriesCarousel";
+import CoinOverviewMainPanel from "@/components/CoinOverview/CoinOverviewMainPanel";
 
 type Props = {
   params: {
@@ -17,7 +17,7 @@ const CoinPage = ({ params: { id } }: Props) => {
   return (
     <div className="w-full flex flex-col items-center">
       <CoinOverviewDescription response={response} />
-      <CoinOverviewCategoriesCarousel response={response} />
+      <CoinOverviewMainPanel response={response} />
     </div>
   );
 };
