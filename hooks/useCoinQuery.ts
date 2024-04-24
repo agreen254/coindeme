@@ -1,9 +1,11 @@
+import type { CoinOverviewResponse } from "@/utils/types";
+
 import { useQuery } from "@tanstack/react-query";
 
 export const useCoinQuery = (id: string) => {
   return useQuery({
     queryKey: ["overview", id],
-    queryFn: async () => {
+    queryFn: async (): Promise<CoinOverviewResponse> => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/coin`,
         {

@@ -1,3 +1,5 @@
+import CoinOverviewDescription from "@/components/CoinOverview/CoinOverviewDescription";
+
 type Props = {
   params: {
     id: string;
@@ -5,7 +7,11 @@ type Props = {
 };
 
 const CoinPage = ({ params: { id } }: Props) => {
-  return <div className="w-full flex justify-center">{id}</div>;
+  return (
+    <div className="w-full flex justify-center">
+      <CoinOverviewDescription id={id} />
+    </div>
+  );
 };
 
 export default CoinPage;
