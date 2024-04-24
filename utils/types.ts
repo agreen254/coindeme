@@ -10,6 +10,8 @@ import {
   assetCurrentSchema,
   coinCurrentRequestSchema,
   coinCurrentResponseSchema,
+  coinOverviewRequestSchema,
+  coinOverviewResponseSchema,
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
@@ -63,6 +65,9 @@ export type CoinCurrentRequest = z.infer<typeof coinCurrentRequestSchema>;
 export type CoinCurrentResponse = z.infer<typeof coinCurrentResponseSchema>;
 export type CoinCurrentQuery = ReturnType<typeof useAssetCurrentQueries>;
 
+export type CoinOverviewRequest = z.infer<typeof coinOverviewRequestSchema>;
+export type CoinOverviewResponse = z.infer<typeof coinOverviewResponseSchema>;
+
 export type ComparisonChartQueries = z.infer<
   typeof comparisonChartQueriesSchema
 >;
@@ -77,7 +82,9 @@ export type ComparisonData = {
   values: number[][];
 };
 
-export type GlobalResponseUnwrapped = z.infer<typeof globalResponseUnwrappedSchema>;
+export type GlobalResponseUnwrapped = z.infer<
+  typeof globalResponseUnwrappedSchema
+>;
 export type GlobalResponse = z.infer<typeof globalResponseSchema>;
 
 export type CoinHistoryRequest = z.infer<typeof coinHistoryRequestSchema>;
@@ -89,7 +96,9 @@ export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
 export type MarketFetchParam = z.infer<typeof marketFetchParamSchema>;
 export type MarketTableMode = "infinite" | "paginated";
 export type MarketResponse = z.infer<typeof marketResponseSchema>;
-export type MarketResponsePaginated = z.infer<typeof marketResponsePaginatedSchema>;
+export type MarketResponsePaginated = z.infer<
+  typeof marketResponsePaginatedSchema
+>;
 export type MarketRequest = z.infer<typeof marketRequest>;
 
 const marketTableSortFields = [
