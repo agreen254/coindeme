@@ -27,6 +27,24 @@
     text-underline-offset: 4px;
   }
 
+  .border-slice {
+    border-image-slice: 1;
+  }
+  .border-grad-r-blue {
+    border-image-source: linear-gradient(
+      to right,
+      #4dfdff,
+      rgba(255, 255, 255, 0)
+    );
+  }
+  .border-grad-l-blue {
+    border-image-source: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      #4dfdff
+    );
+  }
+
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;

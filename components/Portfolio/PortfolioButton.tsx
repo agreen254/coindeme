@@ -10,17 +10,28 @@ const PortfolioButton = () => {
   const activeCn = "bg-[#5B9ACA]/80 shadow-[0_0_20px_8px] shadow-[#7878FA]/20";
 
   const inPortfolio = pathname === "/portfolio";
+  const inConverter = pathname === "/converter";
+  const inHome = !(inPortfolio || inConverter);
 
   return (
-    <div className="w-[264px] h-12 flex justify-center items-center gap-x-1 rounded-full font-medium bg-white/10 shadow-top shadow-menu-highlight/30">
+    <div className="w-[390px] h-12 flex justify-center items-center gap-x-1 rounded-full font-medium bg-white/10 shadow-top shadow-menu-highlight/30">
       <Link
         href="/"
         className={cn(
           "w-[120px] h-8 flex justify-center items-center rounded-full",
-          !inPortfolio && activeCn
+          inHome && activeCn
         )}
       >
-        <span>Coins</span>
+        Coins
+      </Link>
+      <Link
+        href="/converter"
+        className={cn(
+          "w-[120px] h-8 flex justify-center items-center rounded-full",
+          inConverter && activeCn
+        )}
+      >
+        Converter
       </Link>
       <Link
         href="/portfolio"
