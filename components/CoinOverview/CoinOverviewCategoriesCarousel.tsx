@@ -13,6 +13,8 @@ type Props = {
 
 const CoinOverviewCategoriesCarousel = ({ response }: Props) => {
   const categories = response.data?.categories;
+
+  // response object may just have no categories
   const hasCategories = categories && categories.length > 0;
 
   const [emblaRef] = useEmblaCarousel({ loop: true }, [
@@ -46,14 +48,14 @@ const CoinOverviewCategoriesCarousel = ({ response }: Props) => {
         animate={{ opacity: 100 }}
         exit={{ opacity: 0 }}
         transition={{ ease: "easeIn", duration: 1.0 }}
-        className="max-w-full"
+        className="max-w-full h-10"
       >
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
             {expandedCategories.map((cat, idx) => (
               <div
                 key={cat + idx}
-                className="flex-[0_0_auto] max-w-full pl-12 min-w-0 h-8 text-muted-foreground font-light"
+                className="flex-[0_0_auto] max-w-full pl-12 min-w-0 h-8 text-lg text-muted-foreground font-light"
               >
                 {cat}
               </div>
@@ -63,7 +65,7 @@ const CoinOverviewCategoriesCarousel = ({ response }: Props) => {
       </motion.div>
     </AnimatePresence>
   ) : (
-    <div className="h-8"></div>
+    <div className="h-10"></div>
   );
 };
 
