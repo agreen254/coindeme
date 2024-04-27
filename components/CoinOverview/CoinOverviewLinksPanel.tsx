@@ -9,6 +9,8 @@ type Props = {
 };
 
 const CoinOverviewLinksPanel = ({ response }: Props) => {
+  // Display three links while loading, but once response comes through only display the number of links returned.
+  // If there are less than three links the API will show them as empty strings, hence the filtering.
   const links = response.data?.links.blockchain_site
     .slice(1, 4)
     .filter((l) => l !== "") ?? [null, null, null];

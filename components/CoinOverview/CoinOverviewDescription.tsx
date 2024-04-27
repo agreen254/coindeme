@@ -20,10 +20,7 @@ const CoinOverviewDescription = ({ response }: Props) => {
   const expandRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (expandRef.current?.scrollHeight) {
-      setCanExpand(
-        expandRef.current.scrollHeight > 300 &&
-          expandRef.current.scrollHeight <= 700
-      );
+      setCanExpand(expandRef.current.scrollHeight > 300);
     }
   }, [response, canExpand, setCanExpand]);
 
