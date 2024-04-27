@@ -5,8 +5,6 @@ import { TrendingDown as AllTimeLowIcon } from "lucide-react";
 
 import { useCoinQuery } from "@/hooks/useCoinQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import CaretIcon from "@/Icons/Caret";
 import { cn } from "@/utils/cn";
 import {
   formatPriceChangePercentage as fmtPriceChange,
@@ -14,6 +12,8 @@ import {
   localeFormat,
 } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
+
+import CaretIcon from "@/Icons/Caret";
 import PortfolioIcon from "@/Icons/Portfolio";
 
 type Props = {
