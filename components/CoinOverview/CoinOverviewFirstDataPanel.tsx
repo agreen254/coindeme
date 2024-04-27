@@ -53,7 +53,7 @@ const StackedCaretAndTime = ({ val, time }: { val: number; time: string }) => {
   );
 };
 
-const CoinOverviewStatsOnePanel = ({ response }: Props) => {
+const CoinOverviewFirstDataPanel = ({ response }: Props) => {
   const currency = useUserCurrencySetting();
   const cSymbol = getCurrencySymbol(currency);
   const data = response.data;
@@ -63,7 +63,7 @@ const CoinOverviewStatsOnePanel = ({ response }: Props) => {
   return (
     <div
       className={cn(
-        "w-[432px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
+        "min-w-[432px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
         response.isPending && "animate-pulse"
       )}
     >
@@ -149,4 +149,4 @@ const CoinOverviewStatsOnePanel = ({ response }: Props) => {
   );
 };
 
-export default CoinOverviewStatsOnePanel;
+export default CoinOverviewFirstDataPanel;

@@ -5,7 +5,6 @@ import { useCoinQuery } from "@/hooks/useCoinQuery";
 
 import { HTMLReactParserOptions, Element } from "html-react-parser";
 import parse from "html-react-parser";
-import { cn } from "@/utils/cn";
 
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
@@ -16,6 +15,7 @@ const CoinOverviewDescription = ({ response }: Props) => {
 
   const [canExpand, setCanExpand] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const isCollapsed = canExpand && !isExpanded;
 
   const expandRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -47,18 +47,14 @@ const CoinOverviewDescription = ({ response }: Props) => {
       : "No description provided.";
   })();
 
+  const expandCn = isCollapsed
+    ? "bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
+    : "h-auto bg-inherit";
+
   return (
-    <div>
-      <div ref={expandRef} className="relative w-[700px] overflow-hidden">
-        <p
-          className={cn(
-            isExpanded
-              ? "h-auto bg-inherit"
-              : "bg-[linear-gradient(to_bottom,white_50%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
-          )}
-        >
-          {descriptionDisplay}
-        </p>
+    <div className="mt-8">
+      <div ref={expandRef} className="relative w-[888px] overflow-hidden">
+        <p className={expandCn}>{descriptionDisplay}</p>
       </div>
       {canExpand && (
         <button
