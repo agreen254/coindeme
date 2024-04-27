@@ -2,7 +2,6 @@ import { Bitcoin as BitcoinIcon } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
 import Image from "next/image";
 
-import { useEffect, useState } from "react";
 import { useCoinQuery } from "@/hooks/useCoinQuery";
 import { cn } from "@/utils/cn";
 
@@ -15,16 +14,6 @@ type Props = {
 
 const CoinOverviewMainPanel = ({ response }: Props) => {
   const homepage = response.data?.links.homepage[0];
-  const [hasCopied, setHasCopied] = useState<boolean>(false);
-
-  // reset checked copy to regular after use clicks it
-  useEffect(() => {
-    if (hasCopied) {
-      setTimeout(() => {
-        setHasCopied(false);
-      }, 2 * 1000);
-    }
-  }, [hasCopied, setHasCopied]);
 
   return (
     <div className="min-h-[400px]">

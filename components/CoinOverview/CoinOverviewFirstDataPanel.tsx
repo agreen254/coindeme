@@ -1,7 +1,11 @@
 "use client";
 
+import { TrendingUp as AllTimeHighIcon } from "lucide-react";
+import { TrendingDown as AllTimeLowIcon } from "lucide-react";
+
 import { useCoinQuery } from "@/hooks/useCoinQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+
 import CaretIcon from "@/Icons/Caret";
 import { cn } from "@/utils/cn";
 import {
@@ -11,8 +15,6 @@ import {
 } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import PortfolioIcon from "@/Icons/Portfolio";
-import { TrendingUp as AllTimeHighIcon } from "lucide-react";
-import { TrendingDown as AllTimeLowIcon } from "lucide-react";
 
 type Props = {
   response: ReturnType<typeof useCoinQuery>;

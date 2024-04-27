@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useCoinQuery } from "@/hooks/useCoinQuery";
-
 import { HTMLReactParserOptions, Element } from "html-react-parser";
 import parse from "html-react-parser";
+
+import { useCoinQuery } from "@/hooks/useCoinQuery";
 
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
@@ -17,6 +17,8 @@ const CoinOverviewDescription = ({ response }: Props) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const isCollapsed = canExpand && !isExpanded;
 
+  // check the height of the description container using a ref;
+  // determine if the description is long enough to show the "read more" button
   const expandRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (expandRef.current?.scrollHeight) {
