@@ -9,11 +9,9 @@ type Props = {
 };
 
 const CoinOverviewLinksPanel = ({ response }: Props) => {
-  const links = response.data?.links.blockchain_site.slice(1, 4) ?? [
-    null,
-    null,
-    null,
-  ];
+  const links = response.data?.links.blockchain_site
+    .slice(1, 4)
+    .filter((l) => l !== "") ?? [null, null, null];
 
   return (
     <div className="flex flex-col mt-4">

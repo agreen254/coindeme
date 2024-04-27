@@ -122,7 +122,7 @@ export const coinOverviewResponseSchema = z.object({
     small: z.string(),
     large: z.string(),
   }),
-  genesis_date: z.string(),
+  genesis_date: z.string().nullable(),
   market_data: z.object({
     ath: currenciesObjectNumberSchema,
     ath_change_percentage: currenciesObjectNumberSchema,
