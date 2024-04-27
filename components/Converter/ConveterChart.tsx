@@ -1,12 +1,12 @@
+"use client";
+
 import type { ChartData } from "chart.js";
-import type { MarketElementNoIdx } from "@/utils/types";
-
-import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
-
-import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
-import { getOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
-import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { Line } from "react-chartjs-2";
+
+import type { MarketElementNoIdx } from "@/utils/types";
+import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
+import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
+import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
 
 type Props = {
   coinOneChartData: ReturnType<typeof useComparisonChartQueries>[number];
@@ -17,21 +17,30 @@ type Props = {
 
 const ConverterChart = ({
   coinOneChartData,
+  coinOneMarketData,
   coinTwoChartData,
+  coinTwoMarketData,
 }: Props) => {
-  const hasChartData = coinOneChartData.data && coinTwoChartData.data;
+  const hasChartData =
+    coinOneChartData.data &&
+    coinTwoChartData.data &&
+    coinOneMarketData &&
+    coinTwoMarketData;
 
-  const coinRatioData = (() => {
-    return hasChartData
-      ? coinOneChartData.data.prices.map((p, idx) => {
-          const price = p[1];
-          const otherPrice = coinTwoChartData.data.prices[idx][1];
-          const hasPrices = price && otherPrice;
+  const [coinOneSymbol, coinTwoSymbol] = [
+    coinOneMarketData?.symbol,
+    coinTwoMarketData?.symbol,
+  ];
 
-          return hasPrices ? price / otherPrice : null;
-        })
-      : [null];
-  })();
+  const coinRatioData = hasChartData
+    ? coinOneChartData.data.prices.map((p, idx) => {
+        const price = p[1];
+        const otherPrice = coinTwoChartData.data.prices[idx][1];
+        const hasPrices = price && otherPrice;
+
+        return hasPrices ? price / otherPrice : null;
+      })
+    : [null];
 
   const chartData: ChartData<"line"> = {
     labels: hasChartData
@@ -39,9 +48,7 @@ const ConverterChart = ({
       : undefined,
     datasets: [
       {
-        backgroundColor: function (context) {
-          return priceComparisonGradient(context, 0);
-        },
+        backgroundColor: chartColorSets[0].endColor.hex,
         borderColor: chartColorSets[0].startColor.hex,
         data: coinRatioData,
       },
@@ -49,8 +56,32 @@ const ConverterChart = ({
   };
 
   return (
-    <div className="w-full h-[650px] mt-4 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800">
-      <Line data={chartData} options={getOptions("usd")} />
+    <div className="w-full flex flex-col mt-4 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800">
+      <div className="h-[50px]">
+        <p className="text-2xl text-center">
+          <span className="font-semibold">{coinOneSymbol?.toUpperCase()} </span>
+          to
+          <span className="font-semibold">
+            {" "}
+            {coinTwoSymbol?.toUpperCase()}{" "}
+          </span>
+        </p>
+      </div>
+      <div className="h-[550px]">
+        {hasChartData && (
+          <Line
+            data={chartData}
+            options={getOptions({
+              coinOneName: coinOneMarketData.name,
+              coinOneSymbol: coinOneMarketData.symbol,
+              coinTwoName: coinTwoMarketData.name,
+              coinTwoSymbol: coinTwoMarketData.symbol,
+              len: coinOneChartData.data.prices.length,
+              days: 7,
+            })}
+          />
+        )}
+      </div>
     </div>
   );
 };
