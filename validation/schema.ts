@@ -9,13 +9,21 @@ export const currenciesUnionSchema = z.union([
   z.literal("eth"),
 ]);
 
-export const currenciesObjectSchema = z.object({
+export const currenciesObjectNumberSchema = z.object({
   btc: z.number(),
   eth: z.number(),
   eur: z.number(),
   gbp: z.number(),
   usd: z.number(),
 });
+
+const currenciesObjectStringSchema = z.object({
+  btc: z.string(),
+  eth: z.string(),
+  eur: z.string(),
+  gbp: z.string(),
+  usd: z.string(),
+})
 
 export const assetValidatorSchema = z.object({
   coinName: z.string(),
@@ -38,9 +46,9 @@ export const assetSchema = assetValidatorSchema
 
 export const assetHistorySchema = z.object({
   assetId: z.string(),
-  current_price: currenciesObjectSchema,
-  market_cap: currenciesObjectSchema,
-  total_volume: currenciesObjectSchema,
+  current_price: currenciesObjectNumberSchema,
+  market_cap: currenciesObjectNumberSchema,
+  total_volume: currenciesObjectNumberSchema,
 });
 
 export const assetCurrentSchema = assetHistorySchema.extend({
@@ -64,9 +72,9 @@ export const coinCurrentResponseSchema = z.object({
     small: z.string(),
   }),
   market_data: z.object({
-    current_price: currenciesObjectSchema,
-    market_cap: currenciesObjectSchema,
-    total_volume: currenciesObjectSchema,
+    current_price: currenciesObjectNumberSchema,
+    market_cap: currenciesObjectNumberSchema,
+    total_volume: currenciesObjectNumberSchema,
     price_change_percentage_24h: z.number(),
     circulating_supply: z.number(),
     total_supply: z.number().nullable(),
@@ -87,9 +95,55 @@ export const coinHistoryResponseSchema = z.object({
     small: z.string(),
   }),
   market_data: z.object({
-    current_price: currenciesObjectSchema,
-    market_cap: currenciesObjectSchema,
-    total_volume: currenciesObjectSchema,
+    current_price: currenciesObjectNumberSchema,
+    market_cap: currenciesObjectNumberSchema,
+    total_volume: currenciesObjectNumberSchema,
+  }),
+});
+
+export const coinOverviewRequestSchema = z.object({
+  id: z.string(),
+});
+
+export const coinOverviewResponseSchema = z.object({
+  id: z.string(),
+  symbol: z.string(),
+  name: z.string(),
+  categories: z.array(z.string()).nullable(),
+  description: z.object({
+    en: z.string(),
+  }),
+  links: z.object({
+    homepage: z.array(z.string()),
+    blockchain_site: z.array(z.string()),
+  }),
+  image: z.object({
+    thumb: z.string(),
+    small: z.string(),
+    large: z.string(),
+  }),
+  genesis_date: z.string().nullable(),
+  market_data: z.object({
+    ath: currenciesObjectNumberSchema,
+    ath_change_percentage: currenciesObjectNumberSchema,
+    ath_date: currenciesObjectStringSchema,
+    atl: currenciesObjectNumberSchema,
+    atl_change_percentage: currenciesObjectNumberSchema,
+    atl_date: currenciesObjectStringSchema,
+
+    current_price: currenciesObjectNumberSchema,
+    fully_diluted_valuation: currenciesObjectNumberSchema,
+    market_cap: currenciesObjectNumberSchema,
+    market_cap_rank: z.number(),
+    total_volume: currenciesObjectNumberSchema,
+
+    price_change_percentage_24h_in_currency: currenciesObjectNumberSchema,
+    price_change_percentage_7d_in_currency: currenciesObjectNumberSchema,
+    price_change_percentage_30d_in_currency: currenciesObjectNumberSchema,
+
+    total_supply: z.number().nullable(),
+    max_supply: z.number().nullable(),
+    circulating_supply: z.number().nullable(),
   }),
 });
 
@@ -126,8 +180,8 @@ export const comparisonChartResponseSchema = z.object({
 export const globalResponseUnwrappedSchema = z.object({
   active_cryptocurrencies: z.number(),
   markets: z.number(),
-  total_market_cap: currenciesObjectSchema,
-  total_volume: currenciesObjectSchema,
+  total_market_cap: currenciesObjectNumberSchema,
+  total_volume: currenciesObjectNumberSchema,
   market_cap_percentage: z.object({
     btc: z.number(),
     eth: z.number(),
