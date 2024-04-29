@@ -27,7 +27,6 @@ const ConverterChart = ({
     coinOneMarketData &&
     coinTwoMarketData;
 
-
   const coinRatioData = hasChartData
     ? coinOneChartData.data.prices.map((p, idx) => {
         const price = p[1];
