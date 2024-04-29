@@ -18,39 +18,35 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
   const currency = useUserCurrencySetting();
 
   const hasData =
-    assetsPast.every((res) => !!res.data) &&
-    assetsCurrent.every((res) => !!res.data);
+    assetsPast.every((res) => res.data !== undefined) &&
+    assetsCurrent.every((res) => res.data !== undefined);
 
   const profit = (() => {
+    if (assets.length === 0) return "No Assets Found";
     if (hasData) {
-      const pastGrossValue = assets
-        // user has created the asset with a single currency value, so we must
-        // use the ratios between currency values to perform conversions
-        .map(
-          (asset, idx) =>
-            (asset.value * assetsPast[idx].data.current_price[currency]) /
-            assetsPast[idx].data.current_price[asset.valueCurrency]
-        )
-        .reduce((sum, val) => sum + val, 0);
+      return assets
+        .reduce((value, asset, idx) => {
+          const pastCoinValue = assetsPast[idx].data.current_price[currency];
+          const currentCoinValue =
+            assetsCurrent[idx].data.current_price[currency];
+          const numCoins =
+            asset.value /
+            assetsPast[idx].data.current_price[asset.valueCurrency];
 
-      const currentGrossValue = assetsCurrent
-        .map(
-          (asset, idx) =>
-            (asset.data.current_price[currency] *
-              assetsPast[idx].data.current_price[currency]) /
-            assetsPast[idx].data.current_price[assets[idx].valueCurrency]
-        )
-        .reduce((sum, val) => sum + val, 0);
-
-      return currentGrossValue - pastGrossValue;
+          const pastValue = numCoins * pastCoinValue;
+          const currentValue = numCoins * currentCoinValue;
+          return value + (currentValue - pastValue);
+        }, 0)
+        .toString();
     }
-    return null;
+    return "Loading...";
   })();
 
   return (
-    <div>
-      <p>{profit !== null && `Net Profit: ${profit}`}</p>
-    </div>
+    <p>
+      <span className="text-muted-foreground">Portfolio Profit: </span>
+      <span className="text-lg">{profit}</span>
+    </p>
   );
 };
 
