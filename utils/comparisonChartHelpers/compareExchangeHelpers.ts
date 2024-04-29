@@ -7,6 +7,7 @@ import {
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
+import { roundDigits } from "../formatHelpers";
 
 interface ExchangeOptionConfig {
   coinOneName: string;
@@ -40,19 +41,42 @@ export const getOptions = ({
     legend: {
       display: false,
     },
+    title: {
+      position: "top",
+      display: true,
+      font: {
+        size: 22
+      },
+      text:
+        coinOneName +
+        ` (${coinOneSymbol.toUpperCase()})` +
+        " to " +
+        coinTwoName +
+        ` (${coinTwoSymbol.toUpperCase()})`,
+    },
     tooltip: {
       backgroundColor: tooltipBackgroundColor,
-      borderColor: tooltipBorderColor,
-      borderWidth: 1,
+      borderColor: "#FFF",
+      borderWidth: 1.25,
       caretPadding: 14,
       position: "nearest",
       displayColors: false,
+      padding: 12,
+      bodyColor: "#D1D5DB",
+      bodyFont: {
+        size: 16,
+      },
+      titleFont: {
+        size: 20,
+      },
       yAlign: "top",
 
       callbacks: {
         title: function (items) {
+          const convVal = items[0].raw as number;
+
           return `1 ${coinOneSymbol.toUpperCase()} = ${
-            items[0].raw
+            convVal < 0.01 ? convVal.toExponential(3) : roundDigits(convVal, 3)
           } ${coinTwoSymbol.toUpperCase()}`;
         },
         label: function (item) {

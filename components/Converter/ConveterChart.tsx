@@ -27,10 +27,6 @@ const ConverterChart = ({
     coinOneMarketData &&
     coinTwoMarketData;
 
-  const [coinOneSymbol, coinTwoSymbol] = [
-    coinOneMarketData?.symbol,
-    coinTwoMarketData?.symbol,
-  ];
 
   const coinRatioData = hasChartData
     ? coinOneChartData.data.prices.map((p, idx) => {
@@ -57,16 +53,6 @@ const ConverterChart = ({
 
   return (
     <div className="w-full flex flex-col mt-4 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800">
-      <div className="h-[50px]">
-        <p className="text-2xl text-center">
-          <span className="font-semibold">{coinOneSymbol?.toUpperCase()} </span>
-          to
-          <span className="font-semibold">
-            {" "}
-            {coinTwoSymbol?.toUpperCase()}{" "}
-          </span>
-        </p>
-      </div>
       <div className="h-[550px]">
         {hasChartData && (
           <Line
