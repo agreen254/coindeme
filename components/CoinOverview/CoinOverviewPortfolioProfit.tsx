@@ -18,9 +18,13 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
   const assetsCurrent = useAssetCurrentQueries(assets);
   const currency = useUserCurrencySetting();
 
+  const lengthsMatch =
+    assets.length === assetsPast.length &&
+    assets.length === assetsCurrent.length;
   const hasData =
     assetsPast.every((res) => res.data !== undefined) &&
-    assetsCurrent.every((res) => res.data !== undefined);
+    assetsCurrent.every((res) => res.data !== undefined) &&
+    lengthsMatch;
 
   const profit = (() => {
     if (assets.length === 0) return "No Assets Found";
