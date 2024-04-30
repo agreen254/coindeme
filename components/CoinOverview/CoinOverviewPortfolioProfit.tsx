@@ -18,23 +18,20 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
   const assetsCurrent = useAssetCurrentQueries(assets);
   const currency = useUserCurrencySetting();
 
+  const lengthsMatch =
+    assets.length === assetsPast.length &&
+    assets.length === assetsCurrent.length;
   const hasData =
     assetsPast.every((res) => res.data !== undefined) &&
     assetsCurrent.every((res) => res.data !== undefined);
 
   const profit = (() => {
     if (assets.length === 0) return "No Assets Found";
-    if (hasData) {
+    if (hasData && lengthsMatch) {
       const profit = assets.reduce((value, asset, idx) => {
-        const pastCoinValue = assetsPast
-          ? assetsPast[idx].data.current_price[currency]
-          : null;
-        const currentCoinValue = assetsCurrent
-          ? assetsCurrent[idx].data.current_price[currency]
-          : null;
-
-        if (!pastCoinValue || !currentCoinValue) return value;
-
+        const pastCoinValue = assetsPast[idx].data.current_price[currency];
+        const currentCoinValue =
+          assetsCurrent[idx].data.current_price[currency];
         const numCoins =
           asset.value / assetsPast[idx].data.current_price[asset.valueCurrency];
 
@@ -42,7 +39,6 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
         const currentValue = numCoins * currentCoinValue;
         return value + (currentValue - pastValue);
       }, 0);
-
       return profit > 0 ? (
         <span className="text-market-up">
           <CaretIcon className="w-3 h-3 mr-1 -translate-y-[2px] inline fill-market-up" />
