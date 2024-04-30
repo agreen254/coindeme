@@ -29,9 +29,11 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
     if (assets.length === 0) return "No Assets Found";
     if (hasData && lengthsMatch) {
       const profit = assets.reduce((value, asset, idx) => {
-        const pastCoinValue = assetsPast[idx].data.current_price[currency];
+        const pastCoinValue = assetsPast.at(idx)?.data.current_price[currency];
         const currentCoinValue =
-          assetsCurrent[idx].data.current_price[currency];
+          assetsCurrent.at(idx)?.data.current_price[currency];
+        if (!pastCoinValue || !currentCoinValue) return value;
+
         const numCoins =
           asset.value / assetsPast[idx].data.current_price[asset.valueCurrency];
 
