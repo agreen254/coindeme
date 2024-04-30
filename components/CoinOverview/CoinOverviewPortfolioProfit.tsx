@@ -46,7 +46,7 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
         </span>
       ) : (
         <span className="text-market-down">
-          <CaretIcon className="w-3 h-3 mr-1 -translate-y-[2px] inline fill-market-down" />
+          <CaretIcon className="w-3 h-3 mr-1 rotate-180 -translate-y-[2px] inline fill-market-down" />
           {Intl.NumberFormat("en-US", {
             style: "currency",
             currency: currency,
