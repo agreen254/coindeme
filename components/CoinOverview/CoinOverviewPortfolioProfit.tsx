@@ -31,6 +31,9 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
         const pastCoinValue = assetsPast[idx].data.current_price[currency];
         const currentCoinValue =
           assetsCurrent[idx].data.current_price[currency];
+
+        if (!pastCoinValue || !currentCoinValue) return value;
+
         const numCoins =
           asset.value / assetsPast[idx].data.current_price[asset.valueCurrency];
 
