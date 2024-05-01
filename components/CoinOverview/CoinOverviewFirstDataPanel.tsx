@@ -67,7 +67,7 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
   return (
     <div
       className={cn(
-        "min-w-[432px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
+        "min-w-[432px] min-h-[400px] max-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
         response.isPending && "animate-pulse"
       )}
     >

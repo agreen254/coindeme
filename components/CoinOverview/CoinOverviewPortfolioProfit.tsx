@@ -57,6 +57,7 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
         </span>
       );
     }
+
     return "Loading...";
   })();
 
