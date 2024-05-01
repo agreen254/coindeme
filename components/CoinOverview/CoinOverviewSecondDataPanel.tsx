@@ -1,7 +1,6 @@
 "use client";
 
 import { Infinity as InfinityIcon } from "lucide-react";
-import { Sparkles as GenesisIcon } from "lucide-react";
 import RoundButtonIcon from "@/Icons/RoundButton";
 
 import { useCoinQuery } from "@/hooks/useCoinQuery";
