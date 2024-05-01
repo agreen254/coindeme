@@ -1,13 +1,10 @@
 "use client";
 
 import type { ChartData } from "chart.js";
+import { useAverageColorQuery } from "@/hooks/useAverageColorQuery";
 
 import { consecutiveArray } from "@/utils/arrayHelpers";
-import {
-  sparklineColor,
-  sparklineOptions,
-  sparklineGradient,
-} from "@/utils/sparklineHelpers";
+import { sparklineColor, sparklineOptions } from "@/utils/sparklineHelpers";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 
@@ -18,16 +15,19 @@ type Props = {
   data: number[];
   id: string;
   isGaining: boolean;
+  logoUrl: string;
 };
 
-const MarketTableSparkline = ({ data, id, isGaining }: Props) => {
+const MarketTableSparkline = ({ data, id, isGaining, logoUrl }: Props) => {
+  const colorResponse = useAverageColorQuery(logoUrl);
+
   // only render charts if they've actually been in view
   const viewRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(viewRef, { once: true });
 
-  // length is 56 so be sure to include the last point (which isn't divisible by 3)
+  // length is 56 so be sure to include the last point (which isn't divisible by 4)
   const efficientData = [
-    ...data.filter((_, idx) => idx % 3 === 0),
+    ...data.filter((_, idx) => idx % 4 === 0),
     data[data.length - 1],
   ];
 
@@ -37,11 +37,8 @@ const MarketTableSparkline = ({ data, id, isGaining }: Props) => {
       {
         label: id,
         data: efficientData,
-        borderColor: sparklineColor(isGaining),
-        backgroundColor: (context) => {
-          const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 100);
-          return sparklineGradient(isGaining, gradient);
-        },
+        borderColor: colorResponse.data?.hex || sparklineColor(isGaining),
+        backgroundColor: "rgba(255, 255, 255, 0)",
         fill: true,
         tension: 0.5,
       },

@@ -23,7 +23,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
 
   return (
     <tbody>
-      {data?.map(
+      {data.map(
         ({
           id,
           name,
@@ -78,6 +78,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
                 leftNumber={total_volume}
                 rightNumber={market_cap}
                 isGaining={isGaining(change_7d)}
+                colorUrl={imageURL}
               />
             </TD>
             <TD>
@@ -85,6 +86,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
                 leftNumber={circulating_supply}
                 rightNumber={total_supply}
                 isGaining={isGaining(change_7d)}
+                colorUrl={imageURL}
               />
             </TD>
             <TD className="border-r rounded-r-md">
@@ -92,6 +94,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
                 data={data_7d}
                 id={id}
                 isGaining={isGaining(change_7d)}
+                logoUrl={imageURL}
               />
             </TD>
           </tr>

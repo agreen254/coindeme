@@ -1,6 +1,7 @@
 import type { ChartOptions } from "chart.js";
 
-export function sparklineColor(isGaining: boolean) {
+export function sparklineColor(isGaining: boolean, rgba?: string) {
+  if (rgba) return rgba;
   return isGaining ? "#43FFDD" : "#F23F8A";
 }
 
