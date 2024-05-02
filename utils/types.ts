@@ -25,6 +25,9 @@ import {
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
   marketFetchParamSchema,
+  searchItemSchema,
+  searchRequestSchema,
+  searchResponseSchema,
 } from "@/validation/schema";
 import { z } from "zod";
 
@@ -134,3 +137,7 @@ export type SearchResultWrapper = {
   kind: string;
   id: string;
 };
+
+export type SearchItem = z.infer<typeof searchItemSchema>;
+export type SearchRequest = z.infer<typeof searchRequestSchema>;
+export type SearchResponse = z.infer<typeof searchResponseSchema>;

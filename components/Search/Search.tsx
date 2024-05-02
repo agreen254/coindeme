@@ -1,22 +1,23 @@
 "use client";
 
+import { useDebounce } from "@uidotdev/usehooks";
 import { cn } from "@/utils/cn";
-import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+import { getSearchResults } from "@/utils/getSearchElements";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useSearchQuery, useSearchQueryActions } from "@/hooks/useSearch";
+import { useSearchInputQuery } from "@/hooks/useSearchInputQuery";
+import {
+  useDropdownResetFromId,
+  useDropdownSettersFromId,
+  useDropdownUnitFromId,
+} from "@/hooks/useDropdownStore";
+import SearchIcon from "@/Icons/Search";
 
 import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HandleNameMatch, HandleSymbolMatch } from "./SearchResultsHelpers";
 import Link from "next/link";
 import SearchActivator from "./SearchActivator";
-import SearchIcon from "@/Icons/Search";
-import {
-  useDropdownResetFromId,
-  useDropdownSettersFromId,
-  useDropdownUnitFromId,
-} from "@/hooks/useDropdownStore";
 
 type Props = {
   dropdownId: string;
@@ -25,15 +26,16 @@ type Props = {
 const Search = ({ dropdownId }: Props) => {
   // re-using the same query will not cause a double fetch
   // but need to remember to adjust it once params are stored in local storage
-  const market = useMarketQuery("usd", "market_cap", "desc");
   const query = useSearchQuery();
+  const debouncedQuery = useDebounce(query, 500);
+
   const { setQuery } = useSearchQueryActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
   const { setIsUsingMouse, setSelectedIndex } =
     useDropdownSettersFromId(dropdownId);
 
-  const targets = getSearchTargets(market.data?.pages);
-  const results = targets ? getSearchResults(targets, query) : [];
+  const targets = useSearchInputQuery(debouncedQuery);
+  const results = targets.data ? getSearchResults(targets.data, query) : [];
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
@@ -43,6 +45,18 @@ const Search = ({ dropdownId }: Props) => {
     }
   );
 
+  const handleEmptyOrSearch = (() => {
+    const P = ({ text }: { text: string }) => (
+      <p className="italic text-muted-foreground font-medium py-1 indent-3">
+        {text}
+      </p>
+    );
+
+    if (!debouncedQuery || targets.isLoading)
+      return <P text={"Loading results..."} />;
+    if (results.length === 0) return <P text={"No results found."} />;
+  })();
+
   return (
     <div className="flex justify-center">
       <div ref={clickAwayRef} className="relative mb-2">
@@ -50,9 +64,9 @@ const Search = ({ dropdownId }: Props) => {
           Search Coins
         </label>
         <SearchActivator
+          autoComplete="off"
           dropdownId={dropdownId}
           id="mainSearch"
-          disabled={!targets}
           searchResults={results}
           className="pr-5 pl-12 py-[9px] w-[320px] rounded-md bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
         />
@@ -66,7 +80,7 @@ const Search = ({ dropdownId }: Props) => {
             <DropdownMenuItem
               dropdownId={dropdownId}
               index={idx}
-              key={wrapper.result.target + "searchResult"}
+              key={wrapper.id + "searchResult"}
             >
               <Link
                 href={`/coin/${wrapper.id}`}
@@ -87,11 +101,7 @@ const Search = ({ dropdownId }: Props) => {
               </Link>
             </DropdownMenuItem>
           ))}
-          {results.length === 0 && (
-            <p className="italic text-muted-foreground font-medium py-1 indent-3">
-              No results found.
-            </p>
-          )}
+          {handleEmptyOrSearch}
         </DropdownMenu>
       </div>
     </div>

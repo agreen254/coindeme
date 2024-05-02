@@ -259,3 +259,17 @@ export const marketResponsePaginatedSchema = z.object({
   market: marketResponseSchema,
   nextPage: z.number(),
 });
+
+export const searchRequestSchema = z.object({
+  query: z.string().max(255),
+});
+
+export const searchItemSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  symbol: z.string(),
+});
+
+export const searchResponseSchema = z.object({
+  coins: z.array(searchItemSchema),
+});
