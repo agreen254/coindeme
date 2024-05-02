@@ -8,11 +8,16 @@ import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
 
+type ChartDataElement = NonNullable<
+  ReturnType<typeof useComparisonChartQueries>[number]["data"]
+>;
+
 type Props = {
-  coinOneChartData: ReturnType<typeof useComparisonChartQueries>[number];
-  coinTwoChartData: ReturnType<typeof useComparisonChartQueries>[number];
-  coinOneMarketData: MarketElementNoIdx | undefined;
-  coinTwoMarketData: MarketElementNoIdx | undefined;
+  coinOneChartData: ChartDataElement;
+  coinTwoChartData: ChartDataElement;
+  coinOneMarketData: MarketElementNoIdx;
+  coinTwoMarketData: MarketElementNoIdx;
+  days: number;
 };
 
 const ConverterChart = ({
@@ -20,27 +25,20 @@ const ConverterChart = ({
   coinOneMarketData,
   coinTwoChartData,
   coinTwoMarketData,
+  days,
 }: Props) => {
-  const hasChartData =
-    coinOneChartData.data &&
-    coinTwoChartData.data &&
-    coinOneMarketData &&
-    coinTwoMarketData;
+  const coinRatioData = coinOneChartData.prices.map((p, idx) => {
+    if (!coinTwoChartData.prices[idx]) return null;
 
-  const coinRatioData = hasChartData
-    ? coinOneChartData.data.prices.map((p, idx) => {
-        const price = p[1];
-        const otherPrice = coinTwoChartData.data.prices[idx][1];
-        const hasPrices = price && otherPrice;
+    const price = p[1];
+    const otherPrice = coinTwoChartData.prices[idx][1];
+    const hasPrices = price && otherPrice;
 
-        return hasPrices ? price / otherPrice : null;
-      })
-    : [null];
+    return hasPrices ? price / otherPrice : null;
+  });
 
   const chartData: ChartData<"line"> = {
-    labels: hasChartData
-      ? coinOneChartData.data.prices.map((p) => p[0])
-      : undefined,
+    labels: coinOneChartData.prices.map((p) => p[0]),
     datasets: [
       {
         backgroundColor: chartColorSets[0].endColor.hex,
@@ -50,24 +48,20 @@ const ConverterChart = ({
     ],
   };
 
+  // add a key to the chart to prevent the awkward resizing animation
   return (
-    <div className="w-full flex flex-col mt-4 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800">
-      <div className="h-[550px]">
-        {hasChartData && (
-          <Line
-            data={chartData}
-            options={getOptions({
-              coinOneName: coinOneMarketData.name,
-              coinOneSymbol: coinOneMarketData.symbol,
-              coinTwoName: coinTwoMarketData.name,
-              coinTwoSymbol: coinTwoMarketData.symbol,
-              len: coinOneChartData.data.prices.length,
-              days: 7,
-            })}
-          />
-        )}
-      </div>
-    </div>
+    <Line
+      data={chartData}
+      key={"chart" + days.toString()}
+      options={getOptions({
+        coinOneName: coinOneMarketData.name,
+        coinOneSymbol: coinOneMarketData.symbol,
+        coinTwoName: coinTwoMarketData.name,
+        coinTwoSymbol: coinTwoMarketData.symbol,
+        len: coinOneChartData.prices.length,
+        days: days,
+      })}
+    />
   );
 };
 

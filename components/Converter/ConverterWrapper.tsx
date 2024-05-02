@@ -1,20 +1,22 @@
 "use client";
 
-import DropdownProvider from "@/providers/DropdownProvider";
-import Converter from "./Converter";
-
 import { useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+import { cn } from "@/utils/cn";
 
+import DropdownProvider from "@/providers/DropdownProvider";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import ConverterChart from "./ConveterChart";
+import ConverterChartTimeSelector from "./ConverterChartTimeSelector";
+import Converter from "./Converter";
 
 const ConverterWrapper = () => {
-  const dropdownKeys = ["converterFirst", "converterSecond"];
-  const dropdownUnits = dropdownKeys.map((key) => initializeNewDropdown(key));
+  const [nDays, setNDays] = useState(7);
 
   const currency = useUserCurrencySetting();
   const marketResponse = useMarketQuery(currency, "market_cap", "desc");
@@ -29,11 +31,21 @@ const ConverterWrapper = () => {
     (coin) => coin.id === coinTwoId
   );
 
-  const chartDataResponse = useComparisonChartQueries({
+  const [chartDataCoinOne, chartDataCoinTwo] = useComparisonChartQueries({
     ids: [coinOneId, coinTwoId],
     currency: currency,
-    days: "7",
+    days: nDays.toString(),
   });
+
+  const hasData = !!(
+    chartDataCoinOne.data &&
+    chartDataCoinTwo.data &&
+    coinOneData &&
+    coinTwoData
+  );
+
+  const dropdownKeys = ["converterFirst", "converterSecond"];
+  const dropdownUnits = dropdownKeys.map((key) => initializeNewDropdown(key));
 
   return (
     <div>
@@ -49,12 +61,32 @@ const ConverterWrapper = () => {
           setCoinTwoId={setCoinTwoId}
         />
       </DropdownProvider>
-      <ConverterChart
-        coinOneChartData={chartDataResponse[0]}
-        coinTwoChartData={chartDataResponse[1]}
-        coinOneMarketData={coinOneData}
-        coinTwoMarketData={coinTwoData}
-      />
+      <div
+        className={cn(
+          "w-full h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800",
+          !hasData && "animate-pulse"
+        )}
+      >
+        {hasData && (
+          <ErrorBoundary fallback={<></>}>
+            <ConverterChart
+              coinOneChartData={chartDataCoinOne.data}
+              coinTwoChartData={chartDataCoinTwo.data}
+              coinOneMarketData={coinOneData}
+              coinTwoMarketData={coinTwoData}
+              days={nDays}
+            />
+          </ErrorBoundary>
+        )}
+      </div>
+
+      <div className="rounded-lg inline-flex justify-end mb-[20vh] p-1 bg-zinc-900/70 border border-zinc-800 gap-x-1">
+        <ConverterChartTimeSelector
+          nDays={nDays}
+          setNDays={setNDays}
+          hasData={hasData}
+        />
+      </div>
     </div>
   );
 };

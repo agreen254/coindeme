@@ -11,6 +11,7 @@ import {
   PointElement,
   Title,
   Tooltip,
+  TimeScale,
 } from "chart.js";
 
 ChartJS.register(
@@ -22,7 +23,8 @@ ChartJS.register(
   LineElement,
   PointElement,
   Title,
-  Tooltip
+  Tooltip,
+  TimeScale
 );
 
 import { formatPriceValue } from "../formatHelpers";
@@ -43,7 +45,7 @@ export const tooltipBorderColor = "#71717A";
 export function handleGradientColorStops(
   alphaValues: { alphaTop: number; alphaBottom: number },
   gradient: CanvasGradient | undefined,
-  chartIdx: number,
+  chartIdx: number
 ) {
   const { r: rTop, g: gTop, b: bTop } = chartColorSets[chartIdx].startColor.rgb;
   const {

@@ -2,12 +2,13 @@ import type { ChartOptions } from "chart.js";
 
 import {
   gridColor,
-  handleTicksXAxis,
   handleTicksYAxis,
   tooltipBackgroundColor,
-  tooltipBorderColor,
 } from "./compareGeneralHelpers";
 import { roundDigits } from "../formatHelpers";
+import { getMinTimeUnit } from "../getMinTimeUnit";
+
+import "chartjs-adapter-date-fns";
 
 interface ExchangeOptionConfig {
   coinOneName: string;
@@ -23,7 +24,6 @@ export const getOptions = ({
   coinOneSymbol,
   coinTwoName,
   coinTwoSymbol,
-  len,
   days,
 }: ExchangeOptionConfig): ChartOptions<"line"> => ({
   elements: {
@@ -45,7 +45,7 @@ export const getOptions = ({
       position: "top",
       display: true,
       font: {
-        size: 22
+        size: 22,
       },
       text:
         coinOneName +
@@ -80,15 +80,7 @@ export const getOptions = ({
           } ${coinTwoSymbol.toUpperCase()}`;
         },
         label: function (item) {
-          const unixTime = parseInt(item.label);
-          return new Date(unixTime).toLocaleString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          });
+          return item.label;
         },
       },
     },
@@ -105,16 +97,14 @@ export const getOptions = ({
         display: false,
       },
       grid: {
-        drawOnChartArea: false,
-        tickColor: gridColor,
+        color: gridColor,
       },
       ticks: {
-        callback: function (val, idx) {
-          const mod1 = Math.round(len / (days > 1 ? days : 24));
-          if (idx % mod1 !== 0) return "";
-          const label = this.getLabelForValue(val as number);
-          return handleTicksXAxis(label, idx);
-        },
+        font: { size: 15 },
+      },
+      type: "time",
+      time: {
+        minUnit: getMinTimeUnit(days),
       },
     },
     y: {
