@@ -104,7 +104,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
       )}
     >
       {response.data && (
-        <ul className="*:my-3 first:mt-4">
+        <ul className="*:my-3 first:mt-0">
           {entries.map((entry) => (
             <li
               key={entry.label}
