@@ -42,9 +42,16 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
   const marketCap = fmtCurr(response.data?.market_data.market_cap[currency]);
   const marketCapLabel = "Market Cap";
 
-  const fdv = fmtCurr(
-    response.data?.market_data.fully_diluted_valuation[currency]
-  );
+  const fdv = (() => {
+    const fullyDilutedValuation =
+      response.data?.market_data?.fully_diluted_valuation;
+    const hasFDV = fullyDilutedValuation && fullyDilutedValuation[currency];
+    return hasFDV ? (
+      fmtCurr(fullyDilutedValuation[currency])
+    ) : (
+      <span className="text-muted-foreground">N/A</span>
+    );
+  })();
   const fdvLabel = "Fully Diluted Valuation";
 
   const circulatingSupply = (() => {
@@ -78,7 +85,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
     return d ? (
       new Date(d).toLocaleDateString("en-US", { dateStyle: "long" })
     ) : (
-      <span className="italic text-muted-foreground">none specified</span>
+      <span className="text-muted-foreground">N/A</span>
     );
   })();
 

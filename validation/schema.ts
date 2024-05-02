@@ -132,7 +132,7 @@ export const coinOverviewResponseSchema = z.object({
     atl_date: currenciesObjectStringSchema,
 
     current_price: currenciesObjectNumberSchema,
-    fully_diluted_valuation: currenciesObjectNumberSchema,
+    fully_diluted_valuation: currenciesObjectNumberSchema.partial(),
     market_cap: currenciesObjectNumberSchema,
     market_cap_rank: z.number(),
     total_volume: currenciesObjectNumberSchema,
