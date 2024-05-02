@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
+import HolyLoader from "holy-loader";
 import { Open_Sans as OpenSans } from "next/font/google";
-import "./globals.css";
 
 import NavBar from "@/components/NavBar/NavBar";
 import ProvidersMaster from "@/providers/ProvidersMaster";
 import ToastContainer from "@/components/Toast/ToastContainer";
+
+import "./globals.css";
 
 const openSans = OpenSans({ subsets: ["latin", "greek"] });
 
@@ -21,6 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <HolyLoader height="2px" />
       <body
         className={`${openSans.className} dark:bg-grad-dark min-h-screen overflow-y-scroll`}
       >
