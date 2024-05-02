@@ -23,7 +23,7 @@ const currenciesObjectStringSchema = z.object({
   eur: z.string(),
   gbp: z.string(),
   usd: z.string(),
-})
+});
 
 export const assetValidatorSchema = z.object({
   coinName: z.string(),
@@ -145,6 +145,7 @@ export const coinOverviewResponseSchema = z.object({
     max_supply: z.number().nullable(),
     circulating_supply: z.number().nullable(),
   }),
+  market_cap_rank: z.number(),
 });
 
 // each id represents a selected carousel element

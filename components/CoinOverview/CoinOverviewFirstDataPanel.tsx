@@ -14,7 +14,9 @@ import {
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 
 import CaretIcon from "@/Icons/Caret";
+import CoinOverviewPortfolioProfit from "./CoinOverviewPortfolioProfit";
 import PortfolioIcon from "@/Icons/Portfolio";
+import TanstackPersistProvider from "@/providers/TanstackPersistProvider";
 
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
@@ -65,7 +67,7 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
   return (
     <div
       className={cn(
-        "min-w-[432px] min-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
+        "min-w-[432px] min-h-[400px] max-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
         response.isPending && "animate-pulse"
       )}
     >
@@ -142,7 +144,9 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
               <div className="w-full rounded-full h-[1px] my-4 bg-white/35"></div>
               <div className="w-full flex flex-col items-center">
                 <PortfolioIcon className="w-12 h-12 mb-2" />
-                <p>Portfolio Profit: No Assets Found</p>
+                <TanstackPersistProvider>
+                  <CoinOverviewPortfolioProfit id={response.data.id} />
+                </TanstackPersistProvider>
               </div>
             </>
           );
