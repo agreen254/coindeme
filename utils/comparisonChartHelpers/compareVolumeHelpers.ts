@@ -16,6 +16,9 @@ import { getCurrencySymbol } from "../getCurrencySymbol";
 import { sort } from "fast-sort";
 import { formatPriceValue } from "../formatHelpers";
 
+import "chartjs-adapter-date-fns";
+import { getMinTimeUnit } from "../getMinTimeUnit";
+
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function volumeComparisonGradient(
   context: ScriptableContext<"bar">,
@@ -49,14 +52,16 @@ export function volumeComparisonGradient(
   return gradient;
 }
 
-export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
+export function getOptionsStacked(
+  currency: Currency,
+  days: number
+): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
     plugins: {
       legend: {
-        position: "top",
-        align: "end",
+        display: false,
       },
       tooltip: {
         backgroundColor: tooltipBackgroundColor,
@@ -80,11 +85,11 @@ export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
         grid: {
           drawOnChartArea: false,
         },
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+        // this MUST be a `timeseries` scale and NOT a `time` scale because the regular
+        // time scale will render any gaps between times as blank
+        type: "timeseries",
+        time: {
+          minUnit: getMinTimeUnit(days),
         },
         stacked: true,
       },
@@ -113,34 +118,14 @@ export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
 export function getOptionsOverlapped(
   currency: Currency,
   overlapValues: OverlappedVolumeData[][],
-  xValues: number[],
-  carouselSelected: string[]
+  xValues: number[]
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
     plugins: {
       legend: {
-        position: "top",
-        align: "end",
-        labels: {
-          // Need to customize legend labels because the same dataset is going to have different colors if it's relative magnitude
-          // to the other datasets changes.
-          // So, the coloring has to be done via the corresponding name of the point in the dataset instead of the dataset itself.
-          // https://www.chartjs.org/docs/latest/configuration/legend.html#legend-item-interface
-          generateLabels: () =>
-            carouselSelected.map((coinName, idx) => {
-              return {
-                text: coinName,
-                fontColor: legendFontColor,
-                fillStyle: chartColorSets[idx].startColor.hex,
-                hidden: false,
-                lineCap: "round",
-                lineWidth: 2,
-                strokeStyle: chartColorSets[idx].startColor.hex,
-              };
-            }),
-        },
+        display: false,
       },
       tooltip: {
         backgroundColor: tooltipBackgroundColor,

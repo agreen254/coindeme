@@ -1,11 +1,12 @@
 "use client";
 
-import type { ComparisonChartResponse } from "@/utils/types";
+import { ErrorBoundary } from "react-error-boundary";
 
+import type { ComparisonChartResponse } from "@/utils/types";
 import { useCarouselHasNoneSelected } from "@/hooks/useCarousel";
 import { useVolumeChartMode } from "@/hooks/useVolumeChartMode";
 
-import { ErrorBoundary } from "react-error-boundary";
+import ComparisonChartsLegend from "./ComparisonChartsLegend";
 import VolumeOverlapComparisonChart from "./VolumeOverlapComparisonChart";
 import VolumeStackComparisonChart from "./VolumeStackComparisonChart";
 
@@ -35,11 +36,14 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
           </p>
         }
       >
-        {mode === "stack" ? (
-          <VolumeStackComparisonChart chartData={chartData} />
-        ) : (
-          <VolumeOverlapComparisonChart chartData={chartData} />
-        )}
+        <div className="h-[calc(100%-40px)]">
+          {mode === "stack" ? (
+            <VolumeStackComparisonChart chartData={chartData} />
+          ) : (
+            <VolumeOverlapComparisonChart chartData={chartData} />
+          )}
+        </div>
+        <ComparisonChartsLegend />
       </ErrorBoundary>
     </div>
   );

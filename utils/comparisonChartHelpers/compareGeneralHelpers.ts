@@ -12,6 +12,7 @@ import {
   Title,
   Tooltip,
   TimeScale,
+  TimeSeriesScale,
 } from "chart.js";
 
 ChartJS.register(
@@ -24,7 +25,8 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  TimeScale
+  TimeScale,
+  TimeSeriesScale,
 );
 
 import { formatPriceValue } from "../formatHelpers";

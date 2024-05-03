@@ -2,6 +2,7 @@ import type { ChartOptions, ScriptableContext } from "chart.js";
 import type { Currency } from "../types";
 
 import { getCurrencySymbol } from "../getCurrencySymbol";
+import { getMinTimeUnit } from "../getMinTimeUnit";
 import {
   gridColor,
   handleGradientColorStops,
@@ -10,6 +11,8 @@ import {
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
+
+import "chartjs-adapter-date-fns";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function priceComparisonGradient(
@@ -44,7 +47,10 @@ export function priceComparisonGradient(
   return gradient;
 }
 
-export function getOptions(currency: Currency): ChartOptions<"line"> {
+export function getOptions(
+  currency: Currency,
+  days: number
+): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
@@ -61,8 +67,7 @@ export function getOptions(currency: Currency): ChartOptions<"line"> {
     },
     plugins: {
       legend: {
-        position: "top",
-        align: "end",
+        display: false,
       },
       tooltip: {
         backgroundColor: tooltipBackgroundColor,
@@ -87,11 +92,9 @@ export function getOptions(currency: Currency): ChartOptions<"line"> {
         grid: {
           drawOnChartArea: false,
         },
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+        type: "time",
+        time: {
+          minUnit: getMinTimeUnit(days),
         },
       },
       y: {
