@@ -13,6 +13,7 @@ import {
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
+import { isSameDay, subDays, subHours, startOfDay, sub } from "date-fns";
 import { sort } from "fast-sort";
 import { formatPriceValue } from "../formatHelpers";
 
@@ -91,6 +92,10 @@ export function getOptionsStacked(
         time: {
           minUnit: getMinTimeUnit(days),
         },
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 7,
+        },
         stacked: true,
       },
       y: {
@@ -112,13 +117,16 @@ export function getOptionsStacked(
   };
 }
 
+function handleTickDates() {}
+
 /**
  * The options object needs to be generated dynamically because of the callbacks depending on the chart data.
  */
 export function getOptionsOverlapped(
   currency: Currency,
   overlapValues: OverlappedVolumeData[][],
-  xValues: number[]
+  xValues: number[],
+  days: number
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -198,13 +206,15 @@ export function getOptionsOverlapped(
         grid: {
           drawOnChartArea: false,
         },
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+        type: "timeseries",
+        time: {
+          minUnit: getMinTimeUnit(days),
         },
         stacked: true,
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 7,
+        },
       },
       y: {
         border: {

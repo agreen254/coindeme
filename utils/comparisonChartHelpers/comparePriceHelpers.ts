@@ -96,6 +96,10 @@ export function getOptions(
         time: {
           minUnit: getMinTimeUnit(days),
         },
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 7,
+        },
       },
       y: {
         border: {
