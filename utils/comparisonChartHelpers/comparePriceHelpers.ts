@@ -72,7 +72,7 @@ export function getOptions(
         display: true,
         align: "start",
         font: {
-          size: 18,
+          size: 22,
         },
         padding: {
           bottom: 18,

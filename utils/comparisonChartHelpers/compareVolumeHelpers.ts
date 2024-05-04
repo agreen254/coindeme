@@ -62,6 +62,17 @@ export function getOptionsStacked(
 
   return {
     plugins: {
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 22,
+        },
+        padding: {
+          bottom: 18,
+        },
+        text: `Volume (${currency.toUpperCase()})`,
+      },
       legend: {
         display: false,
       },
@@ -83,6 +94,10 @@ export function getOptionsStacked(
         },
         // this MUST be a `timeseries` scale and NOT a `time` scale because the regular
         // time scale will render any gaps between times as blank
+        // unfortunately, using this format will also cause the adapter to display multiple tickmarks of the same value.
+        // set the maxTicksLimit to help circumvent this behavior. There is still a possibility identical ticks will be displayed, though
+        // (e.g.)  /      /       /
+        //      May 1   May 1   May 1
         type: "timeseries",
         time: {
           minUnit: getMinTimeUnit(days),
@@ -130,6 +145,17 @@ export function getOptionsOverlapped(
 
   return {
     plugins: {
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 22,
+        },
+        padding: {
+          bottom: 18,
+        },
+        text: `Volume (${currency.toUpperCase()})`,
+      },
       legend: {
         display: false,
       },
