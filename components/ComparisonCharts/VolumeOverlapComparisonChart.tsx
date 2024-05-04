@@ -18,10 +18,11 @@ import { Bar } from "react-chartjs-2";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
-  const time = useComparisonChartTime();
+const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
+  const time = parseInt(useComparisonChartTime());
   const currency = useUserCurrencySetting();
   const coinLabels = useCarouselSelectedElements();
   const { label: x, values } = prepareComparisonData(
@@ -55,7 +56,13 @@ const VolumeOverlapComparisonChart = ({ chartData }: Props) => {
   return (
     <Bar
       data={volumeChartData}
-      options={getOptionsOverlapped(currency, overlapValues, x, parseInt(time))}
+      options={getOptionsOverlapped(
+        currency,
+        overlapValues,
+        time,
+        coinNames,
+        coinLabels
+      )}
     />
   );
 };

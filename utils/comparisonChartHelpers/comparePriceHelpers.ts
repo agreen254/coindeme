@@ -1,15 +1,13 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
 import type { Currency } from "../types";
 
+import { defaultTooltip } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
 import { getMinTimeUnit } from "../getMinTimeUnit";
 import {
   gridColor,
   handleGradientColorStops,
-  handleTicksXAxis,
   handleTicksYAxis,
-  tooltipBackgroundColor,
-  tooltipBorderColor,
 } from "./compareGeneralHelpers";
 
 import "chartjs-adapter-date-fns";
@@ -49,7 +47,8 @@ export function priceComparisonGradient(
 
 export function getOptions(
   currency: Currency,
-  days: number
+  days: number,
+  names: string[]
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -69,14 +68,7 @@ export function getOptions(
       legend: {
         display: false,
       },
-      tooltip: {
-        backgroundColor: tooltipBackgroundColor,
-        borderColor: tooltipBorderColor,
-        borderWidth: 1,
-        caretPadding: 14,
-        position: "nearest",
-        yAlign: "bottom",
-      },
+      tooltip: defaultTooltip(currency, currencySymbol, names),
     },
     interaction: {
       intersect: false,
@@ -109,8 +101,8 @@ export function getOptions(
           color: gridColor,
         },
         ticks: {
-          callback: function (val, idx) {
-            return currencySymbol + handleTicksYAxis(val as number, idx);
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
           },
         },
       },

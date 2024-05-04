@@ -10,9 +10,10 @@ import PriceComparisonChart from "./PriceComparisonChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const PriceComparisonChartWrapper = ({ chartData }: Props) => {
+const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
 
@@ -33,7 +34,7 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
         }
       >
         <div className="h-[calc(100%-40px)]">
-          <PriceComparisonChart chartData={chartData} />
+          <PriceComparisonChart chartData={chartData} coinNames={coinNames} />
         </div>
         <ComparisonChartsLegend />
       </ErrorBoundary>

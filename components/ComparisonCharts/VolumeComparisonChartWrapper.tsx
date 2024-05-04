@@ -12,9 +12,10 @@ import VolumeStackComparisonChart from "./VolumeStackComparisonChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const PriceComparisonChartWrapper = ({ chartData }: Props) => {
+const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
   const mode = useVolumeChartMode();
@@ -38,9 +39,9 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
       >
         <div className="h-[calc(100%-40px)]">
           {mode === "stack" ? (
-            <VolumeStackComparisonChart chartData={chartData} />
+            <VolumeStackComparisonChart chartData={chartData} coinNames={coinNames} />
           ) : (
-            <VolumeOverlapComparisonChart chartData={chartData} />
+            <VolumeOverlapComparisonChart chartData={chartData} coinNames={coinNames} />
           )}
         </div>
         <ComparisonChartsLegend />

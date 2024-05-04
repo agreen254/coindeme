@@ -17,9 +17,10 @@ import { Bar } from "react-chartjs-2";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const VolumeStackComparisonChart = ({ chartData }: Props) => {
+const VolumeStackComparisonChart = ({ chartData, coinNames }: Props) => {
   const currency = useUserCurrencySetting();
   const time = useComparisonChartTime();
   const coinLabels = useCarouselSelectedElements();
@@ -45,7 +46,7 @@ const VolumeStackComparisonChart = ({ chartData }: Props) => {
   return (
     <Bar
       data={volumeChartData}
-      options={getOptionsStacked(currency, parseInt(time))}
+      options={getOptionsStacked(currency, parseInt(time), coinNames)}
     />
   );
 };

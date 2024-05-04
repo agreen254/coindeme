@@ -7,6 +7,7 @@ import { isDefined } from "@/utils/isDefined";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import CarouselClearButton from "../Carousel/CarouselClearButton";
@@ -14,10 +15,18 @@ import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
 import VolumeChartSwitcher from "./VolumeChartSwitcher";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
+import { flatMarketRes } from "@/utils/flatMarketRes";
 
 const ComparisonChartsWrapper = () => {
   const currency = useUserCurrencySetting();
   const selected = useCarouselSelectedElements();
+
+  const marketData = useMarketQuery(currency, "market_cap", "desc");
+  const marketDataFlat = flatMarketRes(marketData.data?.pages);
+  const coinNames = selected
+    .map((id) => marketDataFlat?.find((coin) => coin.id === id))
+    ?.map((coin) => coin?.name || "");
+
   const queryTime = useComparisonChartTime();
   const queryRequest: ComparisonChartQueries = {
     ids: selected,
@@ -41,7 +50,10 @@ const ComparisonChartsWrapper = () => {
             pulseChartBackground && "animate-pulse"
           )}
         >
-          <PriceComparisonChartWrapper chartData={chartData} />
+          <PriceComparisonChartWrapper
+            chartData={chartData}
+            coinNames={coinNames}
+          />
         </div>
         <div
           className={cn(
@@ -49,7 +61,7 @@ const ComparisonChartsWrapper = () => {
             pulseChartBackground && "animate-pulse"
           )}
         >
-          <VolumeComparisonChartWrapper chartData={chartData} />
+          <VolumeComparisonChartWrapper chartData={chartData} coinNames={coinNames} />
         </div>
       </div>
       <div className="flex justify-between mt-[10px] mb-4">

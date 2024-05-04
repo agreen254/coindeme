@@ -1,4 +1,7 @@
-import type { ChartColorSet } from "../types";
+import type { ChartColorSet, Currency } from "../types";
+
+import { formatSmallNum } from "../formatHelpers";
+import { formatPriceValue } from "../formatHelpers";
 
 import {
   BarElement,
@@ -13,6 +16,9 @@ import {
   Tooltip,
   TimeScale,
   TimeSeriesScale,
+  TooltipItem,
+  TooltipLabelStyle,
+  ChartOptions,
 } from "chart.js";
 
 ChartJS.register(
@@ -26,10 +32,8 @@ ChartJS.register(
   Title,
   Tooltip,
   TimeScale,
-  TimeSeriesScale,
+  TimeSeriesScale
 );
-
-import { formatPriceValue } from "../formatHelpers";
 
 /**
  * Comparison charts will have a maximum number of points per dataset equivalent to this value.
@@ -74,9 +78,83 @@ export function handleTicksXAxis(label: string, index: number) {
   return formattedDate;
 }
 
-export function handleTicksYAxis(value: number, index: number = 0) {
-  if (value === 0) return 0; // don't want '0.00e0'
-  return formatPriceValue(value);
+export function handleTicksYAxis(value: number, currencySymbol: string) {
+  return value === 0 ? 0 : currencySymbol + formatPriceValue(value);
+}
+
+export function handleLabelText(
+  item: TooltipItem<"line" | "bar">,
+  currency: Currency,
+  currencySymbol: string,
+  names: string[]
+) {
+  const value = parseFloat(item.raw as string);
+  const formattedValue =
+    value > 0.01
+      ? Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: currency,
+        }).format(value)
+      : currencySymbol + formatSmallNum(value);
+  return " " + names[item.datasetIndex] + ": " + formattedValue;
+}
+
+export function handleLabelColor(
+  item: TooltipItem<"line" | "bar">
+): TooltipLabelStyle {
+  const idx = item.datasetIndex;
+  return {
+    borderColor: chartColorSets[idx].highlightColor.hex,
+    backgroundColor: chartColorSets[idx].startColor.hex,
+    borderWidth: 4,
+    borderRadius: 2,
+  };
+}
+
+type TooltipOptions = NonNullable<
+  ChartOptions<"line" | "bar">["plugins"]
+>["tooltip"];
+export function defaultTooltip(
+  currency: Currency,
+  currencySymbol: string,
+  names: string[],
+  overrides?: TooltipOptions
+): TooltipOptions {
+  return {
+    backgroundColor: tooltipBackgroundColor,
+    borderColor: tooltipBorderColor,
+    borderWidth: 1,
+    caretPadding: 4,
+    caretSize: 8,
+    padding: 16,
+    position: "nearest",
+    yAlign: "center",
+    usePointStyle: true,
+    ...overrides,
+    titleFont: {
+      size: 16,
+      ...overrides?.titleFont,
+    },
+    bodyFont: {
+      size: 14,
+      ...overrides?.bodyFont,
+    },
+    callbacks: {
+      label: function (item) {
+        return handleLabelText(item, currency, currencySymbol, names);
+      },
+      labelColor: function (item) {
+        return handleLabelColor(item);
+      },
+      labelPointStyle: function (_) {
+        return {
+          pointStyle: "rectRounded",
+          rotation: 0,
+        };
+      },
+      ...overrides?.callbacks,
+    },
+  };
 }
 
 /**
