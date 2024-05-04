@@ -78,7 +78,7 @@ export function handleTicksXAxis(label: string, index: number) {
   return formattedDate;
 }
 
-export function handleTicksYAxis(value: number, currencySymbol: string) {
+export function handleTicksYAxis(value: number, currencySymbol?: string) {
   return value === 0 ? 0 : currencySymbol + formatPriceValue(value);
 }
 
@@ -136,7 +136,7 @@ export function defaultTooltip(
       ...overrides?.titleFont,
     },
     bodyFont: {
-      size: 14,
+      size: 16,
       ...overrides?.bodyFont,
     },
     callbacks: {

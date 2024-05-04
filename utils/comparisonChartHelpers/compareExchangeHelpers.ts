@@ -115,8 +115,8 @@ export const getOptions = ({
         color: gridColor,
       },
       ticks: {
-        callback: function (val, idx) {
-          return handleTicksYAxis(val as number, idx);
+        callback: function (val) {
+          return handleTicksYAxis(val as number);
         },
       },
     },

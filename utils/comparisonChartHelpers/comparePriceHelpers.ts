@@ -68,6 +68,17 @@ export function getOptions(
       legend: {
         display: false,
       },
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 18,
+        },
+        padding: {
+          bottom: 18,
+        },
+        text: `Price (${currency.toUpperCase()})`,
+      },
       tooltip: defaultTooltip(currency, currencySymbol, names),
     },
     interaction: {
