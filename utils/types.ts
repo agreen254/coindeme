@@ -122,15 +122,16 @@ export type OverlappedVolumeData = {
   volume: number;
 };
 
-export type SearchTargets = {
+export type SearchItem = {
   name: string;
   symbol: string;
   id: string;
-}[];
+};
+export type SearchItems = SearchItem[];
 
 export type SearchResultWrapper = {
   result: Fuzzysort.Result;
   otherText: string; // store the name if the symbol is matched and vice-versa
-  kind: string;
+  kind: "name" | "symbol"; 
   id: string;
 };

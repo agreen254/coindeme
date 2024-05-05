@@ -5,7 +5,7 @@ import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import CurrencySelector from "../CurrencySelector/CurrencySelector";
 import DropdownProvider from "@/providers/DropdownProvider";
 import GlobalData from "./GlobalData";
-import PortfolioButton from "../Portfolio/PortfolioButton";
+import NavLinks from "../Portfolio/NavLinks";
 import Search from "../Search/Search";
 import ThemeToggle from "./ThemeToggle";
 
@@ -19,7 +19,7 @@ const NavBar = () => {
     <div className="mt-4 mb-12">
       <div className="flex justify-between mb-2">
         <div className="ml-12 -translate-y-1">
-          <PortfolioButton />
+          <NavLinks />
         </div>
         <div className="flex items-start gap-x-4">
           <DropdownProvider initialUnits={dropdownUnits}>

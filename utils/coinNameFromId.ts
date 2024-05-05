@@ -1,6 +1,6 @@
-import { SearchTargets } from "./types";
+import { SearchItems } from "./types";
 
-export function coinNameFromId(id: string, targets: SearchTargets | undefined) {
+export function coinNameFromId(id: string, targets: SearchItems | undefined) {
   if (!targets) return "";
 
   const target = targets.find((target) => target.id === id);
