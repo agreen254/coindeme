@@ -3,7 +3,7 @@ import type { SearchItem } from "@/utils/types";
 
 type AnalysisState = {
   coins: SearchItem[];
-  coinAxes: ("left" | "right" | "")[];
+  coinAxes: ("left" | "right")[];
   decimationThreshold: number;
   yScale: "linear" | "logarithmic";
 
@@ -26,7 +26,7 @@ const useAnalysisStore = create<AnalysisState>((set) => ({
     { name: "Ethereum", symbol: "ETH", id: "ethereum" },
     { name: "", symbol: "", id: "" },
   ],
-  coinAxes: ["left", "right", ""],
+  coinAxes: ["left", "right", "left"],
   decimationThreshold: Infinity,
   yScale: "linear",
 

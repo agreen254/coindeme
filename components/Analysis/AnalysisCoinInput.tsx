@@ -5,7 +5,6 @@ import { useState } from "react";
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
-import { getOrdinal } from "@/utils/getOrdinal";
 import { resultToItem } from "@/utils/resultToItem";
 import { useAnalysisActions, useAnalysisCoins } from "@/hooks/useAnalysis";
 import { useClickAway } from "@uidotdev/usehooks";
@@ -28,7 +27,7 @@ type Props = {
   dropdownId: string;
 };
 
-const AnalysisCoinsInput = ({ index, dropdownId }: Props) => {
+const AnalysisCoinInput = ({ index, dropdownId }: Props) => {
   const coin = useAnalysisCoins()[index];
   const { setCoin } = useAnalysisActions();
 
@@ -94,9 +93,12 @@ const AnalysisCoinsInput = ({ index, dropdownId }: Props) => {
   };
 
   return (
-    <div className="relative">
-      <label htmlFor={"analysisInput" + index} className="sr-only">
-        input {getOrdinal(index)} coin
+    <>
+      <label
+        htmlFor={"analysisInput" + index}
+        className="absolute left-4 text-sm text-muted-foreground"
+      >
+        Coin
       </label>
       <SearchActivator
         id={"analysisInput" + index}
@@ -108,13 +110,13 @@ const AnalysisCoinsInput = ({ index, dropdownId }: Props) => {
         localQuery={query}
         setLocalQuery={setQuery}
         onKeyDown={handleKeyDown}
-        className="h-11 w-[50%] text-lg p-2 pb-4 pl-10 rounded-none bg-inherit focus:outline-none border-b border-transparent focus:border-slice focus:border-grad-r-blue"
+        className="h-11 text-lg mt-6 p-2 pb-1 pl-4 rounded-none bg-inherit focus:outline-none border-b border-white focus:border-slice focus:border-grad-r-blue"
       />
       <DropdownMenu
         ref={clickAwayRef}
         dropdownId={dropdownId}
         key={"analysisDropdownMenu" + index}
-        className="w-[280px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+        className="w-[280px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[92px] z-10"
       >
         {results.map((wrapper, idx) => (
           <DropdownMenuItem
@@ -129,7 +131,7 @@ const AnalysisCoinsInput = ({ index, dropdownId }: Props) => {
                 idx === selectedIndex && "bg-zinc-600"
               )}
               onClick={() => {
-                setCoin(wrapper.id, index);
+                setCoin(resultToItem(wrapper), index);
                 setQuery(
                   wrapper.kind === "symbol"
                     ? wrapper.otherText
@@ -154,8 +156,8 @@ const AnalysisCoinsInput = ({ index, dropdownId }: Props) => {
           </p>
         )}
       </DropdownMenu>
-    </div>
+    </>
   );
 };
 
-export default AnalysisCoinsInput;
+export default AnalysisCoinInput;

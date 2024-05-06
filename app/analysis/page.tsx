@@ -2,7 +2,7 @@ import AnalysisWrapper from "@/components/Analysis/AnalysisWrapper";
 
 const AnalysisPage = () => {
   return (
-    <div>
+    <div className="w-full flex justify-center">
       <AnalysisWrapper />
     </div>
   );

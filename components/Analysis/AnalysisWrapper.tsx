@@ -3,7 +3,9 @@
 import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import DropdownProvider from "@/providers/DropdownProvider";
 
-import AnalysisCoinsInput from "./AnalysisCoinsInput";
+import AnalysisAxisSwitch from "./AnalysisAxisSwitch";
+import AnalysisCoinInput from "./AnalysisCoinInput";
+import AnalysisDataOptions from "./AnalysisDataOptions";
 
 const AnalysisWrapper = () => {
   const dropdownKeys = ["analysisFirst", "analysisSecond", "analysisThird"];
@@ -11,9 +13,18 @@ const AnalysisWrapper = () => {
 
   return (
     <DropdownProvider initialUnits={dropdownUnits}>
-      <AnalysisCoinsInput index={0} dropdownId={dropdownKeys[0]} />
-      <AnalysisCoinsInput index={1} dropdownId={dropdownKeys[1]} />
-      <AnalysisCoinsInput index={2} dropdownId={dropdownKeys[2]} />
+      <AnalysisDataOptions />
+      <div className="grid grid-cols-3 w-table-xl">
+        {dropdownKeys.map((k, i) => (
+          <div
+            key={k}
+            className="relative m-8 p-4 bg-zinc-900/70 border border-zinc-800 rounded-lg"
+          >
+            <AnalysisCoinInput index={i} dropdownId={dropdownKeys[i]} />
+            <AnalysisAxisSwitch index={i} />
+          </div>
+        ))}
+      </div>
     </DropdownProvider>
   );
 };
