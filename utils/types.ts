@@ -33,6 +33,14 @@ import {
   useAssetHistoryQueries,
 } from "@/hooks/useAssetQueries";
 
+export const analysisCriteria = [
+  "Price",
+  "Price (rate of return)",
+  "Market Cap",
+  "Volume",
+] as const;
+export type AnalysisCriteria = (typeof analysisCriteria)[number];
+
 export type AssetValidator = z.infer<typeof assetValidatorSchema>;
 export type Asset = z.infer<typeof assetSchema>;
 export type AssetHistory = z.infer<typeof assetHistorySchema>;
@@ -122,16 +130,16 @@ export type OverlappedVolumeData = {
   volume: number;
 };
 
-export type SearchItem = {
+export type CoinItem = {
   name: string;
   symbol: string;
   id: string;
 };
-export type SearchItems = SearchItem[];
+export type CoinItems = CoinItem[];
 
 export type SearchResultWrapper = {
   result: Fuzzysort.Result;
   otherText: string; // store the name if the symbol is matched and vice-versa
-  kind: "name" | "symbol"; 
+  kind: "name" | "symbol";
   id: string;
 };

@@ -1,9 +1,12 @@
 import { create } from "zustand";
-import type { SearchItem } from "@/utils/types";
+
+import type { CoinItem } from "@/utils/types";
+import { AnalysisCriteria } from "@/utils/types";
 
 type AnalysisState = {
-  coins: SearchItem[];
+  coins: CoinItem[];
   coinAxes: ("left" | "right")[];
+  criteria: AnalysisCriteria;
   decimationThreshold: number;
   yScale: "linear" | "logarithmic";
 
@@ -11,11 +14,12 @@ type AnalysisState = {
 };
 
 type AnalysisActions = {
-  setCoin: (coin: SearchItem, idx: number) => void;
+  setCoin: (coin: CoinItem, idx: number) => void;
   setCoinAxisPosition: (
     newPosition: AnalysisState["coinAxes"][number],
     newIdx: number
   ) => void;
+  setCriteria: (criteria: AnalysisState["criteria"]) => void;
   setDecimationThreshold: (t: number) => void;
   setYScale: (scale: AnalysisState["yScale"]) => void;
 };
@@ -27,6 +31,7 @@ const useAnalysisStore = create<AnalysisState>((set) => ({
     { name: "", symbol: "", id: "" },
   ],
   coinAxes: ["left", "right", "left"],
+  criteria: "Price",
   decimationThreshold: Infinity,
   yScale: "linear",
 
@@ -47,6 +52,7 @@ const useAnalysisStore = create<AnalysisState>((set) => ({
           coinAxes: state.coinAxes.map((p, i) => (idx === i ? position : p)),
         };
       }),
+    setCriteria: (criteria) => set((_) => ({ criteria: criteria })),
     setDecimationThreshold: (t) => set((_) => ({ decimationThreshold: t })),
     setYScale: (scale) => set((_) => ({ yScale: scale })),
   },
@@ -57,6 +63,9 @@ export const useAnalysisCoins = () => {
 };
 export const useAnalysisCoinAxes = () => {
   return useAnalysisStore().coinAxes;
+};
+export const useAnalysisCriteria = () => {
+  return useAnalysisStore().criteria;
 };
 export const useAnalysisDecimationThreshold = () => {
   return useAnalysisStore().decimationThreshold;

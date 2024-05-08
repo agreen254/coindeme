@@ -27,7 +27,7 @@ type Props = {
   dropdownId: string;
 };
 
-const AnalysisCoinInput = ({ index, dropdownId }: Props) => {
+const AnalysisCoinSelector = ({ index, dropdownId }: Props) => {
   const coin = useAnalysisCoins()[index];
   const { setCoin } = useAnalysisActions();
 
@@ -160,4 +160,4 @@ const AnalysisCoinInput = ({ index, dropdownId }: Props) => {
   );
 };
 
-export default AnalysisCoinInput;
+export default AnalysisCoinSelector;

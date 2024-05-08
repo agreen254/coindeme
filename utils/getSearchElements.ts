@@ -1,20 +1,20 @@
 import type {
   MarketResponse,
   MarketResponsePaginated,
-  SearchItems,
+  CoinItems,
   SearchResultWrapper,
 } from "./types";
 
 import fuzzysort from "fuzzysort";
 
 export function getSearchTargets(data: MarketResponsePaginated[] | undefined) {
-  return data?.reduce((res: SearchItems, current) => {
+  return data?.reduce((res: CoinItems, current) => {
     return [...res, ...parseOnePage(current.market)];
   }, []);
 }
 
 export function parseOnePage(data: MarketResponse) {
-  return data.reduce((res: SearchItems, mkt) => {
+  return data.reduce((res: CoinItems, mkt) => {
     return [
       ...res,
       { name: mkt.name, symbol: mkt.symbol.toUpperCase(), id: mkt.id },
@@ -31,7 +31,7 @@ export function parseOnePage(data: MarketResponse) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap#for_adding_and_removing_items_during_a_map
  */
 export function getSearchResults(
-  targets: SearchItems,
+  targets: CoinItems,
   searchText: string
 ): SearchResultWrapper[] {
   return targets.flatMap((target) => {

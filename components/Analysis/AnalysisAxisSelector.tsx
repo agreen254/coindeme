@@ -5,7 +5,7 @@ import { useAnalysisCoinAxes } from "@/hooks/useAnalysis";
 import { useAnalysisCoins } from "@/hooks/useAnalysis";
 import { cn } from "@/utils/cn";
 
-const AnalysisAxisSwitch = ({ index }: { index: number }) => {
+const AnalysisAxisSelector = ({ index }: { index: number }) => {
   const { setCoinAxisPosition } = useAnalysisActions();
   const axis = useAnalysisCoinAxes()[index];
   const coin = useAnalysisCoins()[index];
@@ -36,4 +36,4 @@ const AnalysisAxisSwitch = ({ index }: { index: number }) => {
   );
 };
 
-export default AnalysisAxisSwitch;
+export default AnalysisAxisSelector;
