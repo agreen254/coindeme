@@ -6,15 +6,19 @@ import {
   chartColorSets,
   gridColor,
   handleGradientColorStops,
-  handleTicksXAxis,
+  handleLabelText,
   handleTicksYAxis,
-  legendFontColor,
   tooltipBackgroundColor,
   tooltipBorderColor,
 } from "./compareGeneralHelpers";
+import { defaultTooltip } from "./compareGeneralHelpers";
+import { formatSmallNum } from "../formatHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
 import { sort } from "fast-sort";
 import { formatPriceValue } from "../formatHelpers";
+
+import "chartjs-adapter-date-fns";
+import { getMinTimeUnit } from "../getMinTimeUnit";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function volumeComparisonGradient(
@@ -49,22 +53,30 @@ export function volumeComparisonGradient(
   return gradient;
 }
 
-export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
+export function getOptionsStacked(
+  currency: Currency,
+  days: number,
+  names: string[]
+): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
     plugins: {
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 22,
+        },
+        padding: {
+          bottom: 18,
+        },
+        text: `Volume (${currency.toUpperCase()})`,
+      },
       legend: {
-        position: "top",
-        align: "end",
+        display: false,
       },
-      tooltip: {
-        backgroundColor: tooltipBackgroundColor,
-        borderColor: tooltipBorderColor,
-        borderWidth: 1,
-        caretPadding: 6,
-        yAlign: "bottom",
-      },
+      tooltip: defaultTooltip(currency, currencySymbol, names),
     },
     interaction: {
       intersect: false,
@@ -80,11 +92,19 @@ export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
         grid: {
           drawOnChartArea: false,
         },
+        // this MUST be a `timeseries` scale and NOT a `time` scale because the regular
+        // time scale will render any gaps between times as blank
+        // unfortunately, using this format will also cause the adapter to display multiple tickmarks of the same value.
+        // set the maxTicksLimit to help circumvent this behavior. There is still a possibility identical ticks will be displayed, though
+        // (e.g.)  /      /       /
+        //      May 1   May 1   May 1
+        type: "timeseries",
+        time: {
+          minUnit: getMinTimeUnit(days),
+        },
         ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+          autoSkip: true,
+          maxTicksLimit: 7,
         },
         stacked: true,
       },
@@ -97,8 +117,8 @@ export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
           color: gridColor,
         },
         ticks: {
-          callback: function (val, idx) {
-            return currencySymbol + handleTicksYAxis(val as number, idx);
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
           },
         },
         stacked: true,
@@ -107,54 +127,42 @@ export function getOptionsStacked(currency: Currency): ChartOptions<"bar"> {
   };
 }
 
-/**
- * The options object needs to be generated dynamically because of the callbacks depending on the chart data.
- */
 export function getOptionsOverlapped(
   currency: Currency,
   overlapValues: OverlappedVolumeData[][],
-  xValues: number[],
-  carouselSelected: string[]
+  days: number,
+  names: string[],
+  ids: string[]
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
+  // overlapping the values means we can no longer map the datasetIndex property to the index of the name array;
+  // create this map instead to access the corresponding name
+  const idsToNamesMap = new Map<string, string>(
+    ids.map((id, idx) => [id, names[idx]])
+  );
+  const idsToNamesArr = Array.from(idsToNamesMap);
+
   return {
     plugins: {
-      legend: {
-        position: "top",
-        align: "end",
-        labels: {
-          // Need to customize legend labels because the same dataset is going to have different colors if it's relative magnitude
-          // to the other datasets changes.
-          // So, the coloring has to be done via the corresponding name of the point in the dataset instead of the dataset itself.
-          // https://www.chartjs.org/docs/latest/configuration/legend.html#legend-item-interface
-          generateLabels: () =>
-            carouselSelected.map((coinName, idx) => {
-              return {
-                text: coinName,
-                fontColor: legendFontColor,
-                fillStyle: chartColorSets[idx].startColor.hex,
-                hidden: false,
-                lineCap: "round",
-                lineWidth: 2,
-                strokeStyle: chartColorSets[idx].startColor.hex,
-              };
-            }),
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 22,
         },
+        padding: {
+          bottom: 18,
+        },
+        text: `Volume (${currency.toUpperCase()})`,
       },
-      tooltip: {
-        backgroundColor: tooltipBackgroundColor,
-        borderColor: tooltipBorderColor,
-        borderWidth: 1,
-        caretPadding: 10,
-        position: "nearest",
-        yAlign: "bottom",
-
-        // sort tooltip order so that highest values will show first
-        itemSort: function (first, second) {
-          return second.datasetIndex - first.datasetIndex;
+      legend: {
+        display: false,
+      },
+      tooltip: defaultTooltip(currency, currencySymbol, names, {
+        itemSort(a, b) {
+          return b.datasetIndex - a.datasetIndex;
         },
-
         callbacks: {
           // make sure the overlapped volume data still shows the correct absolute values
           // https://www.chartjs.org/docs/latest/configuration/tooltip.html#label-callback
@@ -172,32 +180,33 @@ export function getOptionsOverlapped(
               }, 0);
             }
 
+            const id = overlapValues[dataIdx][datasetIdx].name;
+            const name = idsToNamesMap.get(id)!;
             if (label) {
-              label = `${overlapValues[dataIdx][datasetIdx].name}: ${
-                currencySymbol + formatPriceValue(sumVolume)
-              }`;
+              const formattedValue =
+                sumVolume > 0.01
+                  ? Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: currency,
+                    }).format(sumVolume)
+                  : currencySymbol + formatSmallNum(sumVolume);
+              label = " " + name + ": " + formattedValue;
             }
 
             return label;
           },
-
-          // customize title of tooltip so it doesn't just display the unix time returned from the API call
-          title: function (items) {
-            return items.map((item) => {
-              const unixTime = xValues[item.dataIndex];
-              const date = new Date(unixTime).toLocaleString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-              });
-              return date;
-            })[0]; // will repeatedly display the title equal to the number of datasets if not specified
+          labelColor(item) {
+            const id = overlapValues[item.dataIndex][item.datasetIndex].name;
+            const idx = idsToNamesArr.findIndex((kv) => kv[0] === id);
+            return {
+              borderColor: chartColorSets[idx].highlightColor.hex,
+              backgroundColor: chartColorSets[idx].highlightColor.hex,
+              borderWidth: 0,
+              borderRadius: 2,
+            };
           },
         },
-      },
+      }),
     },
     interaction: {
       intersect: false,
@@ -213,13 +222,15 @@ export function getOptionsOverlapped(
         grid: {
           drawOnChartArea: false,
         },
-        ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+        type: "timeseries",
+        time: {
+          minUnit: getMinTimeUnit(days),
         },
         stacked: true,
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 7,
+        },
       },
       y: {
         border: {
@@ -230,8 +241,8 @@ export function getOptionsOverlapped(
           color: gridColor,
         },
         ticks: {
-          callback: function (val, idx) {
-            return currencySymbol + handleTicksYAxis(val as number, idx);
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
           },
         },
         stacked: true,

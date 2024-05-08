@@ -1,15 +1,16 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
 import type { Currency } from "../types";
 
+import { defaultTooltip } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
+import { getMinTimeUnit } from "../getMinTimeUnit";
 import {
   gridColor,
   handleGradientColorStops,
-  handleTicksXAxis,
   handleTicksYAxis,
-  tooltipBackgroundColor,
-  tooltipBorderColor,
 } from "./compareGeneralHelpers";
+
+import "chartjs-adapter-date-fns";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function priceComparisonGradient(
@@ -44,7 +45,11 @@ export function priceComparisonGradient(
   return gradient;
 }
 
-export function getOptions(currency: Currency): ChartOptions<"line"> {
+export function getOptions(
+  currency: Currency,
+  days: number,
+  names: string[]
+): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
@@ -61,17 +66,20 @@ export function getOptions(currency: Currency): ChartOptions<"line"> {
     },
     plugins: {
       legend: {
-        position: "top",
-        align: "end",
+        display: false,
       },
-      tooltip: {
-        backgroundColor: tooltipBackgroundColor,
-        borderColor: tooltipBorderColor,
-        borderWidth: 1,
-        caretPadding: 14,
-        position: "nearest",
-        yAlign: "bottom",
+      title: {
+        display: true,
+        align: "start",
+        font: {
+          size: 22,
+        },
+        padding: {
+          bottom: 18,
+        },
+        text: `Price (${currency.toUpperCase()})`,
       },
+      tooltip: defaultTooltip(currency, currencySymbol, names),
     },
     interaction: {
       intersect: false,
@@ -87,11 +95,13 @@ export function getOptions(currency: Currency): ChartOptions<"line"> {
         grid: {
           drawOnChartArea: false,
         },
+        type: "time",
+        time: {
+          minUnit: getMinTimeUnit(days),
+        },
         ticks: {
-          callback: function (val, idx) {
-            const label = this.getLabelForValue(val as number);
-            return handleTicksXAxis(label, idx);
-          },
+          autoSkip: true,
+          maxTicksLimit: 7,
         },
       },
       y: {
@@ -102,8 +112,8 @@ export function getOptions(currency: Currency): ChartOptions<"line"> {
           color: gridColor,
         },
         ticks: {
-          callback: function (val, idx) {
-            return currencySymbol + handleTicksYAxis(val as number, idx);
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
           },
         },
       },

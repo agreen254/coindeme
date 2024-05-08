@@ -8,18 +8,21 @@ import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareCom
 import { getOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
+import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import { Line } from "react-chartjs-2";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const PriceComparisonChart = ({ chartData }: Props) => {
+const PriceComparisonChart = ({ chartData, coinNames }: Props) => {
   const currency = useUserCurrencySetting();
   const selectedCoins = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "prices");
+  const time = useComparisonChartTime();
 
   const priceChartData: ChartData<"line"> = {
     labels: label,
@@ -36,7 +39,12 @@ const PriceComparisonChart = ({ chartData }: Props) => {
     }),
   };
 
-  return <Line data={priceChartData} options={getOptions(currency)} />;
+  return (
+    <Line
+      data={priceChartData}
+      options={getOptions(currency, parseInt(time), coinNames)}
+    />
+  );
 };
 
 export default PriceComparisonChart;

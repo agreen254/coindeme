@@ -1,23 +1,27 @@
 "use client";
 
-import type { ComparisonChartResponse } from "@/utils/types";
+import { ErrorBoundary } from "react-error-boundary";
 
+import type { ComparisonChartResponse } from "@/utils/types";
 import { useCarouselHasNoneSelected } from "@/hooks/useCarousel";
 
-import { ErrorBoundary } from "react-error-boundary";
+import ComparisonChartsLegend from "./ComparisonChartsLegend";
 import PriceComparisonChart from "./PriceComparisonChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
+  coinNames: string[];
 };
 
-const PriceComparisonChartWrapper = ({ chartData }: Props) => {
+const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
 
   if (hasNoneSelected || hasNoData)
     return (
-      <p className="mt-4 font-light text-center text-stone-400/50">No data to display.</p>
+      <p className="mt-4 font-light text-center text-stone-400/50">
+        No data to display.
+      </p>
     );
 
   return (
@@ -29,7 +33,10 @@ const PriceComparisonChartWrapper = ({ chartData }: Props) => {
           </p>
         }
       >
-        <PriceComparisonChart chartData={chartData} />
+        <div className="h-[calc(100%-40px)]">
+          <PriceComparisonChart chartData={chartData} coinNames={coinNames} />
+        </div>
+        <ComparisonChartsLegend />
       </ErrorBoundary>
     </div>
   );
