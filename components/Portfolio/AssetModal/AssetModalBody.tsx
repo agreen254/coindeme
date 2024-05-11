@@ -1,22 +1,5 @@
 "use client";
 
-import type { Asset, AssetValidator } from "@/utils/types";
-
-import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
-import AssetModalCurrency from "./Separators/AssetModalCurrency";
-import AssetModalDate from "./Separators/AssetModalDate";
-import { ChevronDown as ChevronDownIcon } from "lucide-react";
-import CloseIcon from "@/Icons/Close";
-import DropdownMenu from "@/components/Dropdown/DropdownMenu";
-import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
-import {
-  HandleNameMatch,
-  HandleSymbolMatch,
-} from "@/components/Search/SearchResultsHelpers";
-import Image from "next/image";
-import SearchActivator from "@/components/Search/SearchActivator";
-import { X as XIcon } from "lucide-react";
-
 import {
   useRef,
   forwardRef,
@@ -24,6 +7,12 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { ChevronDown as ChevronDownIcon } from "lucide-react";
+import Image from "next/image";
+import { X as XIcon } from "lucide-react";
+import { uid } from "uid";
+
+import type { Asset, AssetValidator } from "@/utils/types";
 import { useUpdateAssets, validateAsset } from "@/hooks/useAssets";
 import {
   useAssetModalActions,
@@ -48,11 +37,22 @@ import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
 import { convertHistoricalDate } from "@/utils/dateHelpers";
-import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
-import { uid } from "uid";
+import CloseIcon from "@/Icons/Close";
+import DropdownMenu from "@/components/Dropdown/DropdownMenu";
+import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
+import {
+  HandleNameMatch,
+  HandleSymbolMatch,
+} from "@/components/Search/SearchResultsHelpers";
+import SearchActivator from "@/components/Search/SearchActivator";
+
+import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
+import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
+import AssetModalCurrency from "./Separators/AssetModalCurrency";
+import AssetModalDate from "./Separators/AssetModalDate";
 
 type Props = {
   isOpen: boolean;
@@ -103,6 +103,7 @@ const AssetModalBody = (
   // refs
   const coinInputRef = useRef<HTMLInputElement>(null);
   const coinDropdownRef = useRef<HTMLDivElement>(null);
+  const amountInputRef = useRef<HTMLInputElement>(null);
   const currencyButtonRef = useRef<HTMLButtonElement>(null);
   const currencyDropdownRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -267,10 +268,13 @@ const AssetModalBody = (
     forwardedActivatorRef.current?.focus();
   };
 
-  useModalListener(modalRef, coinInputRef, isOpen, handleModalExit, [
-    coinDropdownRef,
-    currencyDropdownRef,
-  ]);
+  useModalListener(
+    modalRef,
+    assetId === "" ? coinInputRef : amountInputRef,
+    isOpen,
+    handleModalExit,
+    [coinDropdownRef, currencyDropdownRef]
+  );
 
   const updateAssets = useUpdateAssets();
   const handleAsset = () => {
@@ -440,6 +444,7 @@ const AssetModalBody = (
               <input
                 type="text"
                 id="amount"
+                ref={amountInputRef}
                 placeholder="0"
                 autoComplete="off"
                 value={value}
