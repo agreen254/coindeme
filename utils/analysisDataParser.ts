@@ -27,10 +27,10 @@ export function analysisDataParser(
         return getRoR(d.prices.map((pt) => pt[1]));
       }
       case "Market Cap": {
-        return d.market_caps.map((pt) => pt[1]);
+        return handleLog(d.market_caps.map((pt) => pt[1]));
       }
       case "Volume": {
-        return d.total_volumes.map((pt) => pt[1]);
+        return handleLog(d.total_volumes.map((pt) => pt[1]));
       }
     }
   });

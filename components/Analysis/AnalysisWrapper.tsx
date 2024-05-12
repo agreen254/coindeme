@@ -10,10 +10,10 @@ import DropdownProvider from "@/providers/DropdownProvider";
 
 import AnalysisAxisSelector from "./AnalysisAxisSelector";
 import AnalysisCoinSelector from "./AnalysisCoinSelector";
+import AnalysisChart from "./AnalysisChart";
 import AnalysisDataSelector from "./AnalysisDataSelector";
 import AnalysisTimeSelector from "./AnalysisTimeSelector";
 import AnalysisScaleSelector from "./AnalysisScaleSelector";
-import AnalysisChart from "./AnalysisChart";
 
 const AnalysisWrapper = () => {
   const [nDays, setNDays] = useState<number>(7);
@@ -34,9 +34,13 @@ const AnalysisWrapper = () => {
     <DropdownProvider initialUnits={dropdownUnits}>
       <div className="w-table-xl flex flex-col">
         <div>
-          <div className="w-full h-[800px]">
+          <div className="w-full h-[800px] p-8 rounded-2xl bg-zinc-900/70 border border-zinc-800">
             {hasData && (
-              <AnalysisChart data={coinData.map((c) => c.data)} coins={coins} />
+              <AnalysisChart
+                data={coinData.map((c) => c.data)}
+                coins={coins}
+                days={nDays}
+              />
             )}
           </div>
           <AnalysisDataSelector />

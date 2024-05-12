@@ -11,14 +11,25 @@ import { getCurrencySymbol } from "./getCurrencySymbol";
 
 import "chartjs-adapter-date-fns";
 
+type AnalysisOptionsProps = {
+  currency: Currency;
+  days: number;
+  names: string[];
+  title: string;
+  axes: string[];
+  isLog: boolean;
+};
 export function getOptions(
   currency: Currency,
   days: number,
-  names: string[]
+  names: string[],
+  title: string,
+  isLog: boolean
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   return {
+    backgroundColor: "rgba(255,255,255,0)",
     elements: {
       point: {
         radius: 0,
@@ -27,7 +38,7 @@ export function getOptions(
       },
       line: {
         fill: true,
-        tension: 0.1,
+        tension: 0.5,
       },
     },
     plugins: {
@@ -36,14 +47,14 @@ export function getOptions(
       },
       title: {
         display: true,
-        align: "start",
+        align: "center",
         font: {
           size: 22,
         },
         padding: {
           bottom: 18,
         },
-        text: `Price (${currency.toUpperCase()})`,
+        text: title,
       },
       tooltip: defaultTooltip(currency, currencySymbol, names),
     },
@@ -59,7 +70,7 @@ export function getOptions(
           display: false,
         },
         grid: {
-          drawOnChartArea: false,
+          color: gridColor,
         },
         type: "time",
         time: {
@@ -67,7 +78,6 @@ export function getOptions(
         },
         ticks: {
           autoSkip: true,
-          maxTicksLimit: 7,
         },
       },
       y: {
@@ -82,6 +92,24 @@ export function getOptions(
             return handleTicksYAxis(val as number, currencySymbol);
           },
         },
+        position: "left",
+        type: "linear",
+      },
+      y1: {
+        display: false,
+        border: {
+          display: false,
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
+          },
+        },
+        type: isLog ? "logarithmic" : "linear",
+        position: "right",
       },
     },
   };

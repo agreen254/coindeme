@@ -8,13 +8,15 @@ import { useAnalysisCriteria } from "@/hooks/useAnalysis";
 import { useAnalysisYScale } from "@/hooks/useAnalysis";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
+import { analysisTitleHandler } from "@/utils/analysisTitleHandler";
 
 type Props = {
   data: ComparisonChartResponse[];
   coins: CoinItems;
+  days: number;
 };
 
-const AnalysisChart = ({ data, coins }: Props) => {
+const AnalysisChart = ({ data, coins, days }: Props) => {
   const currency = useUserCurrencySetting();
   const criteria = useAnalysisCriteria();
   const coinNames = coins.flatMap((c) => (c.name ? [c.name] : []));
@@ -27,10 +29,23 @@ const AnalysisChart = ({ data, coins }: Props) => {
     datasets: datasets.map((set, idx) => ({
       borderColor: chartColorSets[idx].startColor.hex,
       data: set,
+      yAxisID: "y",
+      // yAxisID: idx === 0 ? "y" : "y1",
     })),
   };
 
-  return <Line data={chartData} options={getOptions(currency, 7, coinNames)} />;
+  return (
+    <Line
+      data={chartData}
+      options={getOptions(
+        currency,
+        days,
+        coinNames,
+        analysisTitleHandler(criteria, currency),
+        isLog
+      )}
+    />
+  );
 };
 
 export default AnalysisChart;
