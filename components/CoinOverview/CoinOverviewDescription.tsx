@@ -47,7 +47,7 @@ const CoinOverviewDescription = ({ response }: Props) => {
   })();
 
   const expandCn = isCollapsed
-    ? "bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
+    ? "bg-[linear-gradient(to_bottom,black_60%,transparent_100%)] dark:bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
     : "h-auto bg-inherit";
 
   return (

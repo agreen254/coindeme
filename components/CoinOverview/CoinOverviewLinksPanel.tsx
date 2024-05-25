@@ -20,7 +20,7 @@ const CoinOverviewLinksPanel = ({ response }: Props) => {
       {links.map((l, idx) => (
         <CoinOverviewLink
           key={"link" + idx}
-          className="flex justify-center items-center h-[72px] w-[555px] mt-4 text-lg rounded-xl bg-zinc-900/70 border border-zinc-800"
+          className="flex justify-center items-center h-[72px] w-[555px] mt-4 text-lg"
           link={l}
           isLoading={response.isPending}
         />

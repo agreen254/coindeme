@@ -8,6 +8,8 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { cn } from "@/utils/cn";
 import { getOrdinal } from "@/utils/getOrdinal";
 
+import Panel from "../Theme/Panel";
+
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
 };
@@ -104,9 +106,9 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
   ];
 
   return (
-    <div
+    <Panel
       className={cn(
-        "w-full h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800",
+        "w-full h-[400px]",
         response.isPending && "animate-pulse"
       )}
     >
@@ -131,7 +133,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
           ))}
         </ul>
       )}
-    </div>
+    </Panel>
   );
 };
 
