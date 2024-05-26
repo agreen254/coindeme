@@ -13,7 +13,7 @@ const CarouselSkeleton = ({ pulse }: Props) => {
     <div
       key={"carouselSkeleton" + idx}
       className={cn(
-        "flex-[0_0_auto] min-h-0 h-[68px] mb-4 flex-col justify-center w-[15rem] border bg-teal-900/80 rounded-md",
+        "flex-[0_0_auto] min-h-0 h-[68px] mb-4 flex-col justify-center w-[15rem] border bg-teal-200/80 dark:bg-teal-900/80 rounded-md",
         pulse && "animate-pulse"
       )}
     ></div>
