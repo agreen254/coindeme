@@ -69,8 +69,8 @@ const config = {
         "market-down": "#F23F8A",
         "carousel-focus": "#5B9ACA",
         "carousel-selected": "#487AA1",
-        dropdown: "hsl(275,11%,15%)",
-        "menu-highlight": "#4DFDFF",
+        dropdown: "hsl(var(--dropdown))",
+        "menu-highlight": "hsl(var(--menu-highlight))",
       },
       borderRadius: {
         lg: "var(--radius)",

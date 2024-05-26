@@ -79,6 +79,9 @@
     /* CUSTOM COLORS */
     --default: 240, 21%, 17%;
     --market-up: 169, 100%, 40%;
+    --dropdown: 0, 0%, 98%;
+    /* --menu-highlight: 181, 100%, 50%; */
+    --menu-highlight: 190, 80%, 63%;
   }
 
   .dark {
@@ -112,6 +115,8 @@
 
     --default: 0, 0%, 100%;
     --market-up: 169, 100%, 63%;
+    --dropdown: 275, 11%, 15%;
+    --menu-highlight: 181, 100%, 65%;
   }
 }
 
