@@ -1,11 +1,14 @@
-import { forwardRef } from "react";
+import { ForwardedRef, forwardRef } from "react";
 import { cn } from "@/utils/cn";
 
 interface PanelProps extends React.HTMLProps<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-const Panel = ({ ref, children, className, ...props }: PanelProps) => {
+const Panel = (
+  { children, className, ...props }: PanelProps,
+  ref: ForwardedRef<HTMLDivElement>
+) => {
   return (
     <div
       ref={ref}

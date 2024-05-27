@@ -14,7 +14,7 @@ const PortfolioButton = () => {
   const inHome = !(inPortfolio || inConverter);
 
   return (
-    <div className="w-[390px] h-12 flex justify-center items-center gap-x-1 rounded-full text-zinc-700 dark:text-default font-medium bg-zinc-200 dark:bg-white/10 shadow-top shadow-menu-highlight/30">
+    <div className="w-[390px] h-12 flex justify-center items-center gap-x-1 rounded-full text-zinc-700 dark:text-default font-medium bg-white dark:bg-white/10 shadow-top shadow-menu-highlight/30">
       <Link
         href="/"
         className={cn(

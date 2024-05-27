@@ -48,7 +48,7 @@ const CurrencySelector = ({ dropdownId }: Props) => {
   );
 
   return (
-    <div className="relative" ref={clickAwayRef}>
+    <div className="relative bg-white dark:bg-inherit" ref={clickAwayRef}>
       <CurrencySelectorActivator dropdownId={dropdownId} />
       <DropdownMenu
         dropdownId={dropdownId}

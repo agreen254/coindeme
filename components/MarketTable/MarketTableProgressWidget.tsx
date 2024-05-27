@@ -56,7 +56,7 @@ const MarketTableProgressWidget = ({
           <span className="font-mono">{formatNumber(rightNumber)}</span>
         </span>
       </div>
-      <div className="rounded-[3px] w-56 h-[6px] bg-paynes-gray">
+      <div className="rounded-[3px] w-56 h-[6px] dark:bg-paynes-gray bg-black/15">
         <div
           className={cn(
             "rounded-[3px] w-full h-[6px]",

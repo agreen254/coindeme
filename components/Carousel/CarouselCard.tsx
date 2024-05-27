@@ -38,11 +38,11 @@ const CarouselElement = ({ coinData }: Props) => {
   return (
     <button
       className={cn(
-        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-3 justify-center w-[15rem] rounded-md bg-teal-200/80 dark:bg-teal-900/80 transition-colors disabled:cursor-not-allowed",
+        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-3 justify-center w-[15rem] rounded-md bg-teal-300/50 dark:bg-teal-900/80 transition-colors disabled:cursor-not-allowed",
         !hasMaxSelected &&
           "hover:bg-gradient-to-b hover:from-carousel-focus hover:to-carousel-focus/10 hover:dark:from-carousel-focus-dark hover:dark:to-carousel-focus-dark/10",
         isSelected &&
-          "border-carousel-selected-to bg-gradient-to-b from-carousel-selected to-carousel-selected/20 dark:from-carousel-selected-dark dark:to-carousel-selected-dark/20 shadow-md shadow-sky-400/70 dark:shadow-sky-600/70",
+          "border-carousel-selected-to bg-gradient-to-b from-carousel-focus to-carousel-focus/20 dark:from-carousel-selected-dark dark:to-carousel-selected-dark/20 shadow-md shadow-sky-400/70 dark:shadow-sky-600/70",
         cannotBeSelected && "hover:bg-teal-700/50 hover:dark:bg-teal-900/50"
       )}
       disabled={hasMaxSelected && !isSelected}
