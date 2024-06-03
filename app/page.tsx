@@ -1,5 +1,6 @@
 "use client";
 
+import { useMarketParams } from "@/hooks/useMarketParams";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
@@ -8,16 +9,9 @@ import ComparisonChartsWrapper from "@/components/ComparisonCharts/ComparisonCha
 import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
 
 export default function Home() {
-  // TODO: get the three fields below from url search params
   const currency = useUserCurrencySetting();
-  const marketFetchParam = "market_cap";
-  const marketFetchOrder = "desc";
-
-  const queryResult = useMarketQuery(
-    currency,
-    marketFetchParam,
-    marketFetchOrder
-  );
+  const { field, order } = useMarketParams();
+  const queryResult = useMarketQuery(currency, field, order);
 
   return (
     <main className="flex flex-col items-center gap-y-4">

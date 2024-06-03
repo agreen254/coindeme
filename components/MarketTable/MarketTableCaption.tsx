@@ -1,6 +1,6 @@
 "use client";
 
-import type { MarketFetchParam } from "@/utils/types";
+import type { MarketFetchField } from "@/utils/types";
 
 import { marketFetchParamMap } from "@/utils/maps";
 import {
@@ -26,7 +26,7 @@ const MarketTableCaption = ({
 }: Props) => {
   const tableMode = useMarketTableMode();
   const fetchOrder: "asc" | "desc" = "desc";
-  const fetchParam: MarketFetchParam = "market_cap";
+  const fetchParam: MarketFetchField = "market_cap";
 
   const currentPage = useMarketTableCurrentPage();
   const totalPages = useMarketTableNumFetchedPages();

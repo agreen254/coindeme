@@ -194,15 +194,20 @@ export const globalResponseSchema = z.object({
   data: globalResponseUnwrappedSchema,
 });
 
-export const marketFetchParamSchema = z.union([
+export const marketFetchFieldSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),
+]);
+
+export const marketFetchOrderSchema = z.union([
+  z.literal("asc"),
+  z.literal("desc"),
 ]);
 
 export const marketRequest = z.object({
   page: z.number(),
   currency: currenciesUnionSchema,
-  fetchParam: marketFetchParamSchema,
+  fetchParam: marketFetchFieldSchema,
   fetchOrder: z.union([z.literal("asc"), z.literal("desc")]),
 });
 

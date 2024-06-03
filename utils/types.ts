@@ -15,6 +15,7 @@ import {
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
+  currenciesUnionSchema,
   globalResponseUnwrappedSchema,
   coinHistoryRequestSchema,
   coinHistoryResponseSchema,
@@ -24,7 +25,8 @@ import {
   marketRequest,
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
-  marketFetchParamSchema,
+  marketFetchFieldSchema,
+  marketFetchOrderSchema,
 } from "@/validation/schema";
 import { z } from "zod";
 
@@ -38,8 +40,7 @@ export type Asset = z.infer<typeof assetSchema>;
 export type AssetHistory = z.infer<typeof assetHistorySchema>;
 export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 
-const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
-export type Currency = (typeof validCurrencies)[number];
+export type Currency = z.infer<typeof currenciesUnionSchema>;
 
 export type Dataset = {
   x: number[];
@@ -93,7 +94,8 @@ export type CoinHistoryQuery = ReturnType<typeof useAssetHistoryQueries>;
 
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
 export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
-export type MarketFetchParam = z.infer<typeof marketFetchParamSchema>;
+export type MarketFetchField = z.infer<typeof marketFetchFieldSchema>;
+export type MarketFetchOrder = z.infer<typeof marketFetchOrderSchema>;
 export type MarketTableMode = "infinite" | "paginated";
 export type MarketResponse = z.infer<typeof marketResponseSchema>;
 export type MarketResponsePaginated = z.infer<

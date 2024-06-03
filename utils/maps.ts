@@ -1,4 +1,4 @@
-import { MarketFetchParam, type Currency } from "./types";
+import { MarketFetchField, type Currency } from "./types";
 
 export const comparisonChartsTimeSelectorsMap = new Map<string, string>([
   ["1D", "1"],
@@ -18,7 +18,7 @@ export const currencyMap = new Map<Currency, string>([
 ]);
 export const currencyEntries = Array.from(currencyMap.entries());
 
-export const marketFetchParamMap = new Map<MarketFetchParam, string>([
+export const marketFetchParamMap = new Map<MarketFetchField, string>([
   ["market_cap", "market cap"],
   ["volume", "volume"],
 ]);
