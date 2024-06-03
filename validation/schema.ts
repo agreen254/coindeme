@@ -199,9 +199,18 @@ export const marketFetchFieldSchema = z.union([
   z.literal("volume"),
 ]);
 
-export const marketFetchOrderSchema = z.union([
+export const marketFetchOrderBySchema = z.union([
   z.literal("asc"),
   z.literal("desc"),
+]);
+
+export const marketFetchOrderSchema = z.union([
+  z.literal("default"),
+  z.literal("name"),
+  z.literal("current_price"),
+  z.literal("price_1h"),
+  z.literal("price_24h"),
+  z.literal("price_7d"),
 ]);
 
 export const marketRequest = z.object({

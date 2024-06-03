@@ -1,13 +1,16 @@
 import { type NextRequest, NextResponse } from "next/server";
 import {
   marketFetchFieldSchema,
+  marketFetchOrderBySchema,
   marketFetchOrderSchema,
 } from "@/validation/schema";
 import {
   DEFAULT_MARKET_FIELD,
   DEFAULT_MARKET_ORDER,
-} from "./hooks/useMarketParams";
+  DEFAULT_MARKET_ORDER_BY,
+} from "./validation/defaults";
 import { NextURL } from "next/dist/server/web/next-url";
+import { validateSearchParams } from "./validation/searchParamsValidator";
 
 /**
  * If nothing is provided, redirect the user to default settings.
@@ -16,23 +19,27 @@ import { NextURL } from "next/dist/server/web/next-url";
  * param value to something that is unsupported.
  */
 function handleMarketTable(url: NextURL, searchParams: URLSearchParams) {
-  const validField = marketFetchFieldSchema.safeParse(
-    searchParams.get("field")
-  );
-  const validOrder = marketFetchOrderSchema.safeParse(
-    searchParams.get("order")
-  );
+  const marketParams = [
+    {
+      schema: marketFetchFieldSchema,
+      key: "field",
+      fallback: DEFAULT_MARKET_FIELD,
+    },
+    {
+      schema: marketFetchOrderSchema,
+      key: "order",
+      fallback: DEFAULT_MARKET_ORDER,
+    },
+    {
+      schema: marketFetchOrderBySchema,
+      key: "orderBy",
+      fallback: DEFAULT_MARKET_ORDER_BY,
+    },
+  ];
 
-  if (!validField.success || !validOrder.success) {
-    searchParams.set(
-      "field",
-      validField.success ? validField.data : DEFAULT_MARKET_FIELD
-    );
-    searchParams.set(
-      "order",
-      validOrder.success ? validOrder.data : DEFAULT_MARKET_ORDER
-    );
-
+  const validations = validateSearchParams(marketParams, searchParams);
+  if (validations.some((v) => v.originalStatus === false)) {
+    validations.forEach((v) => searchParams.set(v.key, v.data));
     return NextResponse.redirect(url);
   }
 }
@@ -41,5 +48,9 @@ export function middleware(req: NextRequest) {
   const nextUrl = req.nextUrl;
   const searchParams = req.nextUrl.searchParams;
 
-  if (nextUrl.pathname === "/") return handleMarketTable(nextUrl, searchParams);
+  switch (nextUrl.basePath) {
+    case "/": {
+      return handleMarketTable(nextUrl, searchParams);
+    }
+  }
 }

@@ -2,13 +2,14 @@ import { useSearchParams } from "next/navigation";
 import { URLSearchParams } from "url";
 
 import {
-  marketFetchFieldSchema,
-  marketFetchOrderSchema,
-} from "@/validation/schema";
-import { MarketFetchOrder, MarketFetchField } from "@/utils/types";
+  DEFAULT_MARKET_FIELD,
+  DEFAULT_MARKET_ORDER_BY,
+} from "@/validation/defaults";
 
-export const DEFAULT_MARKET_FIELD: MarketFetchField = "market_cap";
-export const DEFAULT_MARKET_ORDER: MarketFetchOrder = "desc";
+import {
+  marketFetchFieldSchema,
+  marketFetchOrderBySchema,
+} from "@/validation/schema";
 
 export function handleField(params: URLSearchParams) {
   const field = params.get("field");
@@ -18,8 +19,10 @@ export function handleField(params: URLSearchParams) {
 
 export function handleOrder(params: URLSearchParams) {
   const order = params.get("order");
-  const orderValidation = marketFetchOrderSchema.safeParse(order);
-  return orderValidation.success ? orderValidation.data : DEFAULT_MARKET_ORDER;
+  const orderValidation = marketFetchOrderBySchema.safeParse(order);
+  return orderValidation.success
+    ? orderValidation.data
+    : DEFAULT_MARKET_ORDER_BY;
 }
 
 /**

@@ -2,7 +2,7 @@ import type {
   Currency,
   MarketRequest,
   MarketFetchField,
-  MarketFetchOrder,
+  MarketFetchOrderBy,
   MarketResponsePaginated,
 } from "@/utils/types";
 
@@ -11,7 +11,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 export const useMarketQuery = (
   currency: Currency,
   fetchParam: MarketFetchField,
-  fetchOrder: MarketFetchOrder,
+  fetchOrder: MarketFetchOrderBy,
 ) => {
   return useInfiniteQuery({
     // do not retry because this will spam api requests if the first is not successful

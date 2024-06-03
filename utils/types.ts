@@ -27,6 +27,7 @@ import {
   marketElementWithIdxSchema,
   marketFetchFieldSchema,
   marketFetchOrderSchema,
+  marketFetchOrderBySchema,
 } from "@/validation/schema";
 import { z } from "zod";
 
@@ -95,6 +96,7 @@ export type CoinHistoryQuery = ReturnType<typeof useAssetHistoryQueries>;
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
 export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
 export type MarketFetchField = z.infer<typeof marketFetchFieldSchema>;
+export type MarketFetchOrderBy = z.infer<typeof marketFetchOrderBySchema>;
 export type MarketFetchOrder = z.infer<typeof marketFetchOrderSchema>;
 export type MarketTableMode = "infinite" | "paginated";
 export type MarketResponse = z.infer<typeof marketResponseSchema>;
