@@ -11,7 +11,7 @@ import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrap
 export default function Home() {
   const currency = useUserCurrencySetting();
   const { field, order } = useMarketParams();
-  const queryResult = useMarketQuery(currency, field, order);
+  const queryResult = useMarketQuery(currency, field, "desc");
 
   return (
     <main className="flex flex-col items-center gap-y-4">

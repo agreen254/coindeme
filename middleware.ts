@@ -37,11 +37,21 @@ function handleMarketTable(url: NextURL, searchParams: URLSearchParams) {
     },
   ];
 
+  let flag = false;
+
   const validations = validateSearchParams(marketParams, searchParams);
   if (validations.some((v) => v.originalStatus === false)) {
     validations.forEach((v) => searchParams.set(v.key, v.data));
     return NextResponse.redirect(url);
   }
+
+  // if (searchParams.get("mode") === "infinite") {
+  //   flag = true;
+  //   searchParams.delete("order");
+  //   searchParams.delete("orderBy");
+  // }
+
+  // return flag ? NextResponse.redirect(url) : undefined;
 }
 
 export function middleware(req: NextRequest) {
@@ -49,8 +59,11 @@ export function middleware(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
 
   switch (nextUrl.basePath) {
-    case "/": {
+    case "": {
       return handleMarketTable(nextUrl, searchParams);
+    }
+    default: {
+      return undefined;
     }
   }
 }

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 type SearchParamValidationUnit = {
-  schema: z.ZodUnion<any>;
+  schema: z.ZodTypeAny;
   key: string;
   fallback: string;
 };

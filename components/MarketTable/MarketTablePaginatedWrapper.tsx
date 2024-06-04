@@ -1,20 +1,24 @@
 "use client";
 
-import type { MarketQueryResult } from "@/utils/types";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
+import { useSearchParams } from "next/navigation";
+
+import type {
+  MarketFetchOrderBy,
+  MarketQueryResult,
+  MarketTableSortField,
+} from "@/utils/types";
 
 import { addMarketIndices } from "@/utils/addMarketIndices";
 import { marketTableSort } from "@/utils/marketTableSort";
 import {
   useMarketTableActions,
   useMarketTableCurrentPage,
-  useMarketTableSortOrder,
-  useMarketTableSortField,
 } from "@/hooks/useMarketTable";
 
-import {
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-} from "lucide-react";
 import Loader from "../Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
@@ -34,10 +38,13 @@ const MarketTablePaginatedWrapper = ({
     fetchNextPage,
   },
 }: Props) => {
+  const params = useSearchParams();
   const currentPage = useMarketTableCurrentPage();
   const { setCurrentPage } = useMarketTableActions();
-  const sortOrder = useMarketTableSortOrder();
-  const sortField = useMarketTableSortField();
+
+  const sortField = (params.get("order") ||
+    "called_index") as MarketTableSortField;
+  const sortOrder = (params.get("orderBy") || "asc") as MarketFetchOrderBy;
 
   const tableData = data?.pages[currentPage]?.market || [];
   const indexedData = addMarketIndices(tableData);

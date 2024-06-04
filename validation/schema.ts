@@ -205,12 +205,14 @@ export const marketFetchOrderBySchema = z.union([
 ]);
 
 export const marketFetchOrderSchema = z.union([
-  z.literal("default"),
   z.literal("name"),
+  z.literal("called_index"),
   z.literal("current_price"),
-  z.literal("price_1h"),
-  z.literal("price_24h"),
-  z.literal("price_7d"),
+  z.literal("market_cap"),
+  z.literal("total_volume"),
+  z.literal("price_change_percentage_1h_in_currency"),
+  z.literal("price_change_percentage_24h_in_currency"),
+  z.literal("price_change_percentage_7d_in_currency"),
 ]);
 
 export const marketRequest = z.object({
