@@ -1,27 +1,10 @@
-"use client";
+import Home from "@/components/Home";
+import { Suspense } from "react";
 
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useMarketParams } from "@/hooks/useMarketParams";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import CarouselWrapper from "@/components/Carousel/CarouselWrapper";
-import ComparisonChartsWrapper from "@/components/ComparisonCharts/ComparisonChartsWrapper";
-import MarketTableMainWrapper from "@/components/MarketTable/MarketTableMainWrapper";
-
-export default function Home() {
-  const currency = useUserCurrencySetting();
-  const { field } = useMarketParams();
-
-  const queryResult = useMarketQuery(currency, field, "desc");
+export default function HomePage() {
   return (
-    <main className="flex flex-col items-center gap-y-4">
-      <CarouselWrapper axis="x" queryResult={queryResult} />
-      <div className="flex justify-between w-table-xl gap-x-12">
-        <ComparisonChartsWrapper />
-      </div>
-      <div className="mt-2">
-        <MarketTableMainWrapper queryResult={queryResult} />
-      </div>
-    </main>
+    <Suspense>
+      <Home />
+    </Suspense>
   );
 }
