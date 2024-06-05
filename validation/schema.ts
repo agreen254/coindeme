@@ -215,6 +215,11 @@ export const marketFetchOrderSchema = z.union([
   z.literal("price_change_percentage_7d_in_currency"),
 ]);
 
+export const marketTableModeSchema = z.union([
+  z.literal("infinite"),
+  z.literal("paginated"),
+]);
+
 export const marketRequest = z.object({
   page: z.number(),
   currency: currenciesUnionSchema,

@@ -3,67 +3,91 @@ import {
   marketFetchFieldSchema,
   marketFetchOrderBySchema,
   marketFetchOrderSchema,
+  marketTableModeSchema,
 } from "@/validation/schema";
 import {
+  MARKET_FIELD_KEY,
+  MARKET_ORDER_KEY,
+  MARKET_ORDER_BY_KEY,
+  MARKET_TABLE_MODE_KEY,
   DEFAULT_MARKET_FIELD,
   DEFAULT_MARKET_ORDER,
   DEFAULT_MARKET_ORDER_BY,
+  DEFAULT_MARKET_TABLE_MODE,
 } from "./validation/defaults";
 import { NextURL } from "next/dist/server/web/next-url";
 import { validateSearchParams } from "./validation/searchParamsValidator";
 
 /**
- * If nothing is provided, redirect the user to default settings.
+ * Creating a new URL instance will strip the searchParams from the NextURL instance.
  *
- * Do the same if the user decides to manually edit the url and change a
- * param value to something that is unsupported.
+ * A new NextURL instance is then instantiated from the URL instance, maintaining the
+ * ability to use the extended NextURL API.
  */
-function handleMarketTable(url: NextURL, searchParams: URLSearchParams) {
+function clearSearchParams(url: NextURL) {
+  return new NextURL(new URL(url));
+}
+
+function handleMarketSearchParams(url: NextURL, searchParams: URLSearchParams) {
   const marketParams = [
     {
       schema: marketFetchFieldSchema,
-      key: "field",
+      key: MARKET_FIELD_KEY,
       fallback: DEFAULT_MARKET_FIELD,
     },
     {
       schema: marketFetchOrderSchema,
-      key: "order",
+      key: MARKET_ORDER_KEY,
       fallback: DEFAULT_MARKET_ORDER,
     },
     {
       schema: marketFetchOrderBySchema,
-      key: "orderBy",
+      key: MARKET_ORDER_BY_KEY,
       fallback: DEFAULT_MARKET_ORDER_BY,
+    },
+    {
+      schema: marketTableModeSchema,
+      key: MARKET_TABLE_MODE_KEY,
+      fallback: DEFAULT_MARKET_TABLE_MODE,
     },
   ];
 
   let flag = false;
 
-  const validations = validateSearchParams(marketParams, searchParams);
-  if (validations.some((v) => v.originalStatus === false)) {
-    validations.forEach((v) => searchParams.set(v.key, v.data));
-    return NextResponse.redirect(url);
+  // make sure the infinite table is always sorted via the ascending called index
+  if (searchParams.get("table_mode") === "infinite") {
+    const order = searchParams.get("order");
+    const orderBy = searchParams.get("orderBy");
+
+    if (order !== DEFAULT_MARKET_ORDER || orderBy !== DEFAULT_MARKET_ORDER_BY) {
+      flag = true;
+      searchParams.set("order", DEFAULT_MARKET_ORDER);
+      searchParams.set("orderBy", DEFAULT_MARKET_ORDER_BY);
+    }
   }
 
-  // if (searchParams.get("mode") === "infinite") {
-  //   flag = true;
-  //   searchParams.delete("order");
-  //   searchParams.delete("orderBy");
-  // }
+  // make sure user cannot tamper with search params to make one unusable
+  const validations = validateSearchParams(marketParams, searchParams);
+  if (validations.some((v) => v.originalStatus === false)) {
+    flag = true;
+    validations.forEach((v) => {
+      if (!v.originalStatus) searchParams.set(v.key, v.data);
+    });
+  }
 
-  // return flag ? NextResponse.redirect(url) : undefined;
+  return flag ? NextResponse.redirect(url) : null;
 }
 
 export function middleware(req: NextRequest) {
   const nextUrl = req.nextUrl;
   const searchParams = req.nextUrl.searchParams;
 
-  switch (nextUrl.basePath) {
-    case "": {
-      return handleMarketTable(nextUrl, searchParams);
+  switch (nextUrl.pathname) {
+    case "/": {
+      return handleMarketSearchParams(nextUrl, searchParams);
     }
     default: {
-      return undefined;
+      return NextResponse.rewrite(clearSearchParams(nextUrl));
     }
   }
 }

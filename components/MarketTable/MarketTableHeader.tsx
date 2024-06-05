@@ -6,6 +6,11 @@ import { ListFilter as ListFilterIcon } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useMarketTableMode } from "@/hooks/useMarketTable";
 import { useMarketParams } from "@/hooks/useMarketParams";
+import {
+  MARKET_FIELD_KEY,
+  MARKET_ORDER_KEY,
+  MARKET_ORDER_BY_KEY,
+} from "@/validation/defaults";
 
 import { default as TH } from "./MarketTableHeaderCell";
 
@@ -21,18 +26,18 @@ const MarketTableHeader = () => {
       return {
         pathname: "/",
         query: {
-          field,
-          order,
-          orderBy: orderBy === "asc" ? "desc" : "asc",
+          [MARKET_FIELD_KEY]: field,
+          [MARKET_ORDER_KEY]: order,
+          [MARKET_ORDER_BY_KEY]: orderBy === "asc" ? "desc" : "asc",
         },
       };
     else
       return {
         pathname: "/",
         query: {
-          field,
-          order: clickedOrder,
-          orderBy,
+          [MARKET_FIELD_KEY]: field,
+          [MARKET_ORDER_KEY]: clickedOrder,
+          [MARKET_ORDER_BY_KEY]: orderBy,
         },
       };
   };
