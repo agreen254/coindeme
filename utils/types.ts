@@ -140,3 +140,9 @@ export type SearchResultWrapper = {
   kind: string;
   id: string;
 };
+
+export type SearchParamValidationUnit = {
+  schema: z.ZodType;
+  key: string;
+  fallback: any;
+};

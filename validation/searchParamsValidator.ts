@@ -1,10 +1,4 @@
-import { z } from "zod";
-
-type SearchParamValidationUnit = {
-  schema: z.ZodTypeAny;
-  key: string;
-  fallback: string;
-};
+import type { SearchParamValidationUnit } from "@/utils/types";
 
 function validateSearchParam(
   unit: SearchParamValidationUnit,
@@ -14,7 +8,7 @@ function validateSearchParam(
   const validation = schema.safeParse(searchParams.get(key));
 
   return {
-    originalStatus: validation.success,
+    originalStatus: validation.success as boolean,
     key: key,
     data: validation.success ? (validation.data as string) : fallback,
   };

@@ -25,7 +25,7 @@ const PortfolioButton = () => {
         Coins
       </Link>
       <Link
-        href="/converter"
+        href={{ pathname: "/converter", query: {} }}
         className={cn(
           "w-[120px] h-8 flex justify-center items-center rounded-full",
           inConverter && activeCn
@@ -34,7 +34,7 @@ const PortfolioButton = () => {
         Converter
       </Link>
       <Link
-        href="/portfolio"
+        href={{ pathname: "/portfolio", query: {} }}
         className={cn(
           "w-[120px] h-8 flex justify-center items-center rounded-full",
           inPortfolio && activeCn

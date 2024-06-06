@@ -17,19 +17,10 @@ import {
 } from "./validation/defaults";
 import { NextURL } from "next/dist/server/web/next-url";
 import { validateSearchParams } from "./validation/searchParamsValidator";
-
-/**
- * Creating a new URL instance will strip the searchParams from the NextURL instance.
- *
- * A new NextURL instance is then instantiated from the URL instance, maintaining the
- * ability to use the extended NextURL API.
- */
-function clearSearchParams(url: NextURL) {
-  return new NextURL(new URL(url));
-}
+import type { SearchParamValidationUnit } from "./utils/types";
 
 function handleMarketSearchParams(url: NextURL, searchParams: URLSearchParams) {
-  const marketParams = [
+  const marketParams: SearchParamValidationUnit[] = [
     {
       schema: marketFetchFieldSchema,
       key: MARKET_FIELD_KEY,
@@ -54,18 +45,6 @@ function handleMarketSearchParams(url: NextURL, searchParams: URLSearchParams) {
 
   let flag = false;
 
-  // make sure the infinite table is always sorted via the ascending called index
-  if (searchParams.get("table_mode") === "infinite") {
-    const order = searchParams.get("order");
-    const orderBy = searchParams.get("orderBy");
-
-    if (order !== DEFAULT_MARKET_ORDER || orderBy !== DEFAULT_MARKET_ORDER_BY) {
-      flag = true;
-      searchParams.set("order", DEFAULT_MARKET_ORDER);
-      searchParams.set("orderBy", DEFAULT_MARKET_ORDER_BY);
-    }
-  }
-
   // make sure user cannot tamper with search params to make one unusable
   const validations = validateSearchParams(marketParams, searchParams);
   if (validations.some((v) => v.originalStatus === false)) {
@@ -73,6 +52,18 @@ function handleMarketSearchParams(url: NextURL, searchParams: URLSearchParams) {
     validations.forEach((v) => {
       if (!v.originalStatus) searchParams.set(v.key, v.data);
     });
+  }
+
+  // make sure the infinite table is always sorted via the ascending called index
+  if (searchParams.get("table_mode") === "infinite") {
+    const order = searchParams.get(MARKET_ORDER_KEY);
+    const orderBy = searchParams.get(MARKET_ORDER_BY_KEY);
+
+    if (order !== DEFAULT_MARKET_ORDER || orderBy !== DEFAULT_MARKET_ORDER_BY) {
+      flag = true;
+      searchParams.set(MARKET_ORDER_KEY, DEFAULT_MARKET_ORDER);
+      searchParams.set(MARKET_ORDER_BY_KEY, DEFAULT_MARKET_ORDER_BY);
+    }
   }
 
   return flag ? NextResponse.redirect(url) : null;
@@ -87,7 +78,7 @@ export function middleware(req: NextRequest) {
       return handleMarketSearchParams(nextUrl, searchParams);
     }
     default: {
-      return NextResponse.rewrite(clearSearchParams(nextUrl));
+      return null;
     }
   }
 }

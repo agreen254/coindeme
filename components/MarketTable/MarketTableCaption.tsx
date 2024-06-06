@@ -1,15 +1,13 @@
 "use client";
 
-import type { MarketFetchField } from "@/utils/types";
+import { Coins as CoinsIcon } from "lucide-react";
 
 import { marketFetchParamMap } from "@/utils/maps";
 import {
   useMarketTableCurrentPage,
   useMarketTableNumFetchedPages,
-  useMarketTableMode,
 } from "@/hooks/useMarketTable";
-
-import { Coins as CoinsIcon } from "lucide-react";
+import { useMarketParams } from "@/hooks/useMarketParams";
 
 type Props = {
   disablePreviousPage?: boolean;
@@ -24,9 +22,7 @@ const MarketTableCaption = ({
   handleNextPage,
   handlePreviousPage,
 }: Props) => {
-  const tableMode = useMarketTableMode();
-  const fetchOrder: "asc" | "desc" = "desc";
-  const fetchParam: MarketFetchField = "market_cap";
+  const { field, tableMode } = useMarketParams();
 
   const currentPage = useMarketTableCurrentPage();
   const totalPages = useMarketTableNumFetchedPages();
@@ -37,12 +33,10 @@ const MarketTableCaption = ({
         currentPage === 0
           ? 50
           : `${currentPage * 50 + 1}-${50 * (currentPage + 1)}`;
-      return fetchOrder === "desc" ? `top ${range}` : `bottom ${range}`;
+      return `top ${range}`;
     } else {
       const numRecords = totalPages * 50;
-      return fetchOrder === "desc"
-        ? `top ${numRecords}`
-        : `bottom ${numRecords}`;
+      return `top ${numRecords}`;
     }
   };
 
@@ -59,7 +53,7 @@ const MarketTableCaption = ({
           by
         </span>
         <span className="mr-2 text-lg text-gray-400 font-normal uppercase">
-          {marketFetchParamMap.get(fetchParam)}
+          {marketFetchParamMap.get(field)}
         </span>
       </div>
       {tableMode === "paginated" && (

@@ -1,14 +1,8 @@
-import type { MarketTableSortField, MarketTableMode } from "@/utils/types";
-
 import { create } from "zustand";
 
 type MarketTableState = {
   currentPage: number;
   numFetchedPages: number;
-
-  marketMode: MarketTableMode;
-  sortOrder: "asc" | "desc";
-  sortField: MarketTableSortField;
 
   actions: MarketTableAction;
 };
@@ -16,27 +10,15 @@ type MarketTableState = {
 type MarketTableAction = {
   setCurrentPage: (page: MarketTableState["currentPage"]) => void;
   setNumFetchedPages: (n: MarketTableState["numFetchedPages"]) => void;
-
-  setMarketTableMode: (mode: MarketTableState["marketMode"]) => void;
-  setPageSortOrder: (order: MarketTableState["sortOrder"]) => void;
-  setPageSortField: (schema: MarketTableState["sortField"]) => void;
 };
 
 const useMarketTableStore = create<MarketTableState>((set) => ({
   currentPage: 0,
   numFetchedPages: 0,
 
-  marketMode: "paginated",
-  sortOrder: "desc",
-  sortField: "market_cap",
-
   actions: {
     setCurrentPage: (page) => set(() => ({ currentPage: page })),
     setNumFetchedPages: (n) => set(() => ({ numFetchedPages: n })),
-
-    setMarketTableMode: (mode) => set(() => ({ marketMode: mode })),
-    setPageSortField: (schema) => set(() => ({ sortField: schema })),
-    setPageSortOrder: (order) => set(() => ({ sortOrder: order })),
   },
 }));
 
@@ -58,15 +40,6 @@ export const useMarketTableCurrentPage = () => {
 };
 export const useMarketTableNumFetchedPages = () => {
   return useMarketTableStore((state) => state.numFetchedPages);
-};
-export const useMarketTableMode = () => {
-  return useMarketTableStore((state) => state.marketMode);
-};
-export const useMarketTableSortField = () => {
-  return useMarketTableStore((state) => state.sortField);
-};
-export const useMarketTableSortOrder = () => {
-  return useMarketTableStore((state) => state.sortOrder);
 };
 
 export const useMarketTableActions = () => {

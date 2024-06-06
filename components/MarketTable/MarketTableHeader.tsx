@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ListFilter as ListFilterIcon } from "lucide-react";
 
 import { cn } from "@/utils/cn";
-import { useMarketTableMode } from "@/hooks/useMarketTable";
 import { useMarketParams } from "@/hooks/useMarketParams";
 import {
   MARKET_FIELD_KEY,
@@ -15,8 +14,7 @@ import {
 import { default as TH } from "./MarketTableHeaderCell";
 
 const MarketTableHeader = () => {
-  const { field, order, orderBy } = useMarketParams();
-  const tableMode = useMarketTableMode();
+  const { field, order, orderBy, tableMode } = useMarketParams();
 
   const isPaginated = tableMode === "paginated";
   const isInfinite = tableMode === "infinite";

@@ -1,10 +1,10 @@
 "use client";
 
-import type { MarketQueryResult } from "@/utils/types";
-
-import { useMarketTableMode } from "@/hooks/useMarketTable";
-
 import { ErrorBoundary } from "react-error-boundary";
+
+import type { MarketQueryResult } from "@/utils/types";
+import { useMarketParams } from "@/hooks/useMarketParams";
+
 import MarketTableInfiniteWrapper from "./MarketTableInfiniteWrapper";
 import MarketTablePaginatedWrapper from "./MarketTablePaginatedWrapper";
 import MarketTableSwapMode from "./MarketTableSwapMode";
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const MarketTableMainWrapper = ({ queryResult }: Props) => {
-  const tableMode = useMarketTableMode();
+  const { tableMode } = useMarketParams();
 
   return (
     <div>
