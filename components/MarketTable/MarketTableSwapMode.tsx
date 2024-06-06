@@ -1,9 +1,6 @@
 import Link from "next/link";
 
-import {
-  MARKET_TABLE_MODE_KEY,
-  MARKET_FIELD_KEY,
-} from "@/validation/defaults";
+import { MARKET_TABLE_MODE_KEY, MARKET_FIELD_KEY } from "@/validation/defaults";
 import { useMarketParams } from "@/hooks/useMarketParams";
 
 const MarketTableSwapMode = () => {
