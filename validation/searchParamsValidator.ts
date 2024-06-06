@@ -10,7 +10,7 @@ function validateSearchParam(
   return {
     originalStatus: validation.success as boolean,
     key: key,
-    data: validation.success ? (validation.data as string) : fallback,
+    data: validation.success ? validation.data : fallback,
   };
 }
 

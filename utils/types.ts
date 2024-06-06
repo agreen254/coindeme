@@ -144,5 +144,5 @@ export type SearchResultWrapper = {
 export type SearchParamValidationUnit = {
   schema: z.ZodType;
   key: string;
-  fallback: any;
+  fallback: string;
 };
