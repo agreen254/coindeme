@@ -1,15 +1,21 @@
 "use client";
 
-import type { MarketFetchParam } from "@/utils/types";
+import Link from "next/link";
+import { Coins as CoinsIcon } from "lucide-react";
 
+import CaretIcon from "@/Icons/Caret";
 import { marketFetchParamMap } from "@/utils/maps";
 import {
   useMarketTableCurrentPage,
   useMarketTableNumFetchedPages,
-  useMarketTableMode,
 } from "@/hooks/useMarketTable";
-
-import { Coins as CoinsIcon } from "lucide-react";
+import { useMarketParams } from "@/hooks/useMarketParams";
+import {
+  MARKET_FIELD_KEY,
+  MARKET_ORDER_KEY,
+  MARKET_ORDER_BY_KEY,
+  MARKET_TABLE_MODE_KEY,
+} from "@/validation/defaults";
 
 type Props = {
   disablePreviousPage?: boolean;
@@ -24,9 +30,8 @@ const MarketTableCaption = ({
   handleNextPage,
   handlePreviousPage,
 }: Props) => {
-  const tableMode = useMarketTableMode();
-  const fetchOrder: "asc" | "desc" = "desc";
-  const fetchParam: MarketFetchParam = "market_cap";
+  const { field, tableMode, order, orderBy } = useMarketParams();
+  const otherField = field === "market_cap" ? "volume" : "market_cap";
 
   const currentPage = useMarketTableCurrentPage();
   const totalPages = useMarketTableNumFetchedPages();
@@ -37,12 +42,10 @@ const MarketTableCaption = ({
         currentPage === 0
           ? 50
           : `${currentPage * 50 + 1}-${50 * (currentPage + 1)}`;
-      return fetchOrder === "desc" ? `top ${range}` : `bottom ${range}`;
+      return `top ${range}`;
     } else {
       const numRecords = totalPages * 50;
-      return fetchOrder === "desc"
-        ? `top ${numRecords}`
-        : `bottom ${numRecords}`;
+      return `top ${numRecords}`;
     }
   };
 
@@ -55,12 +58,26 @@ const MarketTableCaption = ({
         <span className="mr-2 text-2xl font-bold uppercase">
           {handlePageDisplay()}
         </span>
-        <span className="mr-2 text-lg text-gray-400 font-normal uppercase">
+        <span className="mr-2 text-lg text-gray-200 font-normal uppercase">
           by
         </span>
-        <span className="mr-2 text-lg text-gray-400 font-normal uppercase">
-          {marketFetchParamMap.get(fetchParam)}
+        <span className="mr-2 text-2xl font-semibold uppercase">
+          {marketFetchParamMap.get(field)}
         </span>
+        <Link
+          href={{
+            pathname: "/",
+            query: {
+              [MARKET_FIELD_KEY]: otherField,
+              [MARKET_ORDER_KEY]: order,
+              [MARKET_ORDER_BY_KEY]: orderBy,
+              [MARKET_TABLE_MODE_KEY]: tableMode,
+            },
+          }}
+          scroll={false}
+        >
+          <CaretIcon className="h-4 w-4 inline rotate-180 -translate-y-1 fill-gray-200 hover:fill-menu-highlight" />
+        </Link>
       </div>
       {tableMode === "paginated" && (
         <div className="flex gap-x-4 mr-4 text-sm font-medium">

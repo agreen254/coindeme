@@ -1,35 +1,31 @@
-import { useMarketTableMode } from "@/hooks/useMarketTable";
-import { useMarketTableActions } from "@/hooks/useMarketTable";
+import Link from "next/link";
+
+import { MARKET_TABLE_MODE_KEY, MARKET_FIELD_KEY } from "@/validation/defaults";
+import { useMarketParams } from "@/hooks/useMarketParams";
 
 const MarketTableSwapMode = () => {
-  const tableMode = useMarketTableMode();
-  const { setPageSortOrder, setPageSortField, setMarketTableMode } =
-    useMarketTableActions();
+  const { field, tableMode } = useMarketParams();
 
   const handleTableMode = () => {
-    if (tableMode === "infinite") {
-      setMarketTableMode("paginated");
-    } else {
-      /**
-       * Be sure to re-sort the entries to their numerically fetched order
-       * when switching to infinite table mode.
-       * If this is not done, when a new page is fetched via scrolling
-       * it will cause new entries to pop in both above and below.
-       */
-      setPageSortField("called_index");
-      setPageSortOrder("asc");
-      setMarketTableMode("infinite");
-    }
+    return {
+      pathname: "/",
+      query: {
+        [MARKET_TABLE_MODE_KEY]:
+          tableMode === "infinite" ? "paginated" : "infinite",
+        [MARKET_FIELD_KEY]: field,
+      },
+    };
   };
 
   return (
     <div className="flex justify-end mb-2">
-      <button
+      <Link
         className="px-3 py-2 mr-4 hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors"
-        onClick={handleTableMode}
+        href={handleTableMode()}
+        scroll={false}
       >
         Swap View
-      </button>
+      </Link>
     </div>
   );
 };
