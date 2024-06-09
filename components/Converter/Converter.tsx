@@ -1,20 +1,20 @@
 "use client";
 
-import type { MarketElementNoIdx } from "@/utils/types";
-
+import { useEffect, useState } from "react";
 import { ArrowRightLeft as SwapIcon } from "lucide-react";
-import ConverterSearchInput from "./ConverterSearchInput";
 import Image from "next/image";
 
-import { useEffect, useState } from "react";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import { cn } from "@/utils/cn";
 import { convertCoinAmount } from "@/utils/convertCoinAmount";
 import { formatPriceValue } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { roundDigits } from "@/utils/formatHelpers";
+import { cn } from "@/utils/cn";
+import { useMarketQuery } from "@/hooks/useMarketQuery";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+import type { MarketElementNoIdx } from "@/utils/types";
+
+import ConverterSearchInput from "./ConverterSearchInput";
+import Panel from "../Theme/Panel";
 
 type Props = {
   converterKeys: string[];
@@ -97,13 +97,13 @@ const Converter = ({
 
   return (
     <div className="flex relative w-[1467px] gap-6">
-      <div
+      <Panel
         className={cn(
-          "flex relative flex-col p-4 w-1/2 bg-zinc-900/70 border border-zinc-800 rounded-lg",
+          "flex relative flex-col p-4 w-1/2 rounded-lg",
           response.isPending && "animate-pulse"
         )}
       >
-        <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
+        <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
           {coinOneData ? (
             <>
@@ -133,7 +133,7 @@ const Converter = ({
                 id="coinOneInput"
                 type="number"
                 min={0}
-                className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
+                className="w-[50%] p-2 pl-0 bg-zinc-50/70 dark:bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
                 value={roundDigits(coinOneAmount, 5)}
                 onChange={(e) => {
                   setCoinTwoIsActive(false);
@@ -149,23 +149,23 @@ const Converter = ({
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
           {coinOneData ? conversionLabel(coinOneData) : "Loading..."}
         </p>
-      </div>
+      </Panel>
       <button
         className={cn(
-          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-stone-100 focus:outline-menu-highlight/70",
+          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-default focus:outline-menu-highlight/70",
           response.isPending && "animate-pulse"
         )}
         onClick={swapPositions}
       >
-        <SwapIcon strokeWidth={1} className="h-8 w-8 text-stone-100" />
+        <SwapIcon strokeWidth={1} className="h-8 w-8 text-default" />
       </button>
-      <div
+      <Panel
         className={cn(
-          "flex relative flex-col p-4 w-1/2 bg-zinc-900/70 border border-zinc-800 rounded-lg",
+          "flex relative flex-col p-4 w-1/2",
           response.isPending && "animate-pulse"
         )}
       >
-        <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-white/15"></div>
+        <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
           {coinTwoData ? (
             <>
@@ -195,7 +195,7 @@ const Converter = ({
                 id="coinTwoInput"
                 type="number"
                 min={0}
-                className="w-[50%] p-2 pl-0 bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
+                className="w-[50%] p-2 pl-0 bg-zinc-50/70 dark:bg-zinc-900/70 text-right font-semibold focus:outline-none focus:border-b focus:border-slice focus:border-grad-l-blue"
                 value={roundDigits(coinTwoAmount, 5)}
                 onChange={(e) => {
                   setCoinOneIsActive(false);
@@ -211,7 +211,7 @@ const Converter = ({
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
           {coinTwoData ? conversionLabel(coinTwoData) : "Loading..."}
         </p>
-      </div>
+      </Panel>
     </div>
   );
 };

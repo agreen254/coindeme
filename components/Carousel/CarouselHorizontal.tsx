@@ -77,7 +77,7 @@ const CarouselHorizontal = ({
         </label>
         <button
           id="scrollPrev"
-          className="w-10 h-10 p-2 rounded-full border dark:border-2 border-zinc-700 dark:border-teal-900 hover:dark:bg-teal-900 transition-colors disabled:cursor-not-allowed"
+          className="w-10 h-10 p-2 rounded-full border-2 border-zinc-300 dark:border-teal-900 hover:bg-teal-100 hover:dark:bg-teal-900 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >

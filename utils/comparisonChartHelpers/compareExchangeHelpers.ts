@@ -1,4 +1,5 @@
 import type { ChartOptions } from "chart.js";
+import "chartjs-adapter-date-fns";
 
 import {
   gridColor,
@@ -7,8 +8,7 @@ import {
 } from "./compareGeneralHelpers";
 import { roundDigits } from "../formatHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
-
-import "chartjs-adapter-date-fns";
+import { ThemeType } from "../types";
 
 interface ExchangeOptionConfig {
   coinOneName: string;
@@ -17,6 +17,7 @@ interface ExchangeOptionConfig {
   coinTwoSymbol: string;
   len: number;
   days: number;
+  theme: ThemeType;
 }
 
 export const getOptions = ({
@@ -25,6 +26,7 @@ export const getOptions = ({
   coinTwoName,
   coinTwoSymbol,
   days,
+  theme,
 }: ExchangeOptionConfig): ChartOptions<"line"> => ({
   elements: {
     point: {
@@ -97,7 +99,7 @@ export const getOptions = ({
         display: false,
       },
       grid: {
-        color: gridColor,
+        color: gridColor[theme],
       },
       ticks: {
         font: { size: 15 },
@@ -112,7 +114,7 @@ export const getOptions = ({
         display: false,
       },
       grid: {
-        color: gridColor,
+        color: gridColor[theme],
       },
       ticks: {
         callback: function (val) {

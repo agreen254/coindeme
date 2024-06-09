@@ -43,7 +43,10 @@ ChartJS.register(
  */
 export const decimationThreshold = 150;
 
-export const gridColor = "#27272A";
+export const gridColor = {
+  light: "#D8D8D5",
+  dark: "#27272A"
+};
 export const legendFontColor = "#A1A1AA";
 export const tooltipBackgroundColor = "#121212";
 export const tooltipBorderColor = "#71717A";
@@ -79,7 +82,7 @@ export function handleTicksXAxis(label: string, index: number) {
 }
 
 export function handleTicksYAxis(value: number, currencySymbol?: string) {
-  return value === 0 ? 0 : currencySymbol + formatPriceValue(value);
+  return value === 0 ? 0 : (currencySymbol ?? "") + formatPriceValue(value);
 }
 
 export function handleLabelText(

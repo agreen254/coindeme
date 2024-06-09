@@ -1,8 +1,9 @@
 "use client";
 
 import type { ChartData } from "chart.js";
-import type { ComparisonChartResponse } from "@/utils/types";
+import { Line } from "react-chartjs-2";
 
+import type { ComparisonChartResponse } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import { getOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
@@ -10,8 +11,7 @@ import { priceComparisonGradient } from "@/utils/comparisonChartHelpers/compareP
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import { Line } from "react-chartjs-2";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -23,6 +23,7 @@ const PriceComparisonChart = ({ chartData, coinNames }: Props) => {
   const selectedCoins = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "prices");
   const time = useComparisonChartTime();
+  const theme = useThemeTyped();
 
   const priceChartData: ChartData<"line"> = {
     labels: label,
@@ -42,7 +43,7 @@ const PriceComparisonChart = ({ chartData, coinNames }: Props) => {
   return (
     <Line
       data={priceChartData}
-      options={getOptions(currency, parseInt(time), coinNames)}
+      options={getOptions(currency, parseInt(time), coinNames, theme)}
     />
   );
 };

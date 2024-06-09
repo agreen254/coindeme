@@ -58,7 +58,7 @@ const MarketTableCaption = ({
         <span className="mr-2 text-2xl font-bold uppercase">
           {handlePageDisplay()}
         </span>
-        <span className="mr-2 text-lg text-gray-200 font-normal uppercase">
+        <span className="mr-2 text-lg text-gray-600 dark:text-gray-200 font-normal uppercase">
           by
         </span>
         <span className="mr-2 text-2xl font-semibold uppercase">
@@ -76,20 +76,20 @@ const MarketTableCaption = ({
           }}
           scroll={false}
         >
-          <CaretIcon className="h-4 w-4 inline rotate-180 -translate-y-1 fill-gray-200 hover:fill-menu-highlight" />
+          <CaretIcon className="h-4 w-4 inline rotate-180 -translate-y-1 fill-gray-600 dark:fill-gray-200 hover:fill-menu-highlight" />
         </Link>
       </div>
       {tableMode === "paginated" && (
         <div className="flex gap-x-4 mr-4 text-sm font-medium">
           <button
-            className="py-1 w-32 rounded-md dark:bg-teal-800 dark:disabled:bg-stone-800 disabled:text-primary/50 disabled:cursor-not-allowed"
+            className="py-1 w-32 rounded-md bg-teal-300 dark:bg-teal-800 dark:disabled:bg-stone-800 disabled:text-primary/50 disabled:cursor-not-allowed"
             disabled={disablePreviousPage}
             onClick={handlePreviousPage}
           >
             Previous
           </button>
           <button
-            className="py-1 w-32 rounded-md dark:bg-teal-800 dark:disabled:bg-stone-800 disabled:text-primary/50 disabled:cursor-not-allowed"
+            className="py-1 w-32 rounded-md bg-teal-300 dark:bg-teal-800 dark:disabled:bg-stone-800 disabled:text-primary/50 disabled:cursor-not-allowed"
             disabled={disableNextPage}
             onClick={handleNextPage}
           >

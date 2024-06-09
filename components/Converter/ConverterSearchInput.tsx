@@ -128,7 +128,7 @@ const ConverterSearchInput = ({
         ref={clickAwayRef}
         dropdownId={dropdownId}
         key="searchResults"
-        className="w-[280px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+        className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
       >
         {results.map((wrapper, idx) => (
           <DropdownMenuItem
@@ -140,7 +140,7 @@ const ConverterSearchInput = ({
               tabIndex={-1}
               className={cn(
                 "indent-3 py-1 block w-full text-start",
-                idx === selectedIndex && "bg-zinc-600"
+                idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
               )}
               onClick={() => {
                 setCoinId(wrapper.id);

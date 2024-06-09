@@ -1,23 +1,18 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
-import type { Currency, OverlappedVolumeData } from "../types";
+import { sort } from "fast-sort";
+import "chartjs-adapter-date-fns";
 
+import type { Currency, OverlappedVolumeData, ThemeType } from "../types";
 import { arrayOfNs } from "../arrayHelpers";
 import {
   chartColorSets,
   gridColor,
   handleGradientColorStops,
-  handleLabelText,
   handleTicksYAxis,
-  tooltipBackgroundColor,
-  tooltipBorderColor,
 } from "./compareGeneralHelpers";
 import { defaultTooltip } from "./compareGeneralHelpers";
 import { formatSmallNum } from "../formatHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
-import { sort } from "fast-sort";
-import { formatPriceValue } from "../formatHelpers";
-
-import "chartjs-adapter-date-fns";
 import { getMinTimeUnit } from "../getMinTimeUnit";
 
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
@@ -56,7 +51,8 @@ export function volumeComparisonGradient(
 export function getOptionsStacked(
   currency: Currency,
   days: number,
-  names: string[]
+  names: string[],
+  theme: ThemeType
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -114,7 +110,7 @@ export function getOptionsStacked(
         },
         grid: {
           drawOnChartArea: true,
-          color: gridColor,
+          color: gridColor[theme],
         },
         ticks: {
           callback: function (val) {
@@ -132,7 +128,8 @@ export function getOptionsOverlapped(
   overlapValues: OverlappedVolumeData[][],
   days: number,
   names: string[],
-  ids: string[]
+  ids: string[],
+  theme: ThemeType
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -238,7 +235,7 @@ export function getOptionsOverlapped(
         },
         grid: {
           drawOnChartArea: true,
-          color: gridColor,
+          color: gridColor[theme],
         },
         ticks: {
           callback: function (val) {

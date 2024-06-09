@@ -1,5 +1,5 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
-import type { Currency } from "../types";
+import type { Currency, ThemeType } from "../types";
 
 import { defaultTooltip } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
@@ -48,7 +48,8 @@ export function priceComparisonGradient(
 export function getOptions(
   currency: Currency,
   days: number,
-  names: string[]
+  names: string[],
+  theme: ThemeType
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -109,7 +110,7 @@ export function getOptions(
           display: false,
         },
         grid: {
-          color: gridColor,
+          color: gridColor[theme],
         },
         ticks: {
           callback: function (val) {
