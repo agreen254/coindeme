@@ -15,6 +15,7 @@ import {
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
+  currenciesUnionSchema,
   globalResponseUnwrappedSchema,
   coinHistoryRequestSchema,
   coinHistoryResponseSchema,
@@ -24,7 +25,10 @@ import {
   marketRequest,
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
-  marketFetchParamSchema,
+  marketFetchFieldSchema,
+  marketFetchOrderSchema,
+  marketFetchOrderBySchema,
+  marketTableModeSchema,
 } from "@/validation/schema";
 import { z } from "zod";
 
@@ -38,8 +42,7 @@ export type Asset = z.infer<typeof assetSchema>;
 export type AssetHistory = z.infer<typeof assetHistorySchema>;
 export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 
-const validCurrencies = ["usd", "eur", "gbp", "btc", "eth"] as const;
-export type Currency = (typeof validCurrencies)[number];
+export type Currency = z.infer<typeof currenciesUnionSchema>;
 
 export type Dataset = {
   x: number[];
@@ -93,8 +96,10 @@ export type CoinHistoryQuery = ReturnType<typeof useAssetHistoryQueries>;
 
 export type MarketElementNoIdx = z.infer<typeof marketElementNoIdxSchema>;
 export type MarketElementWithIdx = z.infer<typeof marketElementWithIdxSchema>;
-export type MarketFetchParam = z.infer<typeof marketFetchParamSchema>;
-export type MarketTableMode = "infinite" | "paginated";
+export type MarketFetchField = z.infer<typeof marketFetchFieldSchema>;
+export type MarketFetchOrderBy = z.infer<typeof marketFetchOrderBySchema>;
+export type MarketFetchOrder = z.infer<typeof marketFetchOrderSchema>;
+export type MarketTableMode = z.infer<typeof marketTableModeSchema>;
 export type MarketResponse = z.infer<typeof marketResponseSchema>;
 export type MarketResponsePaginated = z.infer<
   typeof marketResponsePaginatedSchema
@@ -106,6 +111,7 @@ const marketTableSortFields = [
   "called_index",
   "current_price",
   "market_cap",
+  "total_volume",
   "price_change_percentage_1h_in_currency",
   "price_change_percentage_24h_in_currency",
   "price_change_percentage_7d_in_currency",
@@ -133,4 +139,10 @@ export type SearchResultWrapper = {
   otherText: string; // store the name if the symbol is matched and vice-versa
   kind: string;
   id: string;
+};
+
+export type SearchParamValidationUnit = {
+  schema: z.ZodType;
+  key: string;
+  fallback: string;
 };

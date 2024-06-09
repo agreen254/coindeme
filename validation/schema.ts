@@ -194,15 +194,36 @@ export const globalResponseSchema = z.object({
   data: globalResponseUnwrappedSchema,
 });
 
-export const marketFetchParamSchema = z.union([
+export const marketFetchFieldSchema = z.union([
   z.literal("market_cap"),
   z.literal("volume"),
+]);
+
+export const marketFetchOrderBySchema = z.union([
+  z.literal("asc"),
+  z.literal("desc"),
+]);
+
+export const marketFetchOrderSchema = z.union([
+  z.literal("name"),
+  z.literal("called_index"),
+  z.literal("current_price"),
+  z.literal("market_cap"),
+  z.literal("total_volume"),
+  z.literal("price_change_percentage_1h_in_currency"),
+  z.literal("price_change_percentage_24h_in_currency"),
+  z.literal("price_change_percentage_7d_in_currency"),
+]);
+
+export const marketTableModeSchema = z.union([
+  z.literal("infinite"),
+  z.literal("paginated"),
 ]);
 
 export const marketRequest = z.object({
   page: z.number(),
   currency: currenciesUnionSchema,
-  fetchParam: marketFetchParamSchema,
+  fetchParam: marketFetchFieldSchema,
   fetchOrder: z.union([z.literal("asc"), z.literal("desc")]),
 });
 
