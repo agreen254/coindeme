@@ -32,7 +32,7 @@ export function sparklineGradient(
 export const sparklineOptions: ChartOptions<"line"> = {
   elements: {
     line: {
-      borderWidth: 2,
+      borderWidth: 2.5,
     },
     point: {
       radius: 0,

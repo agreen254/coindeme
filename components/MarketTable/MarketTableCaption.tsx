@@ -76,7 +76,7 @@ const MarketTableCaption = ({
           }}
           scroll={false}
         >
-          <CaretIcon className="h-4 w-4 inline rotate-180 -translate-y-1 fill-gray-600 dark:fill-gray-200 hover:fill-menu-highlight" />
+          <CaretIcon className="h-4 w-4 inline rotate-180 -translate-y-1 fill-gray-600 dark:fill-gray-200 hover:dark:fill-menu-highlight hover:fill-menu-highlight" />
         </Link>
       </div>
       {tableMode === "paginated" && (
