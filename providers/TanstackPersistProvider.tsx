@@ -2,15 +2,15 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { renderErrorToast } from "@/components/Toast/ErrorToast";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { PersistGate } from "@/components/PersistGate";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 /**
  * Queries that should be stored in the local storage require a different provider component.
- * 
+ *
  * This component takes a 'persister':
  * https://tanstack.com/query/latest/docs/framework/react/plugins/persistQueryClient
  */
@@ -27,7 +27,7 @@ const TanstackPersistProvider = ({
             const message = [query?.meta?.errorMessage, error?.message].join(
               " "
             );
-            renderErrorToast(message);
+            toast.error(message, { position: "bottom-right" });
           },
         }),
         defaultOptions: {
