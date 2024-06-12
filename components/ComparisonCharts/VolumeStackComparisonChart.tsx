@@ -35,7 +35,7 @@ const VolumeStackComparisonChart = ({ chartData, coinNames }: Props) => {
         backgroundColor: function (context) {
           return volumeComparisonGradient(context, idx);
         },
-        categoryPercentage: 0.8,
+        categoryPercentage: 0.95,
         barPercentage: 1,
         hoverBackgroundColor: chartColorSets[idx].highlightColor.hex,
         data: values[idx],

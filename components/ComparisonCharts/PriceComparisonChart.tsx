@@ -30,7 +30,7 @@ const PriceComparisonChart = ({ chartData, coinNames }: Props) => {
     datasets: chartData.map((_, idx) => {
       return {
         backgroundColor: function (context) {
-          return priceComparisonGradient(context, idx);
+          return priceComparisonGradient(context, idx, theme);
         },
         borderColor: chartColorSets[idx].startColor.hex,
         data: values[idx],

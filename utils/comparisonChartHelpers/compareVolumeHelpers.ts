@@ -72,7 +72,7 @@ export function getOptionsStacked(
       legend: {
         display: false,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names),
+      tooltip: defaultTooltip(currency, currencySymbol, names, theme),
     },
     interaction: {
       intersect: false,
@@ -156,7 +156,7 @@ export function getOptionsOverlapped(
       legend: {
         display: false,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, {
+      tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
         itemSort(a, b) {
           return b.datasetIndex - a.datasetIndex;
         },
@@ -329,7 +329,8 @@ export function getOverlapBackgroundColor(
   idx: number,
   context: ScriptableContext<"bar">,
   overlapValues: OverlappedVolumeData[][],
-  labels: string[]
+  labels: string[],
+  theme: ThemeType
 ) {
   const coinName = overlapValues[context.dataIndex][idx].name;
   const nameIdx = labels.findIndex((label) => label === coinName);

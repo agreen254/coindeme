@@ -1,4 +1,4 @@
-import type { ChartColorSet, Currency } from "../types";
+import type { ChartColorSet, Currency, ThemeType } from "../types";
 
 import { formatSmallNum } from "../formatHelpers";
 import { formatPriceValue } from "../formatHelpers";
@@ -45,11 +45,12 @@ export const decimationThreshold = 150;
 
 export const gridColor = {
   light: "#D8D8D5",
-  dark: "#27272A"
+  dark: "#27272A",
 };
-export const legendFontColor = "#A1A1AA";
-export const tooltipBackgroundColor = "#121212";
-export const tooltipBorderColor = "#71717A";
+export const legendBodyTextColor = { dark: "#A1A1AA", light: "#52525B" };
+export const legendTitleTextColor = { dark: "#A1A1AA", light: "#09090B" };
+export const tooltipBackgroundColor = { dark: "#121212", light: "#FFF" };
+export const tooltipBorderColor = { dark: "#71717A", light: "#121212" };
 
 export function handleGradientColorStops(
   alphaValues: { alphaTop: number; alphaBottom: number },
@@ -121,11 +122,14 @@ export function defaultTooltip(
   currency: Currency,
   currencySymbol: string,
   names: string[],
+  theme: ThemeType,
   overrides?: TooltipOptions
 ): TooltipOptions {
   return {
-    backgroundColor: tooltipBackgroundColor,
-    borderColor: tooltipBorderColor,
+    backgroundColor: tooltipBackgroundColor[theme],
+    borderColor: tooltipBorderColor[theme],
+    bodyColor: legendBodyTextColor[theme],
+    titleColor: legendTitleTextColor[theme],
     borderWidth: 1,
     caretPadding: 4,
     caretSize: 8,

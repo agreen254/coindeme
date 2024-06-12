@@ -41,7 +41,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
             idx,
             context,
             overlapValues,
-            coinLabels
+            coinLabels,
+            theme
           );
         },
         hoverBackgroundColor: function (context) {
@@ -50,6 +51,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
 
         data: overlapValues.map((value) => value[idx].volume),
         label: idx.toString(),
+        categoryPercentage: 0.95,
+        barPercentage: 1,
       };
     }),
   };

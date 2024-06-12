@@ -5,7 +5,6 @@ import type { MarketQueryResult } from "@/utils/types";
 import { addMarketIndices } from "@/utils/addMarketIndices";
 import { marketTableSort } from "@/utils/marketTableSort";
 import { flatMarketRes } from "@/utils/flatMarketRes";
-import { useMarketTableActions } from "@/hooks/useMarketTable";
 import { useMarketParams } from "@/hooks/useMarketParams";
 
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -21,9 +20,6 @@ const MarketTableInfiniteWrapper = ({
   queryResult: { data, error, isPending, isFetching, fetchNextPage },
 }: Props) => {
   const { order, orderBy } = useMarketParams();
-
-  const { setNumFetchedPages: setTotalPages } = useMarketTableActions();
-  setTotalPages(data?.pages.length ?? 0);
 
   const tableData = flatMarketRes(data?.pages) || [];
   const indexedData = addMarketIndices(tableData);
