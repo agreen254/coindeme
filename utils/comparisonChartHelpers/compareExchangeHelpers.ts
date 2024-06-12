@@ -2,9 +2,13 @@ import type { ChartOptions } from "chart.js";
 import "chartjs-adapter-date-fns";
 
 import {
+  defaultTooltip,
   gridColor,
   handleTicksYAxis,
   tooltipBackgroundColor,
+  tooltipBorderColor,
+  legendBodyTextColor,
+  legendTitleTextColor,
 } from "./compareGeneralHelpers";
 import { roundDigits } from "../formatHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
@@ -57,21 +61,52 @@ export const getOptions = ({
         ` (${coinTwoSymbol.toUpperCase()})`,
     },
     tooltip: {
-      backgroundColor: tooltipBackgroundColor,
-      borderColor: "#FFF",
-      borderWidth: 1.25,
-      caretPadding: 14,
+      // backgroundColor: tooltipBackgroundColor[theme],
+      // borderColor: "#FFF",
+      // borderWidth: 1.25,
+      // caretPadding: 14,
+      // position: "nearest",
+      // displayColors: false,
+      // padding: 12,
+      // bodyColor: "#D1D5DB",
+      // bodyFont: {
+      //   size: 16,
+      // },
+      // titleFont: {
+      //   size: 20,
+      // },
+      // yAlign: "top",
+
+      // callbacks: {
+      //   title: function (items) {
+      //     const convVal = items[0].raw as number;
+
+      //     return `1 ${coinOneSymbol.toUpperCase()} = ${
+      //       convVal < 0.01 ? convVal.toExponential(3) : roundDigits(convVal, 3)
+      //     } ${coinTwoSymbol.toUpperCase()}`;
+      //   },
+      //   label: function (item) {
+      //     return item.label;
+      //   },
+      // },
+      backgroundColor: tooltipBackgroundColor[theme],
+      borderColor: tooltipBorderColor[theme],
+      bodyColor: legendBodyTextColor[theme],
+      titleColor: legendTitleTextColor[theme],
+      borderWidth: 1,
+      caretPadding: 4,
+      caretSize: 8,
+      padding: 16,
       position: "nearest",
+      yAlign: "center",
+      usePointStyle: true,
       displayColors: false,
-      padding: 12,
-      bodyColor: "#D1D5DB",
-      bodyFont: {
-        size: 16,
-      },
       titleFont: {
-        size: 20,
+        size: 18
       },
-      yAlign: "top",
+      bodyFont: {
+        size: 16
+      },
 
       callbacks: {
         title: function (items) {

@@ -48,7 +48,7 @@ export const gridColor = {
   dark: "#27272A",
 };
 export const legendBodyTextColor = { dark: "#A1A1AA", light: "#52525B" };
-export const legendTitleTextColor = { dark: "#A1A1AA", light: "#09090B" };
+export const legendTitleTextColor = { dark: "#FFF", light: "#09090B" };
 export const tooltipBackgroundColor = { dark: "#121212", light: "#FFF" };
 export const tooltipBorderColor = { dark: "#71717A", light: "#121212" };
 
