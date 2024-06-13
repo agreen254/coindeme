@@ -22,6 +22,7 @@ const ToastContainer = () => {
         backgroundColor: `rgba(0, 177, 167, ${
           theme === "dark" ? "50%" : "75%"
         })`,
+        border: "1px solid rgb(0, 177, 167)",
       },
     },
     error: {
@@ -33,6 +34,7 @@ const ToastContainer = () => {
         backgroundColor: `rgba(254, 34, 100, ${
           theme === "dark" ? "50%" : "75%"
         })`,
+        border: "1px solid rgb(254, 34, 100)",
       },
     },
   };
