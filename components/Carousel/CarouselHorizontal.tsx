@@ -77,13 +77,13 @@ const CarouselHorizontal = ({
         </label>
         <button
           id="scrollPrev"
-          className="w-10 h-10 p-2 rounded-full border-2 border-zinc-300 dark:border-teal-900 hover:bg-teal-100 hover:dark:bg-teal-900 transition-colors disabled:cursor-not-allowed"
+          className="w-10 h-10 p-2 rounded-full border dark:border-white border-zinc-950 dark:hover:bg-teal-900 hover:bg-teal-500 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >
           <ChevronLeftIcon
-            className="w-5 h-5 text-zinc-300"
-            strokeWidth="2.5px"
+            className="w-5 h-5 dark:text-white text-zinc-950"
+            strokeWidth="2px"
           />
         </button>
       </div>
@@ -100,13 +100,13 @@ const CarouselHorizontal = ({
         </label>
         <button
           id="scrollNext"
-          className="w-10 h-10 p-2 rounded-full border-2 border-zinc-300 dark:border-teal-900 hover:bg-teal-100 hover:dark:bg-teal-900 transition-colors disabled:cursor-not-allowed"
+          className="w-10 h-10 rounded-full border dark:border-white border-zinc-950 dark:hover:bg-teal-900 hover:bg-teal-500 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
         >
           <ChevronRightIcon
-            className="w-5 h-5 text-zinc-300"
-            strokeWidth="2.5px"
+            className="w-5 h-5 ml-[9px] dark:text-white text-zinc-950"
+            strokeWidth="2px"
           />
         </button>
       </div>
