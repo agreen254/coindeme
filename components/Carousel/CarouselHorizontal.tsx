@@ -32,7 +32,7 @@ const CarouselHorizontal = ({
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
     loop: false,
-    slidesToScroll: 5,
+    slidesToScroll: 6,
   });
 
   const scrollPrev = useCallback(() => {
@@ -70,8 +70,8 @@ const CarouselHorizontal = ({
   };
 
   return (
-    <div className="flex justify-center w-table-xl">
-      <div className="flex items-center mr-4 mb-3">
+    <div className="flex justify-center relative w-table-xl">
+      <div className="absolute -left-11 top-[14px] z-10">
         <label htmlFor="scrollPrev" className="sr-only">
           Scroll carousel backward
         </label>
@@ -89,12 +89,12 @@ const CarouselHorizontal = ({
       </div>
       <div className="flex justify-center">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex w-[1270px] space-x-4">
+          <div className="flex w-table-xl space-x-2">
             {handleCarouselRender()}
           </div>
         </div>
       </div>
-      <div className="flex items-center mb-3 ml-4">
+      <div className="absolute -right-11 top-[14px] z-10">
         <label htmlFor="scrollNext" className="sr-only">
           Scroll carousel forward
         </label>
