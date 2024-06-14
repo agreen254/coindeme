@@ -1,8 +1,9 @@
 "use client";
 
 import type { ChartData } from "chart.js";
-import type { ComparisonChartResponse } from "@/utils/types";
+import { Bar } from "react-chartjs-2";
 
+import type { ComparisonChartResponse } from "@/utils/types";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import {
   getOptionsOverlapped,
@@ -13,8 +14,7 @@ import {
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import { Bar } from "react-chartjs-2";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -30,6 +30,7 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
     "total_volumes"
   );
   const overlapValues = overlapData(values, coinLabels);
+  const theme = useThemeTyped();
 
   const volumeChartData: ChartData<"bar"> = {
     labels: x,
@@ -40,7 +41,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
             idx,
             context,
             overlapValues,
-            coinLabels
+            coinLabels,
+            theme
           );
         },
         hoverBackgroundColor: function (context) {
@@ -49,6 +51,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
 
         data: overlapValues.map((value) => value[idx].volume),
         label: idx.toString(),
+        categoryPercentage: 0.9,
+        barPercentage: 1,
       };
     }),
   };
@@ -61,7 +65,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
         overlapValues,
         time,
         coinNames,
-        coinLabels
+        coinLabels,
+        theme
       )}
     />
   );

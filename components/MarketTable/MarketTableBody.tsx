@@ -40,7 +40,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
           price_change_percentage_7d_in_currency: change_7d,
           sparkline_in_7d: { price: data_7d },
         }) => (
-          <tr key={id} className="hover:dark:bg-slate-800/60">
+          <tr key={id} className="hover:dark:bg-slate-800/60 hover:bg-zinc-200 transition-colors bg-white dark:bg-inherit">
             <TD className="text-center border-l rounded-l-md">
               {called_index + 1 + (initialIdx ?? 0)}
             </TD>

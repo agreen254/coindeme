@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
@@ -30,7 +32,6 @@ import {
   marketFetchOrderBySchema,
   marketTableModeSchema,
 } from "@/validation/schema";
-import { z } from "zod";
 
 import {
   useAssetCurrentQueries,
@@ -146,3 +147,5 @@ export type SearchParamValidationUnit = {
   key: string;
   fallback: string;
 };
+
+export type ThemeType = "light" | "dark";

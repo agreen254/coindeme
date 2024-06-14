@@ -22,7 +22,7 @@ export const HandleNameMatch = (wrapper: SearchResultWrapper) => {
   return (
     <span>
       <span>{HighlightMatchedChars(wrapper.result)} </span>
-      <span className="text-zinc-300 font-semibold">{symbol}</span>
+      <span className="text-zinc-500 dark:text-zinc-300 font-semibold">{symbol}</span>
     </span>
   );
 };
@@ -32,7 +32,7 @@ export const HandleSymbolMatch = (wrapper: SearchResultWrapper) => {
   return (
     <span>
       <span>{name} </span>
-      <span className="text-zinc-300 font-semibold">
+      <span className="text-zinc-500 dark:text-zinc-300 font-semibold">
         {HighlightMatchedChars(wrapper.result)}
       </span>
     </span>

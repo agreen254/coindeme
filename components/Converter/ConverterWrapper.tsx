@@ -14,6 +14,7 @@ import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import ConverterChart from "./ConveterChart";
 import ConverterChartTimeSelector from "./ConverterChartTimeSelector";
 import Converter from "./Converter";
+import Panel from "../Theme/Panel";
 
 const ConverterWrapper = () => {
   const [nDays, setNDays] = useState(7);
@@ -61,9 +62,9 @@ const ConverterWrapper = () => {
           setCoinTwoId={setCoinTwoId}
         />
       </DropdownProvider>
-      <div
+      <Panel
         className={cn(
-          "w-full h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl bg-zinc-900/70 border border-zinc-800",
+          "w-full h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl",
           !hasData && "animate-pulse"
         )}
       >
@@ -78,15 +79,15 @@ const ConverterWrapper = () => {
             />
           </ErrorBoundary>
         )}
-      </div>
+      </Panel>
 
-      <div className="rounded-lg inline-flex justify-end mb-[20vh] p-1 bg-zinc-900/70 border border-zinc-800 gap-x-1">
+      <Panel className="rounded-lg inline-flex justify-end mb-[20vh] p-1 gap-x-1">
         <ConverterChartTimeSelector
           nDays={nDays}
           setNDays={setNDays}
           hasData={hasData}
         />
-      </div>
+      </Panel>
     </div>
   );
 };

@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <HolyLoader height="2px" />
       <body
-        className={`${openSans.className} dark:bg-grad-dark min-h-screen overflow-y-scroll`}
+        className={`${openSans.className} bg-zinc-100 dark:bg-black dark:bg-grad-dark min-h-screen overflow-y-scroll`}
       >
         <ProvidersMaster>
           <NavBar />

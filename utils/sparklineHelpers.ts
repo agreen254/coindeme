@@ -6,14 +6,25 @@ export function sparklineColor(isGaining: boolean) {
 
 export function sparklineGradient(
   isGaining: boolean,
-  gradient: CanvasGradient
+  gradient: CanvasGradient,
+  theme: string | undefined
 ) {
   if (isGaining) {
-    gradient.addColorStop(0, "rgba(20, 155, 20, 0.4)");
-    gradient.addColorStop(0.6, "rgba(38, 38, 38, 0.0)");
+    if (theme === "dark") {
+      gradient.addColorStop(0, "rgba(20, 155, 20, 0.4)");
+      gradient.addColorStop(0.6, "rgba(38, 38, 38, 0.0)");
+    } else {
+      gradient.addColorStop(0, "rgba(163, 245, 165, 0.4)");
+      gradient.addColorStop(0.6, "rgba(255, 255, 255, 0)");
+    }
   } else {
-    gradient.addColorStop(0, "rgba(255, 99, 132, 0.4");
-    gradient.addColorStop(0.6, "rgba(38, 38, 38, 0.0)");
+    if (theme === "dark") {
+      gradient.addColorStop(0, "rgba(255, 99, 132, 0.4");
+      gradient.addColorStop(0.6, "rgba(38, 38, 38, 0.0)");
+    } else {
+      gradient.addColorStop(0, "rgba(255, 99, 132, 0.3");
+      gradient.addColorStop(0.6, "rgba(255, 255, 255, 0)");
+    }
   }
   return gradient;
 }
@@ -21,7 +32,7 @@ export function sparklineGradient(
 export const sparklineOptions: ChartOptions<"line"> = {
   elements: {
     line: {
-      borderWidth: 2,
+      borderWidth: 2.5,
     },
     point: {
       radius: 0,

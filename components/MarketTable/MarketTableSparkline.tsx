@@ -2,17 +2,18 @@
 
 import type { ChartData } from "chart.js";
 
-import { consecutiveArray } from "@/utils/arrayHelpers";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { useTheme } from "next-themes";
+import { ErrorBoundary } from "react-error-boundary";
+import { Line } from "react-chartjs-2";
+
 import {
   sparklineColor,
   sparklineOptions,
   sparklineGradient,
 } from "@/utils/sparklineHelpers";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-
-import { ErrorBoundary } from "react-error-boundary";
-import { Line } from "react-chartjs-2";
+import { consecutiveArray } from "@/utils/arrayHelpers";
 
 type Props = {
   data: number[];
@@ -21,6 +22,8 @@ type Props = {
 };
 
 const MarketTableSparkline = ({ data, id, isGaining }: Props) => {
+  const { theme } = useTheme();
+
   // only render charts if they've actually been in view
   const viewRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(viewRef, { once: true });
@@ -40,7 +43,7 @@ const MarketTableSparkline = ({ data, id, isGaining }: Props) => {
         borderColor: sparklineColor(isGaining),
         backgroundColor: (context) => {
           const gradient = context.chart.ctx.createLinearGradient(0, 0, 0, 100);
-          return sparklineGradient(isGaining, gradient);
+          return sparklineGradient(isGaining, gradient, theme);
         },
         fill: true,
         tension: 0.5,

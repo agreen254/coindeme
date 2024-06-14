@@ -1,6 +1,7 @@
 "use client";
 
-import { Toaster } from "react-hot-toast";
+import { Toaster, type DefaultToastOptions } from "react-hot-toast";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 /**
  * Container to house toast notifications. The container can only be used inside of a client component,
@@ -9,7 +10,36 @@ import { Toaster } from "react-hot-toast";
  * It is wrapped within this client component so that it can be placed in the main layout file.
  */
 const ToastContainer = () => {
-  return <Toaster />;
+  const theme = useThemeTyped();
+  const options: DefaultToastOptions = {
+    success: {
+      iconTheme: { primary: "white", secondary: "rgb(0, 177, 167)" },
+      style: {
+        fontSize: "1.1rem",
+        padding: "18px 22px 18px 16px",
+        borderRadius: "6px",
+        color: "white",
+        backgroundColor: `rgba(0, 177, 167, ${
+          theme === "dark" ? "50%" : "75%"
+        })`,
+        border: "1px solid rgb(0, 177, 167)",
+      },
+    },
+    error: {
+      iconTheme: { primary: "white", secondary: "rgb(254, 34, 100)" },
+      style: {
+        padding: "18px 22px 18px 16px",
+        borderRadius: "6px",
+        color: "white",
+        backgroundColor: `rgba(254, 34, 100, ${
+          theme === "dark" ? "50%" : "75%"
+        })`,
+        border: "1px solid rgb(254, 34, 100)",
+      },
+    },
+  };
+
+  return <Toaster toastOptions={options} />;
 };
 
 export default ToastContainer;

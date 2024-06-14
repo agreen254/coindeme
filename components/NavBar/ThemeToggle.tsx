@@ -19,7 +19,7 @@ const ThemeToggle = () => {
     return (
       <div className="flex items-center gap-x-4 rounded-md">
         <span className="sr-only">Loading theme...</span>
-        <button className="px-2 py-2 border rounded-md bg-white/10">
+        <button className="px-2 py-2 border rounded-md bg-white dark:bg-white/10">
           <MoreHorizontalIcon className="w-6 h-6" />
         </button>
       </div>
@@ -28,7 +28,7 @@ const ThemeToggle = () => {
   return (
     <div className="flex items-center gap-x-4 rounded-md shadow-top shadow-zinc-500/60">
       <button
-        className="px-2 py-2 border rounded-md bg-white/10 hover:bg-stone-300 dark:hover:bg-stone-600 transition-colors"
+        className="px-2 py-2 border rounded-md bg-white dark:bg-white/10 hover:bg-stone-300 dark:hover:bg-stone-600 transition-colors"
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       >
         <span className="sr-only">Change Theme</span>

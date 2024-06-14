@@ -18,6 +18,8 @@ import CoinOverviewPortfolioProfit from "./CoinOverviewPortfolioProfit";
 import PortfolioIcon from "@/Icons/Portfolio";
 import TanstackPersistProvider from "@/providers/TanstackPersistProvider";
 
+import Panel from "../Theme/Panel";
+
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
 };
@@ -28,7 +30,7 @@ const StackedCaretAndTime = ({ val, time }: { val: number; time: string }) => {
       ? "h-5 w-5 mr-2 -mb-2 inline fill-market-up"
       : "h-5 w-5 mr-2 inline fill-market-down rotate-180";
   const timeCn = cn(
-    "text-sm font-light",
+    "text-sm dark:font-light",
     val <= 0 && "-mb-2",
     time.length === 3 ? "-translate-x-[1px]" : "translate-x-[1px]" // make sure time is centered above/below caret
   );
@@ -65,9 +67,9 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
     cSymbol + (val < 0.01 ? formatSmallNum(val) : localeFormat(val));
 
   return (
-    <div
+    <Panel
       className={cn(
-        "min-w-[432px] min-h-[400px] max-h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800 p-8 pt-6",
+        "min-w-[432px] min-h-[400px] max-h-[400px] p-8 pt-6",
         response.isPending && "animate-pulse"
       )}
     >
@@ -108,7 +110,7 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
                 <StackedCaretAndTime val={change_7d[currency]} time="7d" />
                 <StackedCaretAndTime val={change_30d[currency]} time="30d" />
               </div>
-              <div className="w-full rounded-full h-[1px] my-4 bg-white/35"></div>
+              <div className="w-full rounded-full h-[1px] my-4 bg-black/35 dark:bg-white/35"></div>
               <div className="text-lg">
                 <p>
                   <AllTimeHighIcon
@@ -118,11 +120,11 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
                   <span className="min-w-[130px] inline-block">
                     All-Time High:
                   </span>
-                  <span className="text-xl font-medium">
+                  <span className="text-xl dark:font-medium">
                     {fmt(ath[currency])}
                   </span>
                 </p>
-                <p className="indent-10 -mt-1 text-base text-white/50">
+                <p className="indent-10 -mt-1 text-base text-black/40 dark:text-white/50">
                   {athDateString}
                 </p>
                 <p className="mt-3">
@@ -133,17 +135,17 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
                   <span className="min-w-[130px] inline-block">
                     All-Time Low:
                   </span>
-                  <span className="text-xl font-medium">
+                  <span className="text-xl dark:font-medium">
                     {fmt(atl[currency])}
                   </span>
                 </p>
-                <p className="indent-10 -mt-1 text-base text-white/50">
+                <p className="indent-10 -mt-1 text-base text-black/40 dark:text-white/50">
                   {atlDateString}
                 </p>
               </div>
-              <div className="w-full rounded-full h-[1px] my-4 bg-white/35"></div>
+              <div className="w-full rounded-full h-[1px] my-4 bg-black/35 dark:bg-white/35"></div>
               <div className="w-full flex flex-col items-center">
-                <PortfolioIcon className="w-12 h-12 mb-2" />
+                <PortfolioIcon className="w-12 h-12 mb-2 fill-default" />
                 <TanstackPersistProvider>
                   <CoinOverviewPortfolioProfit id={response.data.id} />
                 </TanstackPersistProvider>
@@ -151,7 +153,7 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
             </>
           );
         })()}
-    </div>
+    </Panel>
   );
 };
 

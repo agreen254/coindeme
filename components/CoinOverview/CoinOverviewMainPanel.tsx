@@ -7,6 +7,7 @@ import { cn } from "@/utils/cn";
 
 import CoinOverviewCategoriesCarousel from "./CoinOverviewCategoriesCarousel";
 import CoinOverviewLink from "./CoinOverviewLink";
+import Panel from "../Theme/Panel";
 
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
@@ -17,9 +18,9 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
 
   return (
     <div className="min-h-[400px]">
-      <div
+      <Panel
         className={cn(
-          "bg-zinc-900/70 border border-zinc-800 w-[432px] h-[312px] rounded-xl",
+          "w-[432px] h-[312px]",
           response.isPending && "animate-pulse"
         )}
       >
@@ -35,13 +36,13 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
               />
               <h2 className="mt-1">
                 <span className="text-4xl">{response.data.name} </span>
-                <span className="uppercase text-3xl font-semibold text-zinc-400">
+                <span className="uppercase text-3xl font-semibold text-zinc-600 dark:text-zinc-400">
                   {response.data.symbol}
                 </span>
               </h2>
             </>
           ) : (
-            <BitcoinIcon className="w-[80px] h-[80px] rounded-full text-white/15" />
+            <BitcoinIcon className="w-[80px] h-[80px] rounded-full text-black/85 dark:text-white/15" />
           )}
         </div>
         <div className="my-8">
@@ -49,12 +50,12 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
             <CoinOverviewCategoriesCarousel response={response} />
           </ErrorBoundary>
         </div>
-      </div>
+      </Panel>
       <CoinOverviewLink
         link={homepage}
         isLoading={response.isPending}
         className={cn(
-          "flex justify-center items-center h-[72px] w-full mt-4 text-lg rounded-xl bg-zinc-900/70 border border-zinc-800",
+          "flex justify-center items-center h-[72px] w-full mt-4 text-lg",
           response.isPending && "animate-pulse"
         )}
       />

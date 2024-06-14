@@ -47,7 +47,7 @@ const CoinOverviewDescription = ({ response }: Props) => {
   })();
 
   const expandCn = isCollapsed
-    ? "bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
+    ? "bg-[linear-gradient(to_bottom,black_60%,transparent_100%)] dark:bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
     : "h-auto bg-inherit";
 
   return (
@@ -57,7 +57,7 @@ const CoinOverviewDescription = ({ response }: Props) => {
       </div>
       {canExpand && (
         <button
-          className="mb-[20vh] hover:underline hover:underline-offset-[6px] text-menu-highlight/80"
+          className="mb-[20vh] hover:underline hover:underline-offset-[6px] dark:text-menu-highlight text-menu-highlight"
           onClick={() =>
             isExpanded ? setIsExpanded(false) : setIsExpanded(true)
           }

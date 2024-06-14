@@ -61,7 +61,7 @@ const MarketTableHeader = () => {
   };
 
   return (
-    <thead>
+    <thead className="bg-white dark:bg-inherit">
       <tr className="w-table-xl">
         <TH className="min-w-16 w-16 text-center rounded-bl-xl border-l">
           <SortUnit localOrder="called_index">#</SortUnit>

@@ -74,7 +74,7 @@ const MarketTablePaginatedWrapper = ({
         {!isFetching && (
           <div className="flex justify-center mt-4 gap-x-4">
             <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:dark:cursor-not-allowed"
+              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
               onClick={() => {
                 window.scrollTo(0, 0);
                 handlePreviousPage();
@@ -84,7 +84,7 @@ const MarketTablePaginatedWrapper = ({
               <ChevronLeftIcon className="w-4 h-4" />
             </button>
             <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:dark:cursor-not-allowed"
+              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
               onClick={() => {
                 window.scrollTo(0, 0);
                 handleNextPage();

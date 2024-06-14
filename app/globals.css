@@ -75,6 +75,12 @@
     --ring: 20 14.3% 4.1%;
 
     --radius: 0.5rem;
+
+    /* CUSTOM COLORS */
+    --default: 240, 21%, 17%;
+    --market-up: 169, 100%, 40%;
+    --dropdown: 0, 0%, 98%;
+    --menu-highlight: 190, 80%, 63%;
   }
 
   .dark {
@@ -105,6 +111,11 @@
     --border: 12 6.5% 15.1%;
     --input: 12 6.5% 15.1%;
     --ring: 24 5.7% 82.9%;
+
+    --default: 0, 0%, 100%;
+    --market-up: 169, 100%, 63%;
+    --dropdown: 275, 11%, 15%;
+    --menu-highlight: 181, 100%, 65%;
   }
 }
 
