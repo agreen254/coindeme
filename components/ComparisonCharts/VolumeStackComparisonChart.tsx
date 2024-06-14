@@ -1,8 +1,9 @@
 "use client";
 
 import type { ChartData } from "chart.js";
-import type { ComparisonChartResponse } from "@/utils/types";
+import { Bar } from "react-chartjs-2";
 
+import type { ComparisonChartResponse } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import {
   getOptionsStacked,
@@ -12,8 +13,7 @@ import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareCom
 import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-
-import { Bar } from "react-chartjs-2";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -25,6 +25,7 @@ const VolumeStackComparisonChart = ({ chartData, coinNames }: Props) => {
   const time = useComparisonChartTime();
   const coinLabels = useCarouselSelectedElements();
   const { label, values } = prepareComparisonData(chartData, "total_volumes");
+  const theme = useThemeTyped();
 
   const volumeChartData: ChartData<"bar"> = {
     labels: label,
@@ -34,7 +35,7 @@ const VolumeStackComparisonChart = ({ chartData, coinNames }: Props) => {
         backgroundColor: function (context) {
           return volumeComparisonGradient(context, idx);
         },
-        categoryPercentage: 0.8,
+        categoryPercentage: 0.9,
         barPercentage: 1,
         hoverBackgroundColor: chartColorSets[idx].highlightColor.hex,
         data: values[idx],
@@ -46,7 +47,7 @@ const VolumeStackComparisonChart = ({ chartData, coinNames }: Props) => {
   return (
     <Bar
       data={volumeChartData}
-      options={getOptionsStacked(currency, parseInt(time), coinNames)}
+      options={getOptionsStacked(currency, parseInt(time), coinNames, theme)}
     />
   );
 };

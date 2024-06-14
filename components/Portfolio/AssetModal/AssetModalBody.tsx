@@ -1,22 +1,5 @@
 "use client";
 
-import type { Asset, AssetValidator } from "@/utils/types";
-
-import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
-import AssetModalCurrency from "./Separators/AssetModalCurrency";
-import AssetModalDate from "./Separators/AssetModalDate";
-import { ChevronDown as ChevronDownIcon } from "lucide-react";
-import CloseIcon from "@/Icons/Close";
-import DropdownMenu from "@/components/Dropdown/DropdownMenu";
-import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
-import {
-  HandleNameMatch,
-  HandleSymbolMatch,
-} from "@/components/Search/SearchResultsHelpers";
-import Image from "next/image";
-import SearchActivator from "@/components/Search/SearchActivator";
-import { X as XIcon } from "lucide-react";
-
 import {
   useRef,
   forwardRef,
@@ -24,6 +7,12 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { ChevronDown as ChevronDownIcon } from "lucide-react";
+import Image from "next/image";
+import { X as XIcon } from "lucide-react";
+import { uid } from "uid";
+
+import type { Asset, AssetValidator } from "@/utils/types";
 import { useUpdateAssets, validateAsset } from "@/hooks/useAssets";
 import {
   useAssetModalActions,
@@ -48,11 +37,22 @@ import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
 import { convertHistoricalDate } from "@/utils/dateHelpers";
-import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
 import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
-import { uid } from "uid";
+import CloseIcon from "@/Icons/Close";
+import DropdownMenu from "@/components/Dropdown/DropdownMenu";
+import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
+import {
+  HandleNameMatch,
+  HandleSymbolMatch,
+} from "@/components/Search/SearchResultsHelpers";
+import SearchActivator from "@/components/Search/SearchActivator";
+
+import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
+import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
+import AssetModalCurrency from "./Separators/AssetModalCurrency";
+import AssetModalDate from "./Separators/AssetModalDate";
 
 type Props = {
   isOpen: boolean;
@@ -103,6 +103,7 @@ const AssetModalBody = (
   // refs
   const coinInputRef = useRef<HTMLInputElement>(null);
   const coinDropdownRef = useRef<HTMLDivElement>(null);
+  const amountInputRef = useRef<HTMLInputElement>(null);
   const currencyButtonRef = useRef<HTMLButtonElement>(null);
   const currencyDropdownRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -267,10 +268,13 @@ const AssetModalBody = (
     forwardedActivatorRef.current?.focus();
   };
 
-  useModalListener(modalRef, coinInputRef, isOpen, handleModalExit, [
-    coinDropdownRef,
-    currencyDropdownRef,
-  ]);
+  useModalListener(
+    modalRef,
+    assetId === "" ? coinInputRef : amountInputRef,
+    isOpen,
+    handleModalExit,
+    [coinDropdownRef, currencyDropdownRef]
+  );
 
   const updateAssets = useUpdateAssets();
   const handleAsset = () => {
@@ -308,7 +312,7 @@ const AssetModalBody = (
         isOpen && "flex flex-col"
       )}
     >
-      <div className="w-[886px] min-h-[400px] p-12 rounded-xl bg-zinc-900 border border-zinc-800">
+      <div className="w-[886px] min-h-[400px] p-12 rounded-xl dark:bg-zinc-900 bg-zinc-50 border dark:border-zinc-800 border-zinc-200">
         <div className="flex justify-between">
           <h2 className="text-xl ml-1">
             {assetId ? "Edit Asset" : "Add Asset"}
@@ -325,7 +329,7 @@ const AssetModalBody = (
           </button>
         </div>
         <div className="flex justify-between gap-8 mt-8">
-          <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg bg-zinc-800/60">
+          <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60">
             {coinId && (
               <div>
                 <Image
@@ -370,7 +374,7 @@ const AssetModalBody = (
                 disabled={!searchTargets || !!assetId}
                 searchResults={searchResults}
                 className={cn(
-                  "h-11 w-full p-2 rounded-lg bg-zinc-800/60",
+                  "h-11 w-full p-2 rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60",
                   !!assetId && "text-muted-foreground"
                 )}
                 localQuery={coinQuery}
@@ -381,7 +385,7 @@ const AssetModalBody = (
                 ref={coinDropdownRef}
                 dropdownId={searchDropdownId}
                 key="searchResults"
-                className="w-[460px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-zinc-200 absolute top-[52px] z-10"
+                className="w-[460px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-default absolute top-[52px] z-10"
               >
                 {searchResults.map((wrapper, idx) => (
                   <DropdownMenuItem
@@ -393,7 +397,8 @@ const AssetModalBody = (
                       tabIndex={-1}
                       className={cn(
                         "indent-3 py-1 block w-full text-start",
-                        idx === selectedIndexSearch && "bg-zinc-600"
+                        idx === selectedIndexSearch &&
+                          "dark:bg-zinc-600 bg-zinc-200"
                       )}
                       onClick={() => {
                         setCoinId(wrapper.id);
@@ -440,12 +445,13 @@ const AssetModalBody = (
               <input
                 type="text"
                 id="amount"
+                ref={amountInputRef}
                 placeholder="0"
                 autoComplete="off"
                 value={value}
                 onChange={(e) => setValue(e.currentTarget.value)}
                 onKeyDown={(e) => handleKeyDownCurrencyInput(e)}
-                className="h-11 w-full pl-5 rounded-lg bg-zinc-800/60"
+                className="h-11 w-full pl-5 rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60"
               />
               <label htmlFor="assetCurrency" className="sr-only">
                 select purchase currency
@@ -454,7 +460,7 @@ const AssetModalBody = (
                 id="assetCurrency"
                 ref={currencyButtonRef}
                 className={cn(
-                  "py-2 pr-2 pl-3 min-w-[5rem] rounded-lg bg-zinc-800/60",
+                  "py-2 pr-2 pl-3 min-w-[5rem] rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60",
                   isVisibleCurrency && "border-2 border-muted-foreground"
                 )}
                 onKeyDown={(e) => handleKeyDownCurrencyMenu(e)}
@@ -483,7 +489,7 @@ const AssetModalBody = (
                     index={idx}
                     className={cn(
                       selectedIndexCurrency === idx &&
-                        "bg-zinc-600 first:rounded-t-md last:rounded-b-md"
+                        "dark:bg-zinc-600 bg-zinc-200 first:rounded-t-md last:rounded-b-md"
                     )}
                   >
                     <button
@@ -510,7 +516,7 @@ const AssetModalBody = (
                 type="date"
                 id="date"
                 className={cn(
-                  "h-11 w-full pl-2 pr-3 rounded-lg bg-zinc-800/60",
+                  "h-11 w-full pl-2 pr-3 rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60",
                   date === "" && "text-muted-foreground"
                 )}
                 placeholder="Purchase date"
@@ -528,13 +534,13 @@ const AssetModalBody = (
             </AssetModalDate>
             <div className="flex justify-between gap-x-4 mt-4 text-center">
               <button
-                className="w-1/2 rounded-md bg-zinc-800/60 h-[45px] hover:bg-zinc-700/80 transition-colors"
+                className="w-1/2 rounded-md dark:bg-zinc-800/60 bg-zinc-200/60 h-[45px] hover:dark:bg-zinc-700/80 hover:bg-zinc-300/80 transition-colors"
                 onClick={handleModalExit}
               >
                 Cancel
               </button>
               <button
-                className="w-1/2 rounded-md bg-teal-900 shadow-[0_-1px_0_1px] shadow-zinc-600/80 hover:bg-teal-700 transition-colors"
+                className="w-1/2 rounded-md dark:bg-teal-900 bg-teal-300 shadow-[0_-1px_0_1px] dark:shadow-zinc-600/80 shadow-zinc-200 hover:dark:bg-teal-700 hover:bg-teal-200 transition-colors"
                 onClick={() => {
                   handleAsset();
                 }}

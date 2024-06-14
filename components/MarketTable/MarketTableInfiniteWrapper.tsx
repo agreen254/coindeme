@@ -5,11 +5,7 @@ import type { MarketQueryResult } from "@/utils/types";
 import { addMarketIndices } from "@/utils/addMarketIndices";
 import { marketTableSort } from "@/utils/marketTableSort";
 import { flatMarketRes } from "@/utils/flatMarketRes";
-import {
-  useMarketTableActions,
-  useMarketTableSortOrder,
-  useMarketTableSortField,
-} from "@/hooks/useMarketTable";
+import { useMarketParams } from "@/hooks/useMarketParams";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "@/components/Loader";
@@ -23,15 +19,11 @@ type Props = {
 const MarketTableInfiniteWrapper = ({
   queryResult: { data, error, isPending, isFetching, fetchNextPage },
 }: Props) => {
-  const { setNumFetchedPages: setTotalPages } = useMarketTableActions();
-  setTotalPages(data?.pages.length ?? 0);
-
-  const sortOrder = useMarketTableSortOrder();
-  const sortField = useMarketTableSortField();
+  const { order, orderBy } = useMarketParams();
 
   const tableData = flatMarketRes(data?.pages) || [];
   const indexedData = addMarketIndices(tableData);
-  const sortedData = marketTableSort(indexedData, sortField, sortOrder);
+  const sortedData = marketTableSort(indexedData, order, orderBy);
 
   const showLoader = !error && (isPending || isFetching);
 

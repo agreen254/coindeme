@@ -1,14 +1,17 @@
 import type { ChartOptions } from "chart.js";
+import "chartjs-adapter-date-fns";
 
 import {
   gridColor,
   handleTicksYAxis,
   tooltipBackgroundColor,
+  tooltipBorderColor,
+  legendBodyTextColor,
+  legendTitleTextColor,
 } from "./compareGeneralHelpers";
 import { roundDigits } from "../formatHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
-
-import "chartjs-adapter-date-fns";
+import { ThemeType } from "../types";
 
 interface ExchangeOptionConfig {
   coinOneName: string;
@@ -17,6 +20,7 @@ interface ExchangeOptionConfig {
   coinTwoSymbol: string;
   len: number;
   days: number;
+  theme: ThemeType;
 }
 
 export const getOptions = ({
@@ -25,6 +29,7 @@ export const getOptions = ({
   coinTwoName,
   coinTwoSymbol,
   days,
+  theme,
 }: ExchangeOptionConfig): ChartOptions<"line"> => ({
   elements: {
     point: {
@@ -55,21 +60,24 @@ export const getOptions = ({
         ` (${coinTwoSymbol.toUpperCase()})`,
     },
     tooltip: {
-      backgroundColor: tooltipBackgroundColor,
-      borderColor: "#FFF",
-      borderWidth: 1.25,
-      caretPadding: 14,
+      backgroundColor: tooltipBackgroundColor[theme],
+      borderColor: tooltipBorderColor[theme],
+      bodyColor: legendBodyTextColor[theme],
+      titleColor: legendTitleTextColor[theme],
+      borderWidth: 1,
+      caretPadding: 4,
+      caretSize: 8,
+      padding: 16,
       position: "nearest",
+      yAlign: "center",
+      usePointStyle: true,
       displayColors: false,
-      padding: 12,
-      bodyColor: "#D1D5DB",
-      bodyFont: {
-        size: 16,
-      },
       titleFont: {
-        size: 20,
+        size: 18
       },
-      yAlign: "top",
+      bodyFont: {
+        size: 16
+      },
 
       callbacks: {
         title: function (items) {
@@ -97,7 +105,7 @@ export const getOptions = ({
         display: false,
       },
       grid: {
-        color: gridColor,
+        color: gridColor[theme],
       },
       ticks: {
         font: { size: 15 },
@@ -112,7 +120,7 @@ export const getOptions = ({
         display: false,
       },
       grid: {
-        color: gridColor,
+        color: gridColor[theme],
       },
       ticks: {
         callback: function (val) {

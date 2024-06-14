@@ -1,5 +1,5 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
-import type { Currency } from "../types";
+import type { Currency, ThemeType } from "../types";
 
 import { defaultTooltip } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
@@ -15,7 +15,8 @@ import "chartjs-adapter-date-fns";
 // https://www.chartjs.org/docs/latest/samples/advanced/linear-gradient.html
 export function priceComparisonGradient(
   context: ScriptableContext<"line">,
-  chartIdx: number = 0
+  chartIdx: number = 0,
+  theme: ThemeType
 ) {
   const chart = context.chart;
   const { ctx, chartArea } = chart;
@@ -36,7 +37,9 @@ export function priceComparisonGradient(
     gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
 
     handleGradientColorStops(
-      { alphaTop: 0.8, alphaBottom: 0.0 },
+      theme === "dark"
+        ? { alphaTop: 0.8, alphaBottom: 0.0 }
+        : { alphaBottom: 0, alphaTop: 0.3 },
       gradient,
       chartIdx
     );
@@ -48,7 +51,8 @@ export function priceComparisonGradient(
 export function getOptions(
   currency: Currency,
   days: number,
-  names: string[]
+  names: string[],
+  theme: ThemeType
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -79,7 +83,7 @@ export function getOptions(
         },
         text: `Price (${currency.toUpperCase()})`,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names),
+      tooltip: defaultTooltip(currency, currencySymbol, names, theme),
     },
     interaction: {
       intersect: false,
@@ -109,7 +113,7 @@ export function getOptions(
           display: false,
         },
         grid: {
-          color: gridColor,
+          color: gridColor[theme],
         },
         ticks: {
           callback: function (val) {

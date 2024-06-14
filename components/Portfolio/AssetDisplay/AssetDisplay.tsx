@@ -1,12 +1,9 @@
-import type { Asset, AssetCurrent, AssetHistory } from "@/utils/types";
-
-import AssetModalWrapper from "../AssetModal/AssetModalWrapper";
-import CaretIcon from "@/Icons/Caret";
 import Image from "next/image";
-import { Infinity as InfinityIcon } from "lucide-react";
-import ProgressWidget from "@/components/ProgressWidget";
-import { FileX2 as DeleteIcon } from "lucide-react";
+import { FileX2 as DeleteIcon, Infinity as InfinityIcon } from "lucide-react";
 
+import type { Asset, AssetCurrent, AssetHistory } from "@/utils/types";
+import CaretIcon from "@/Icons/Caret";
+import ProgressWidget from "@/components/ProgressWidget";
 import { useDeleteAsset } from "@/hooks/useAssets";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { assetDisplayData } from "@/utils/assetDisplayData";
@@ -14,6 +11,8 @@ import { cn } from "@/utils/cn";
 import { currencyMap } from "@/utils/maps";
 import { extractDate } from "@/utils/dateHelpers";
 import { localeFormat } from "@/utils/formatHelpers";
+
+import AssetModalWrapper from "../AssetModal/AssetModalWrapper";
 
 type Props = {
   asset: Asset;
@@ -159,8 +158,8 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
   })();
 
   return (
-    <div className="w-[1296px] flex rounded-xl border box-border border-zinc-700/80 shadow-md shadow-zinc-700/30">
-      <div className="pl-2 pt-2 pr-4 bg-teal-950/70 rounded-l-xl">
+    <div className="w-[1296px] flex rounded-xl border box-border dark:border-zinc-700/80 border-zinc-200 shadow-md dark:shadow-zinc-700/30 shadow-zinc-300">
+      <div className="pl-2 pt-2 pr-4 dark:bg-teal-950/70 bg-white rounded-l-xl">
         <Image
           alt={`${coinName} logo`}
           src={coinImage}
@@ -170,7 +169,7 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
           priority
         />
       </div>
-      <div className="relative min-w-[380px] w-[380px] flex flex-col justify-start pb-6 pt-4 gap-y-3 bg-teal-950/70">
+      <div className="relative min-w-[380px] w-[380px] flex flex-col justify-start pb-6 pt-4 gap-y-3 dark:bg-teal-950/70 bg-white">
         <AssetModalWrapper role="edit" initialData={asset} />
         <button
           className="absolute top-12 right-4 p-1 rounded-md border-2 border-white/0 focus:outline-none focus:border-stone-500"
@@ -198,29 +197,31 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
           </p>
         </div>
       </div>
-      <div className="w-[916px] rounded-r-xl grid grid-cols-2 p-6 gap-x-6 place-items-center box-border bg-zinc-900/70">
+      <div className="w-[916px] rounded-r-xl grid grid-cols-2 p-6 gap-x-6 place-items-center box-border dark:bg-zinc-900/70 bg-zinc-50">
         <div className="w-full space-y-4">
-          <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
+          <div className="border p-2 space-y-1 rounded-md dark:border-teal-900/50 border-zinc-300">
             <p className="text-xl">{currentPrice}</p>
-            <p className="text-sm text-muted-foreground/50">
+            <p className="text-sm dark:text-muted-foreground/50 text-muted-foreground">
               Current Coin Price
             </p>
           </div>
-          <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
+          <div className="border p-2 space-y-1 rounded-md dark:border-teal-900/50 border-zinc-300">
             <div className="flex items-center text-xl">{marketCapVsVolume}</div>
-            <p className="text-sm text-muted-foreground/50">
+            <p className="text-sm dark:text-muted-foreground/50 text-muted-foreground">
               Market Cap vs. Volume
             </p>
           </div>
         </div>
         <div className="w-full space-y-4">
-          <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
+          <div className="border p-2 space-y-1 rounded-md dark:border-teal-900/50 border-zinc-300">
             <p className="text-xl">{currentPriceChange24h}</p>
-            <p className="text-sm text-muted-foreground/50">24h%</p>
+            <p className="text-sm dark:text-muted-foreground/50 text-muted-foreground">
+              24h%
+            </p>
           </div>
-          <div className="border p-2 space-y-1 rounded-md border-teal-900/50">
+          <div className="border p-2 space-y-1 rounded-md dark:border-teal-900/50 border-zinc-300">
             <div className="flex items-center text-xl">{circVsTotalSupply}</div>
-            <p className="text-sm text-muted-foreground/50">
+            <p className="text-sm dark:text-muted-foreground/50 text-muted-foreground">
               Circulating Supply vs. Total Supply
             </p>
           </div>

@@ -1,7 +1,7 @@
-import type { Currency } from "@/utils/types";
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
+import { type Currency } from "@/utils/types";
 
 type UserSettingsState = {
   currency: Currency;

@@ -1,20 +1,19 @@
 "use client";
 
-import type { MarketQueryResult } from "@/utils/types";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
 
+import type { MarketQueryResult } from "@/utils/types";
 import { addMarketIndices } from "@/utils/addMarketIndices";
 import { marketTableSort } from "@/utils/marketTableSort";
 import {
   useMarketTableActions,
   useMarketTableCurrentPage,
-  useMarketTableSortOrder,
-  useMarketTableSortField,
 } from "@/hooks/useMarketTable";
+import { useMarketParams } from "@/hooks/useMarketParams";
 
-import {
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-} from "lucide-react";
 import Loader from "../Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
@@ -36,12 +35,12 @@ const MarketTablePaginatedWrapper = ({
 }: Props) => {
   const currentPage = useMarketTableCurrentPage();
   const { setCurrentPage } = useMarketTableActions();
-  const sortOrder = useMarketTableSortOrder();
-  const sortField = useMarketTableSortField();
+
+  const { order, orderBy } = useMarketParams();
 
   const tableData = data?.pages[currentPage]?.market || [];
   const indexedData = addMarketIndices(tableData);
-  const sortedData = marketTableSort(indexedData, sortField, sortOrder);
+  const sortedData = marketTableSort(indexedData, order, orderBy);
 
   const showLoader = !error && (isPending || isFetching);
 
@@ -75,7 +74,7 @@ const MarketTablePaginatedWrapper = ({
         {!isFetching && (
           <div className="flex justify-center mt-4 gap-x-4">
             <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:dark:cursor-not-allowed"
+              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
               onClick={() => {
                 window.scrollTo(0, 0);
                 handlePreviousPage();
@@ -85,7 +84,7 @@ const MarketTablePaginatedWrapper = ({
               <ChevronLeftIcon className="w-4 h-4" />
             </button>
             <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:dark:cursor-not-allowed"
+              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
               onClick={() => {
                 window.scrollTo(0, 0);
                 handleNextPage();

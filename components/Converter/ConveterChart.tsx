@@ -7,6 +7,7 @@ import type { MarketElementNoIdx } from "@/utils/types";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 type ChartDataElement = NonNullable<
   ReturnType<typeof useComparisonChartQueries>[number]["data"]
@@ -27,6 +28,7 @@ const ConverterChart = ({
   coinTwoMarketData,
   days,
 }: Props) => {
+  const theme = useThemeTyped();
   const coinRatioData = coinOneChartData.prices.map((p, idx) => {
     if (!coinTwoChartData.prices[idx]) return null;
 
@@ -41,7 +43,7 @@ const ConverterChart = ({
     labels: coinOneChartData.prices.map((p) => p[0]),
     datasets: [
       {
-        backgroundColor: chartColorSets[0].endColor.hex,
+        backgroundColor: "rgba(255,255,255,0)",
         borderColor: chartColorSets[0].startColor.hex,
         data: coinRatioData,
       },
@@ -60,6 +62,7 @@ const ConverterChart = ({
         coinTwoSymbol: coinTwoMarketData.symbol,
         len: coinOneChartData.prices.length,
         days: days,
+        theme: theme,
       })}
     />
   );

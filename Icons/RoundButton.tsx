@@ -16,34 +16,33 @@ const RoundButtonIcon = (props: SVGProps<SVGSVGElement>) => {
           cy="36"
           r="12"
           fill="#6161D6"
-          fill-opacity="0.5"
           style={{
             fill: "color(display-p3 0.3794 0.3794 0.8400)",
             fillOpacity: 0.5,
           }}
-          shape-rendering="crispEdges"
+          shapeRendering="crispEdges"
         />
         <circle
           cx="36.6523"
           cy="36"
           r="11.5"
           stroke="url(#paint0_linear_587_9796)"
-          shape-rendering="crispEdges"
+          shapeRendering="crispEdges"
         />
       </g>
       <path
         d="M32.6523 36H40.6523"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M36.6523 40V32"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <defs>
         <filter
@@ -53,9 +52,9 @@ const RoundButtonIcon = (props: SVGProps<SVGSVGElement>) => {
           width="80"
           height="80"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="2" />
           <feComposite
             in2="SourceAlpha"
@@ -102,7 +101,7 @@ const RoundButtonIcon = (props: SVGProps<SVGSVGElement>) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop
-            stop-color="#7878FA"
+            stopColor="#7878FA"
             style={{
               stopColor: "color(display-p3 0.4704 0.4704 0.9800)",
               stopOpacity: 1,
@@ -110,8 +109,8 @@ const RoundButtonIcon = (props: SVGProps<SVGSVGElement>) => {
           />
           <stop
             offset="1"
-            stop-color="#7878FA"
-            stop-opacity="0"
+            stopColor="#7878FA"
+            stopOpacity="0"
             style={{ stopColor: "none", stopOpacity: 0 }}
           />
         </linearGradient>

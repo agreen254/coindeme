@@ -19,13 +19,14 @@ const config = {
     },
     extend: {
       boxShadow: {
-        "top": "0 -0.5px 0 1px",
+        top: "0 -0.5px 0 1px",
       },
       backgroundImage: {
         "grad-dark":
           "linear-gradient(135deg, rgba(8,50,58,0.65), rgba(8,60,70,0) 2100px), linear-gradient(225deg, rgba(85,3,87,0.35), rgba(85,3,87,0) 1600px), linear-gradient(336deg, rgba(0,0,0,1), rgba(0,0,0,0.1) 90%)",
       },
       colors: {
+        default: "hsl(var(--default))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -64,12 +65,14 @@ const config = {
         "paynes-gray": "#646E78",
         "market-teal": "#1CB3AA",
         "market-red": "#D14E85",
-        "market-up": "#43FFDD",
+        "market-up": "hsl(var(--market-up))",
         "market-down": "#F23F8A",
-        "carousel-focus": "#5B9ACA",
-        "carousel-selected": "#487AA1",
-        "dropdown": "hsl(275,11%,15%)",
-        "menu-highlight": "#4DFDFF",
+        "carousel-focus-dark": "#5B9ACA",
+        "carousel-focus": "#9EE3FA",
+        "carousel-selected-dark": "#487AA1",
+        "carousel-selected": "#47C2EB",
+        dropdown: "hsl(var(--dropdown))",
+        "menu-highlight": "hsl(var(--menu-highlight))",
       },
       borderRadius: {
         lg: "var(--radius)",

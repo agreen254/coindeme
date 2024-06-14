@@ -1,6 +1,6 @@
 "use client";
 
-import { renderErrorToast } from "@/components/Toast/ErrorToast";
+import toast from "react-hot-toast";
 import { useState } from "react";
 
 import {
@@ -20,14 +20,14 @@ const TanstackProvider = ({ children }: { children: React.ReactNode }) => {
             /**
              * Each query has the meta prop where a custom error message can be passed in. The meta prop has access to useful information like
              * the query key that helps for further customization.
-             * 
+             *
              * Error text will be rendered like this:
              * <custom generic error message>: <error status> <error status text>
              */
             const message = [query?.meta?.errorMessage, error?.message].join(
               " "
             );
-            renderErrorToast(message);
+            toast.error(message, { position: "bottom-right" });
           },
         }),
         defaultOptions: {

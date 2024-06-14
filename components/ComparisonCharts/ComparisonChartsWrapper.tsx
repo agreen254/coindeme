@@ -9,13 +9,14 @@ import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+import { flatMarketRes } from "@/utils/flatMarketRes";
 
 import CarouselClearButton from "../Carousel/CarouselClearButton";
 import ComparisonChartsTimeSelector from "./ComparisonChartsTimeSelector";
+import Panel from "../Theme/Panel";
 import PriceComparisonChartWrapper from "./PriceComparisonChartWrapper";
 import VolumeChartSwitcher from "./VolumeChartSwitcher";
 import VolumeComparisonChartWrapper from "./VolumeComparisonChartWrapper";
-import { flatMarketRes } from "@/utils/flatMarketRes";
 
 const ComparisonChartsWrapper = () => {
   const currency = useUserCurrencySetting();
@@ -44,9 +45,9 @@ const ComparisonChartsWrapper = () => {
         Clear Selection
       </CarouselClearButton>
       <div className="flex w-full h-[600px] justify-center gap-x-4">
-        <div
+        <Panel
           className={cn(
-            "bg-zinc-900/70 border border-zinc-800 rounded-2xl w-1/2",
+            "rounded-2xl w-1/2",
             pulseChartBackground && "animate-pulse"
           )}
         >
@@ -54,15 +55,18 @@ const ComparisonChartsWrapper = () => {
             chartData={chartData}
             coinNames={coinNames}
           />
-        </div>
-        <div
+        </Panel>
+        <Panel
           className={cn(
-            "bg-zinc-900/70 border border-zinc-800 rounded-2xl w-1/2",
+            "rounded-2xl w-1/2",
             pulseChartBackground && "animate-pulse"
           )}
         >
-          <VolumeComparisonChartWrapper chartData={chartData} coinNames={coinNames} />
-        </div>
+          <VolumeComparisonChartWrapper
+            chartData={chartData}
+            coinNames={coinNames}
+          />
+        </Panel>
       </div>
       <div className="flex justify-between mt-[10px] mb-4">
         <ComparisonChartsTimeSelector isPending={pulseChartBackground} />

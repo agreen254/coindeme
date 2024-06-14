@@ -48,12 +48,12 @@ const CurrencySelector = ({ dropdownId }: Props) => {
   );
 
   return (
-    <div className="relative" ref={clickAwayRef}>
+    <div className="relative bg-white dark:bg-inherit" ref={clickAwayRef}>
       <CurrencySelectorActivator dropdownId={dropdownId} />
       <DropdownMenu
         dropdownId={dropdownId}
         key="currencyDropdown"
-        className="w-[108px] absolute top-[52px] z-10 rounded-md text-zinc-200 border border-stone-300 bg-dropdown"
+        className="w-[108px] absolute top-[52px] z-10 rounded-md border border-stone-300 bg-dropdown"
       >
         {currencyEntries.map((entry, index) => (
           <DropdownMenuItem
@@ -63,7 +63,7 @@ const CurrencySelector = ({ dropdownId }: Props) => {
             className={cn(
               currency === entry[0] && "text-menu-highlight",
               index === selectedIndex &&
-                "bg-zinc-600 first:rounded-t-md last:rounded-b-md text-inherit"
+                "bg-zinc-200 dark:bg-zinc-600 first:rounded-t-md last:rounded-b-md text-inherit"
             )}
           >
             <button

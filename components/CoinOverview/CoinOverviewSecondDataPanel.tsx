@@ -8,6 +8,8 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { cn } from "@/utils/cn";
 import { getOrdinal } from "@/utils/getOrdinal";
 
+import Panel from "../Theme/Panel";
+
 type Props = {
   response: ReturnType<typeof useCoinQuery>;
 };
@@ -42,9 +44,16 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
   const marketCap = fmtCurr(response.data?.market_data.market_cap[currency]);
   const marketCapLabel = "Market Cap";
 
-  const fdv = fmtCurr(
-    response.data?.market_data.fully_diluted_valuation[currency]
-  );
+  const fdv = (() => {
+    const fullyDilutedValuation =
+      response.data?.market_data?.fully_diluted_valuation;
+    const hasFDV = fullyDilutedValuation && fullyDilutedValuation[currency];
+    return hasFDV ? (
+      fmtCurr(fullyDilutedValuation[currency])
+    ) : (
+      <span className="text-muted-foreground">N/A</span>
+    );
+  })();
   const fdvLabel = "Fully Diluted Valuation";
 
   const circulatingSupply = (() => {
@@ -78,7 +87,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
     return d ? (
       new Date(d).toLocaleDateString("en-US", { dateStyle: "long" })
     ) : (
-      <span className="italic text-muted-foreground">none specified</span>
+      <span className="text-muted-foreground">N/A</span>
     );
   })();
 
@@ -97,14 +106,14 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
   ];
 
   return (
-    <div
+    <Panel
       className={cn(
-        "w-full h-[400px] rounded-xl bg-zinc-900/70 border border-zinc-800",
+        "w-full h-[400px]",
         response.isPending && "animate-pulse"
       )}
     >
       {response.data && (
-        <ul className="*:my-3 first:mt-4">
+        <ul className="*:my-3 first:mt-0">
           {entries.map((entry) => (
             <li
               key={entry.label}
@@ -124,7 +133,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
           ))}
         </ul>
       )}
-    </div>
+    </Panel>
   );
 };
 

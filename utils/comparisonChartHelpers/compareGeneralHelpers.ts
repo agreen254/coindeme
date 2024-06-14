@@ -1,4 +1,4 @@
-import type { ChartColorSet, Currency } from "../types";
+import type { ChartColorSet, Currency, ThemeType } from "../types";
 
 import { formatSmallNum } from "../formatHelpers";
 import { formatPriceValue } from "../formatHelpers";
@@ -45,10 +45,14 @@ ChartJS.register(
  */
 export const decimationThreshold = 150;
 
-export const gridColor = "#27272A";
-export const legendFontColor = "#A1A1AA";
-export const tooltipBackgroundColor = "#121212";
-export const tooltipBorderColor = "#71717A";
+export const gridColor = {
+  light: "#D8D8D5",
+  dark: "#27272A",
+};
+export const legendBodyTextColor = { dark: "#A1A1AA", light: "#52525B" };
+export const legendTitleTextColor = { dark: "#FFF", light: "#09090B" };
+export const tooltipBackgroundColor = { dark: "#121212", light: "#FFF" };
+export const tooltipBorderColor = { dark: "#71717A", light: "#121212" };
 
 export function handleGradientColorStops(
   alphaValues: { alphaTop: number; alphaBottom: number },
@@ -81,7 +85,7 @@ export function handleTicksXAxis(label: string, index: number) {
 }
 
 export function handleTicksYAxis(value: number, currencySymbol?: string) {
-  return value === 0 ? 0 : currencySymbol + formatPriceValue(value);
+  return value === 0 ? 0 : (currencySymbol ?? "") + formatPriceValue(value);
 }
 
 export function handleLabelText(
@@ -120,11 +124,14 @@ export function defaultTooltip(
   currency: Currency,
   currencySymbol: string,
   names: string[],
+  theme: ThemeType,
   overrides?: TooltipOptions
 ): TooltipOptions {
   return {
-    backgroundColor: tooltipBackgroundColor,
-    borderColor: tooltipBorderColor,
+    backgroundColor: tooltipBackgroundColor[theme],
+    borderColor: tooltipBorderColor[theme],
+    bodyColor: legendBodyTextColor[theme],
+    titleColor: legendTitleTextColor[theme],
     borderWidth: 1,
     caretPadding: 4,
     caretSize: 8,

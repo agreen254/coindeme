@@ -21,7 +21,9 @@ const GlobalData = () => {
   const currencySymbol = currencyMap.get(currency);
 
   if (isPending || !data)
-    return <div className="flex h-[52px] border-y border-white/10"></div>;
+    return (
+      <div className="flex h-[52px] border-y border-black/10 dark:border-white/10"></div>
+    );
 
   const {
     active_cryptocurrencies: num_active_coins,
@@ -35,81 +37,87 @@ const GlobalData = () => {
     },
   } = data;
 
+  const HorizontalDivider = () => (
+    <span className="w-[1px] h-6 bg-black/20 dark:bg-white/10" />
+  );
+
   return (
-    <div className="flex justify-center items-center h-[52px] gap-x-[2%] border-y border-white/10 text-sm">
-      <span>
-        <HandCoinsIcon className="w-6 h-6 inline" />
-        <span className="ml-1 mr-2 font-semibold text-muted-foreground">
-          Coins
-        </span>
-        <span>{num_active_coins}</span>
-      </span>
-      <span className="w-[1px] h-6 bg-white/10" />
-      <span>
+    <div className="flex justify-center h-[52px] border-y border-black/20 dark:border-white/10 text-sm">
+      <div className="w-table-xl flex justify-between items-center px-4">
         <span>
-          <ExchangeIcon className="w-6 h-6 inline" />
+          <HandCoinsIcon className="w-6 h-6 inline text-default" />
+          <span className="ml-1 mr-2 font-semibold text-muted-foreground">
+            Coins
+          </span>
+          <span>{num_active_coins}</span>
         </span>
-        <span className="ml-1 mr-2 font-semibold text-muted-foreground">
-          Markets
+        <HorizontalDivider />
+        <span>
+          <span>
+            <ExchangeIcon className="w-6 h-6 inline fill-default" />
+          </span>
+          <span className="ml-1 mr-2 font-semibold text-muted-foreground">
+            Markets
+          </span>
+          <span>{num_markets}</span>
         </span>
-        <span>{num_markets}</span>
-      </span>
-      <span className="w-[1px] h-6 bg-white/10" />
-      <span>
-        <CaretIcon
-          className={cn(
-            "w-4 h-4 inline mr-1",
-            market_cap_change > 0 && "fill-market-up",
-            market_cap_change < 0 && "fill-market-down rotate-180"
-          )}
-        />
-        {currencySymbol + formatPriceValue(total_market_cap[currency])}
-      </span>
-      <span className="w-[1px] h-6 bg-white/10" />
-      <span className="flex items-center">
-        {currencySymbol + formatPriceValue(total_volume[currency])}
-        <ProgressWidget
-          containerClassName="w-16 ml-2 bg-white/20"
-          progressClassName="bg-white"
-          progressPercentage={
-            total_market_cap[currency] / total_volume[currency]
-          }
-        />
-      </span>
-      <span className="w-[1px] h-6 bg-white/10" />
-      <span className="flex items-center">
-        <Image
-          width={25}
-          height={25}
-          className="-translate-y-[1px] mr-2"
-          src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
-          alt="bitcoin logo"
-          priority
-        />
-        {formatPriceChangePercentage(btc_market_percentage)}%
-        <ProgressWidget
-          containerClassName="w-16 ml-2 bg-white/20"
-          progressClassName="bg-bitcoin"
-          progressPercentage={btc_market_percentage}
-        />
-      </span>
-      <span className="w-[1px] h-6 bg-white/10" />
-      <span className="flex items-center">
-        <Image
-          width={25}
-          height={25}
-          className="-translate-y-[2px] mr-1"
-          src="https://assets.coingecko.com/coins/images/279/large/ethereum.png"
-          alt="ethereum logo"
-          priority
-        />
-        {formatPriceChangePercentage(eth_market_percentage)}%
-        <ProgressWidget
-          containerClassName="w-16 ml-2 bg-white/20"
-          progressClassName="bg-eth"
-          progressPercentage={eth_market_percentage}
-        />
-      </span>
+        <HorizontalDivider />
+        <span>
+          <CaretIcon
+            className={cn(
+              "w-4 h-4 inline mr-1",
+              market_cap_change > 0 && "fill-market-up",
+              market_cap_change < 0 && "fill-market-down rotate-180"
+            )}
+          />
+          {currencySymbol + formatPriceValue(total_market_cap[currency])}
+        </span>
+        <HorizontalDivider />
+        <span className="flex items-center">
+          {currencySymbol + formatPriceValue(total_volume[currency])}
+          <ProgressWidget
+            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            progressClassName="bg-black/30 dark:bg-white"
+            progressPercentage={
+              total_market_cap[currency] / total_volume[currency]
+            }
+          />
+        </span>
+        <HorizontalDivider />
+        <span className="flex items-center">
+          <Image
+            width={25}
+            height={25}
+            className="-translate-y-[1px] mr-2"
+            src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
+            alt="bitcoin logo"
+            priority
+          />
+          {formatPriceChangePercentage(btc_market_percentage)}%
+          <ProgressWidget
+            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            progressClassName="bg-bitcoin"
+            progressPercentage={btc_market_percentage}
+          />
+        </span>
+        <HorizontalDivider />
+        <span className="flex items-center">
+          <Image
+            width={25}
+            height={25}
+            className="-translate-y-[2px] mr-1"
+            src="https://assets.coingecko.com/coins/images/279/large/ethereum.png"
+            alt="ethereum logo"
+            priority
+          />
+          {formatPriceChangePercentage(eth_market_percentage)}%
+          <ProgressWidget
+            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            progressClassName="bg-eth"
+            progressPercentage={eth_market_percentage}
+          />
+        </span>
+      </div>
     </div>
   );
 };
