@@ -71,18 +71,18 @@ const CarouselHorizontal = ({
 
   return (
     <div className="flex justify-center relative w-table-xl">
-      <div className="absolute -left-11 top-[14px] z-10">
+      <div className="absolute -left-9 top-[10px] z-10">
         <label htmlFor="scrollPrev" className="sr-only">
           Scroll carousel backward
         </label>
         <button
           id="scrollPrev"
-          className="w-10 h-10 p-2 rounded-full border dark:border-white border-zinc-950 dark:hover:bg-teal-900 hover:bg-teal-500 transition-colors disabled:cursor-not-allowed"
+          className="w-12 h-12 p-2 rounded-full border border-teal-300 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >
           <ChevronLeftIcon
-            className="w-5 h-5 dark:text-white text-zinc-950"
+            className="w-5 h-5 ml-1 text-white"
             strokeWidth="2px"
           />
         </button>
@@ -94,18 +94,18 @@ const CarouselHorizontal = ({
           </div>
         </div>
       </div>
-      <div className="absolute -right-11 top-[14px] z-10">
+      <div className="absolute -right-9 top-[10px]">
         <label htmlFor="scrollNext" className="sr-only">
           Scroll carousel forward
         </label>
         <button
           id="scrollNext"
-          className="w-10 h-10 rounded-full border dark:border-white border-zinc-950 dark:hover:bg-teal-900 hover:bg-teal-500 transition-colors disabled:cursor-not-allowed"
+          className="w-12 h-12 p-2 rounded-full border border-teal-300 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
         >
           <ChevronRightIcon
-            className="w-5 h-5 ml-[9px] dark:text-white text-zinc-950"
+            className="w-5 h-5 ml-1 text-white"
             strokeWidth="2px"
           />
         </button>
