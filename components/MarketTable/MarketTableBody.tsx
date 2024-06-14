@@ -1,11 +1,12 @@
 "use client";
 
-import type { MarketElementWithIdx } from "@/utils/types";
+import Image from "next/image";
+import Link from "next/link";
 
+import type { MarketElementWithIdx } from "@/utils/types";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { formatLongName, formatSmallNum } from "@/utils/formatHelpers";
 
-import Image from "next/image";
 import PricePercentageChange from "../PricePercentageChange";
 import MarketTableProgressWidget from "./MarketTableProgressWidget";
 import MarketTableSparkline from "./MarketTableSparkline";
@@ -40,23 +41,28 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
           price_change_percentage_7d_in_currency: change_7d,
           sparkline_in_7d: { price: data_7d },
         }) => (
-          <tr key={id} className="hover:dark:bg-slate-800/60 hover:bg-zinc-200 transition-colors bg-white dark:bg-inherit">
+          <tr
+            key={id}
+            className="hover:dark:bg-slate-800/60 hover:bg-zinc-200 transition-colors bg-white dark:bg-inherit"
+          >
             <TD className="text-center border-l rounded-l-md">
               {called_index + 1 + (initialIdx ?? 0)}
             </TD>
             <TD className="text-start">
-              <Image
-                className="inline mr-2"
-                src={imageURL.replace("large", "thumb")}
-                alt={`${name} logo`}
-                width={30}
-                height={30}
-                priority
-              />
-              <span>{formatLongName(name, 22, symbol)}</span>{" "}
-              <span className="text-gray-400 text-sm uppercase font-semibold">
-                {symbol.trim()}
-              </span>
+              <Link href={`/coin/${id}`}>
+                <Image
+                  className="inline mr-2"
+                  src={imageURL.replace("large", "thumb")}
+                  alt={`${name} logo`}
+                  width={30}
+                  height={30}
+                  priority
+                />
+                <span>{formatLongName(name, 22, symbol)}</span>{" "}
+                <span className="text-gray-400 text-sm uppercase font-semibold">
+                  {symbol.trim()}
+                </span>
+              </Link>
             </TD>
             <TD className="font-mono">
               {getCurrencySymbol(currency)}
@@ -88,11 +94,13 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
               />
             </TD>
             <TD className="border-r rounded-r-md">
-              <MarketTableSparkline
-                data={data_7d}
-                id={id}
-                isGaining={isGaining(change_7d)}
-              />
+              <Link href={`/coin/${id}`}>
+                <MarketTableSparkline
+                  data={data_7d}
+                  id={id}
+                  isGaining={isGaining(change_7d)}
+                />
+              </Link>
             </TD>
           </tr>
         )
