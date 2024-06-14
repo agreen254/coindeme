@@ -38,7 +38,7 @@ const CarouselElement = ({ coinData }: Props) => {
   return (
     <button
       className={cn(
-        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-3 justify-center min-w-[15rem] rounded-md bg-white dark:bg-teal-900/80 transition-colors disabled:cursor-not-allowed",
+        "group p-0 m-0 flex-[0_0_auto] flex-col min-h-0 mb-4 py-3 justify-center min-w-[237px] rounded-md bg-white dark:bg-teal-900/80 transition-colors disabled:cursor-not-allowed",
         !hasMaxSelected &&
           "hover:bg-gradient-to-b hover:from-carousel-focus hover:to-carousel-focus/10 hover:dark:from-carousel-focus-dark hover:dark:to-carousel-focus-dark/10",
         isSelected &&
@@ -60,7 +60,7 @@ const CarouselElement = ({ coinData }: Props) => {
         </div>
         <div className="flex flex-col ml-3 items-start">
           <span>
-            <span>{formatLongName(name, 12)}</span>
+            <span>{formatLongName(name, 15, symbol)}</span>
             <span
               className={cn(
                 "ml-1 text-gray-400 text-sm uppercase font-semibold",
