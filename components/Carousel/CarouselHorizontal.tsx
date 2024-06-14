@@ -77,7 +77,7 @@ const CarouselHorizontal = ({
         </label>
         <button
           id="scrollPrev"
-          className="w-12 h-12 p-2 rounded-full border border-teal-300 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
+          className="w-12 h-12 p-2 rounded-full border dark:border-teal-300 border-teal-600 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
         >
@@ -100,7 +100,7 @@ const CarouselHorizontal = ({
         </label>
         <button
           id="scrollNext"
-          className="w-12 h-12 p-2 rounded-full border border-teal-300 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
+          className="w-12 h-12 p-2 rounded-full border dark:border-teal-300 border-teal-600 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
         >
