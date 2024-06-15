@@ -33,12 +33,15 @@ const initSeries: AnalysisSeries[] = [
     name: "Ethereum",
   },
 ];
+const initScale: AnalysisScale = "linear";
+const initDataMode: AnalysisDataMode = "price";
+const initTimeLength = 7;
 
 const useAnalysis = create<AnalysisState>((set) => ({
-  scale: "linear",
-  dataMode: "price",
+  scale: initScale,
+  dataMode: initDataMode,
   series: initSeries,
-  timeLength: 7,
+  timeLength: initTimeLength,
 
   actions: {
     setDataMode: (mode) => set(() => ({ dataMode: mode })),
