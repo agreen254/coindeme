@@ -39,7 +39,7 @@ import {
 } from "@/hooks/useAssetQueries";
 
 export type AnalysisScale = "linear" | "logarithmic";
-export type AnalysisDataMode = "price" | "rate of return" | "volume";
+export type AnalysisDataMode = "price" | "rate of return" | "volume" | "market cap";
 export type AnalysisAxis = "left" | "right";
 export type AnalysisSeries = {
   axis: AnalysisAxis;

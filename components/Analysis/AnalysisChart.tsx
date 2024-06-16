@@ -1,5 +1,6 @@
 import { type ChartData } from "chart.js";
 import { Line } from "react-chartjs-2";
+import "chartjs-adapter-date-fns";
 
 import {
   AnalysisDataMode,
@@ -10,7 +11,7 @@ import {
   ThemeType,
 } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
-import { getOptions } from "@/utils/comparisonChartHelpers/comparePriceHelpers";
+import { getOptions } from "@/utils/comparisonChartHelpers/analysisHelpers";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 
 type Props = {
@@ -27,7 +28,7 @@ const AnalysisChart = ({
   series,
   rawData,
   //   mode,
-  //   scale,
+  scale,
   currency,
   theme,
   timeLength,
@@ -36,13 +37,14 @@ const AnalysisChart = ({
 
   const data: ChartData<"line"> = {
     labels: label,
-    datasets: rawData.map((_, idx) => {
+    datasets: values.map((val, idx) => {
       return {
         backgroundColor: "transparent",
         borderColor: chartColorSets[idx].startColor.hex,
-        data: values[idx],
+        data: val,
         label: series[idx].name,
         pointHoverBorderColor: chartColorSets[idx].highlightColor.hex,
+        yAxisID: series[idx].axis === "left" ? "y" : "y1",
       };
     }),
   };
@@ -54,7 +56,9 @@ const AnalysisChart = ({
         currency,
         timeLength,
         series.map((s) => s.name),
-        theme
+        theme,
+        scale,
+        series
       )}
     />
   );
