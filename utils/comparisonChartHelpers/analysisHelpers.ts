@@ -1,12 +1,9 @@
 import { ChartOptions } from "chart.js";
-import type {
-  AnalysisScale,
-  AnalysisSeries,
-  Currency,
-  ThemeType,
-} from "../types";
+import type { AnalysisSeries, Currency, ThemeType } from "../types";
+import { isDefined } from "../isDefined";
 import {
   defaultTooltip,
+  gridColor,
   handleTicksYAxis,
 } from "./compareGeneralHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
@@ -17,24 +14,12 @@ export function getOptions(
   days: number,
   names: string[],
   theme: ThemeType,
-  scale: AnalysisScale,
   series: AnalysisSeries[]
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
   const hasLeftAxis = series.some((s) => s.axis === "left");
   const hasRightAxis = series.some((s) => s.axis === "right");
-
-  const axisGridColors = {
-    left: {
-      dark: "#52525B",
-      light: "#71717A",
-    },
-    right: {
-      dark: "#27272A",
-      light: "#D4D4D8",
-    },
-  };
 
   return {
     elements: {
@@ -88,37 +73,8 @@ export function getOptions(
           maxTicksLimit: 7,
         },
       },
-      y1: {
-        type: scale,
-        display: hasRightAxis,
-        position: "right",
-        title: {
-          text: series
-            .filter((s) => s.axis === "right")
-            .map((s) => s.name)
-            .join(" "),
-          display: hasLeftAxis,
-          font: {
-            size: 18,
-          },
-        },
-        border: {
-          display: hasLeftAxis,
-          color: axisGridColors.right[theme],
-        },
-        grid: {
-          color: axisGridColors.right[theme],
-          drawOnChartArea: true,
-        },
-        ticks: {
-          callback: function (val) {
-            return handleTicksYAxis(val as number, currencySymbol);
-          },
-        //   color: axisColors.right[theme],
-        },
-      },
       y: {
-        type: scale,
+        type: "linear",
         display: hasLeftAxis,
         position: "left",
         title: {
@@ -133,16 +89,64 @@ export function getOptions(
         },
         border: {
           display: hasRightAxis,
-          color: axisGridColors.left[theme],
+          color: gridColor[theme],
         },
         grid: {
-          color: axisGridColors.left[theme],
+          color: gridColor[theme],
         },
         ticks: {
           callback: function (val) {
             return handleTicksYAxis(val as number, currencySymbol);
           },
-        //   color: axisColors.left[theme],
+        },
+      },
+      y1: {
+        type: "linear",
+        display: hasRightAxis,
+        position: "right",
+        title: {
+          text: series
+            .filter((s) => s.axis === "right")
+            .map((s) => s.name)
+            .join(" "),
+          display: hasLeftAxis,
+          font: {
+            size: 18,
+          },
+        },
+        border: {
+          display: hasLeftAxis,
+          color: gridColor[theme],
+        },
+        grid: {
+          color: gridColor[theme],
+          drawOnChartArea: true,
+        },
+        ticks: {
+          callback: function (val) {
+            return handleTicksYAxis(val as number, currencySymbol);
+          },
+        },
+        // Make sure ticks are the same count
+        // https://stackoverflow.com/questions/56696642/how-to-match-left-and-right-tick-intervals-with-chartjs
+        beforeUpdate: function (scale) {
+          const max = Math.max.apply(
+            this,
+            (scale.chart.config.data.datasets[1].data.filter(
+              isDefined
+            ) as number[]) ?? [0]
+          );
+          let leftTickCount = scale.chart.scales["y"].ticks.length;
+          leftTickCount = leftTickCount < 7 ? 7 : leftTickCount - 1;
+
+          const leftAxisMin = Math.min.apply(
+            Math,
+            scale.chart.scales["y"].ticks.map((t) => t.value)
+          );
+          const stepSize = max / leftTickCount;
+
+          // scale.chart.options?.scales["y1"].ticks.stepSize = stepSize;
+          return;
         },
       },
     },

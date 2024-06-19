@@ -5,7 +5,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { cn } from "@/utils/cn";
 import {
   useAnalysisDataMode,
-  useAnalysisScale,
   useAnalysisSeries,
   useAnalysisTimeLength,
 } from "@/hooks/useAnalysis";
@@ -20,7 +19,6 @@ const AnalysisWrapper = () => {
   const series = useAnalysisSeries();
   const timeLength = useAnalysisTimeLength();
   const mode = useAnalysisDataMode();
-  const scale = useAnalysisScale();
   const currency = useUserCurrencySetting();
   const theme = useThemeTyped();
 
@@ -54,7 +52,6 @@ const AnalysisWrapper = () => {
               series={series}
               rawData={responses.map((r) => r.data!)}
               mode={mode}
-              scale={scale}
               currency={currency}
               theme={theme}
               timeLength={timeLength}

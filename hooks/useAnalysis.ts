@@ -1,9 +1,8 @@
 import { create } from "zustand";
-import { AnalysisDataMode, AnalysisScale, AnalysisSeries } from "@/utils/types";
+import { AnalysisDataMode, AnalysisSeries } from "@/utils/types";
 
 type AnalysisState = {
   dataMode: AnalysisDataMode;
-  scale: AnalysisScale;
   series: AnalysisSeries[];
   timeLength: number;
 
@@ -12,7 +11,6 @@ type AnalysisState = {
 
 type AnalysisActions = {
   setDataMode: (mode: AnalysisState["dataMode"]) => void;
-  setScale: (scale: AnalysisState["scale"]) => void;
   setTimeLength: (length: AnalysisState["timeLength"]) => void;
 
   setSeriesAxisById: (id: string, axis: AnalysisSeries["axis"]) => void;
@@ -33,19 +31,16 @@ const initSeries: AnalysisSeries[] = [
     name: "Ethereum",
   },
 ];
-const initScale: AnalysisScale = "linear";
 const initDataMode: AnalysisDataMode = "price";
 const initTimeLength = 7;
 
 const useAnalysis = create<AnalysisState>((set) => ({
-  scale: initScale,
   dataMode: initDataMode,
   series: initSeries,
   timeLength: initTimeLength,
 
   actions: {
     setDataMode: (mode) => set(() => ({ dataMode: mode })),
-    setScale: (scale) => set(() => ({ scale: scale })),
     setTimeLength: (length) => set(() => ({ timeLength: length })),
 
     setSeriesAxisById: (id, axis) =>
@@ -67,9 +62,6 @@ const useAnalysis = create<AnalysisState>((set) => ({
   },
 }));
 
-export const useAnalysisScale = () => {
-  return useAnalysis((state) => state.scale);
-};
 export const useAnalysisDataMode = () => {
   return useAnalysis((state) => state.dataMode);
 };

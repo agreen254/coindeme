@@ -4,7 +4,6 @@ import "chartjs-adapter-date-fns";
 
 import {
   AnalysisDataMode,
-  AnalysisScale,
   AnalysisSeries,
   ComparisonChartResponse,
   Currency,
@@ -18,7 +17,6 @@ type Props = {
   series: AnalysisSeries[];
   rawData: ComparisonChartResponse[];
   mode: AnalysisDataMode;
-  scale: AnalysisScale;
   currency: Currency;
   theme: ThemeType;
   timeLength: number;
@@ -27,8 +25,7 @@ type Props = {
 const AnalysisChart = ({
   series,
   rawData,
-  //   mode,
-  scale,
+  // mode,
   currency,
   theme,
   timeLength,
@@ -57,7 +54,6 @@ const AnalysisChart = ({
         timeLength,
         series.map((s) => s.name),
         theme,
-        scale,
         series
       )}
     />
