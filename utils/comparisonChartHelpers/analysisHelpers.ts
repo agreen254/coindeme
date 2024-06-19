@@ -1,6 +1,5 @@
 import { ChartOptions } from "chart.js";
 import type { AnalysisSeries, Currency, ThemeType } from "../types";
-import { isDefined } from "../isDefined";
 import {
   defaultTooltip,
   gridColor,
@@ -62,7 +61,8 @@ export function getOptions(
           display: false,
         },
         grid: {
-          drawOnChartArea: false,
+          drawOnChartArea: true,
+          color: gridColor[theme],
         },
         type: "time",
         time: {
@@ -70,7 +70,7 @@ export function getOptions(
         },
         ticks: {
           autoSkip: true,
-          maxTicksLimit: 7,
+          maxTicksLimit: 12,
         },
       },
       y: {
@@ -127,25 +127,19 @@ export function getOptions(
             return handleTicksYAxis(val as number, currencySymbol);
           },
         },
-        // Make sure ticks are the same count
-        // https://stackoverflow.com/questions/56696642/how-to-match-left-and-right-tick-intervals-with-chartjs
-        beforeUpdate: function (scale) {
-          const max = Math.max.apply(
-            this,
-            (scale.chart.config.data.datasets[1].data.filter(
-              isDefined
-            ) as number[]) ?? [0]
-          );
-          let leftTickCount = scale.chart.scales["y"].ticks.length;
-          leftTickCount = leftTickCount < 7 ? 7 : leftTickCount - 1;
+        beforeBuildTicks: function (scale) {
+          const leftTickCount = scale.chart.scales["y"].ticks.length;
+          if (leftTickCount === 0) return;
 
-          const leftAxisMin = Math.min.apply(
-            Math,
-            scale.chart.scales["y"].ticks.map((t) => t.value)
-          );
-          const stepSize = max / leftTickCount;
+          const scales = scale.chart.options.scales;
 
-          // scale.chart.options?.scales["y1"].ticks.stepSize = stepSize;
+          if (scales && scales["y1"]?.ticks) {
+            // the `count` property on this object exists only on the `linear` axis type,
+            // but the corresponding type does not recognize it.
+            // @ts-ignore
+            scales["y1"].ticks.count = leftTickCount;
+          }
+
           return;
         },
       },

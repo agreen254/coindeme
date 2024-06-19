@@ -32,7 +32,7 @@ const initSeries: AnalysisSeries[] = [
   },
 ];
 const initDataMode: AnalysisDataMode = "price";
-const initTimeLength = 7;
+const initTimeLength = 31;
 
 const useAnalysis = create<AnalysisState>((set) => ({
   dataMode: initDataMode,
