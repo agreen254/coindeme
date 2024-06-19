@@ -30,7 +30,7 @@ const AnalysisWrapper = () => {
   const mode = useAnalysisDataMode();
   const currency = useUserCurrencySetting();
   const theme = useThemeTyped();
-  const { setDataMode } = useAnalysisActions();
+  const { setDataMode, setSeriesAxisById } = useAnalysisActions();
 
   const responses = useComparisonChartQueries({
     ids: series.map((s) => s.id),
@@ -47,6 +47,8 @@ const AnalysisWrapper = () => {
 
     if (newMode === "Rate of Return") {
       // do not try to take logarithm here because rate of return can be negative
+      // rate of return always starts at 0
+      series.forEach((s) => setSeriesAxisById(s.id, "left"));
     }
     setDataMode(newMode);
   }
