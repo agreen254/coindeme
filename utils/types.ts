@@ -38,11 +38,17 @@ import {
   useAssetHistoryQueries,
 } from "@/hooks/useAssetQueries";
 
-export type AnalysisDataMode =
-  | "Price"
-  | "Market Cap"
-  | "Total Volume"
-  | "Rate of Return";
+export const analysisDataModes = [
+  "Price",
+  "Market Cap",
+  "Total Volume",
+  "Rate of Return",
+] as const;
+export type AnalysisDataMode = (typeof analysisDataModes)[number];
+
+export const analysisValueScales = ["linear", "logarithmic"] as const;
+export type AnalysisValueScale = (typeof analysisValueScales)[number];
+
 export type AnalysisAxis = "left" | "right";
 export type AnalysisSeries = {
   axis: AnalysisAxis;

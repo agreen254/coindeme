@@ -19,6 +19,7 @@ type AnalysisActions = {
   addSeries: (series: AnalysisSeries) => void;
 };
 
+const initDataMode: AnalysisDataMode = "Price";
 const initSeries: AnalysisSeries[] = [
   {
     axis: "left",
@@ -31,7 +32,6 @@ const initSeries: AnalysisSeries[] = [
     name: "Ethereum",
   },
 ];
-const initDataMode: AnalysisDataMode = "Market Cap";
 const initTimeLength = 7;
 
 const useAnalysis = create<AnalysisState>((set) => ({
