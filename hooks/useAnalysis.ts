@@ -31,8 +31,8 @@ const initSeries: AnalysisSeries[] = [
     name: "Ethereum",
   },
 ];
-const initDataMode: AnalysisDataMode = "price";
-const initTimeLength = 31;
+const initDataMode: AnalysisDataMode = "Market Cap";
+const initTimeLength = 7;
 
 const useAnalysis = create<AnalysisState>((set) => ({
   dataMode: initDataMode,

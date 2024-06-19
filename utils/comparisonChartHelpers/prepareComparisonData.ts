@@ -20,7 +20,7 @@ export function prepareComparisonData(
   const label = prepareAxes(data[0][property]).x;
 
   const values = data.map((dataset) => prepareAxes(dataset[property]).y);
-  
+
   return <ComparisonData>{
     label: label,
     values: values,

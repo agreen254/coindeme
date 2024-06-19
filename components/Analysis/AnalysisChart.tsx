@@ -11,7 +11,7 @@ import {
 } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/analysisHelpers";
-import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
+import { prepareAnalysisData } from "@/utils/comparisonChartHelpers/prepareAnalysisData";
 
 type Props = {
   series: AnalysisSeries[];
@@ -25,12 +25,12 @@ type Props = {
 const AnalysisChart = ({
   series,
   rawData,
-  // mode,
+  mode,
   currency,
   theme,
   timeLength,
 }: Props) => {
-  const { label, values } = prepareComparisonData(rawData, "prices");
+  const { label, values } = prepareAnalysisData(rawData, mode);
 
   const data: ChartData<"line"> = {
     labels: label,
@@ -54,7 +54,8 @@ const AnalysisChart = ({
         timeLength,
         series.map((s) => s.name),
         theme,
-        series
+        series,
+        mode
       )}
     />
   );

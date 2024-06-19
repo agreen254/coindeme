@@ -1,8 +1,14 @@
 import { ChartOptions } from "chart.js";
-import type { AnalysisSeries, Currency, ThemeType } from "../types";
+import {
+  AnalysisDataMode,
+  AnalysisSeries,
+  Currency,
+  ThemeType,
+} from "../types";
 import {
   defaultTooltip,
   gridColor,
+  gridNegativeColor,
   handleTicksYAxis,
 } from "./compareGeneralHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
@@ -13,7 +19,8 @@ export function getOptions(
   days: number,
   names: string[],
   theme: ThemeType,
-  series: AnalysisSeries[]
+  series: AnalysisSeries[],
+  mode: AnalysisDataMode
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -45,7 +52,10 @@ export function getOptions(
         padding: {
           bottom: 24,
         },
-        text: `Price (${currency.toUpperCase()})`,
+        text:
+          mode === "Rate of Return"
+            ? "Rate of Return (%)"
+            : `${mode} (${currency.toUpperCase()})`,
       },
       tooltip: defaultTooltip(currency, currencySymbol, names, theme),
     },
@@ -77,26 +87,23 @@ export function getOptions(
         type: "linear",
         display: hasLeftAxis,
         position: "left",
-        title: {
-          text: series
-            .filter((s) => s.axis === "left")
-            .map((s) => s.name)
-            .join(" "),
-          display: hasRightAxis,
-          font: {
-            size: 18,
-          },
-        },
         border: {
-          display: hasRightAxis,
+          display: hasLeftAxis,
           color: gridColor[theme],
         },
         grid: {
-          color: gridColor[theme],
+          color: (c) =>
+            c["tick"]["value"] < 0
+              ? gridNegativeColor[theme]
+              : gridColor[theme],
         },
         ticks: {
+          color: (c) => (c["tick"]["value"] < 0 ? "Red" : "Gray"),
           callback: function (val) {
-            return handleTicksYAxis(val as number, currencySymbol);
+            const tick = handleTicksYAxis(val as number, currencySymbol);
+            return mode === "Rate of Return"
+              ? String(tick).replace(currencySymbol, "") + "%"
+              : tick;
           },
         },
       },
@@ -104,38 +111,35 @@ export function getOptions(
         type: "linear",
         display: hasRightAxis,
         position: "right",
-        title: {
-          text: series
-            .filter((s) => s.axis === "right")
-            .map((s) => s.name)
-            .join(" "),
-          display: hasLeftAxis,
-          font: {
-            size: 18,
-          },
-        },
         border: {
-          display: hasLeftAxis,
+          display: hasRightAxis,
           color: gridColor[theme],
         },
         grid: {
-          color: gridColor[theme],
-          drawOnChartArea: true,
+          color: (c) =>
+            c["tick"]["value"] < 0
+              ? gridNegativeColor[theme]
+              : gridColor[theme],
         },
         ticks: {
+          color: (c) => (c["tick"]["value"] < 0 ? "Red" : "Gray"),
           callback: function (val) {
-            return handleTicksYAxis(val as number, currencySymbol);
+            const tick = handleTicksYAxis(val as number, currencySymbol);
+            return mode === "Rate of Return"
+              ? String(tick).replace(currencySymbol, "") + "%"
+              : tick;
           },
         },
+        // https://www.chartjs.org/docs/latest/api/classes/Scale.html#beforebuildticks
+        // small description contained in the `CoreScaleOptions` interface in index.d.ts
         beforeBuildTicks: function (scale) {
           const leftTickCount = scale.chart.scales["y"].ticks.length;
           if (leftTickCount === 0) return;
 
-          const scales = scale.chart.options.scales;
-
+          let scales = scale.chart.options.scales;
           if (scales && scales["y1"]?.ticks) {
             // the `count` property on this object exists only on the `linear` axis type,
-            // but the corresponding type does not recognize it.
+            // but the typing in the library fails to recognize this.
             // @ts-ignore
             scales["y1"].ticks.count = leftTickCount;
           }

@@ -42,7 +42,7 @@ export function formatPriceValue(
   numTrailing: number = 2,
   notation: Intl.NumberFormatOptions["notation"] = "compact"
 ) {
-  return price < 0.01
+  return Math.abs(price) < 0.01
     ? formatSmallNum(price)
     : Intl.NumberFormat("en-US", {
         notation: notation,

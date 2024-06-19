@@ -46,8 +46,12 @@ ChartJS.register(
 export const decimationThreshold = 150;
 
 export const gridColor = {
-  light: "#D8D8D5",
+  light: "#A1A1AA",
   dark: "#27272A",
+};
+export const gridNegativeColor = {
+  light: "rgba(200, 50, 50, 0.5)",
+  dark: "rgba(200, 50, 50, 0.3)",
 };
 export const legendBodyTextColor = { dark: "#A1A1AA", light: "#52525B" };
 export const legendTitleTextColor = { dark: "#FFF", light: "#09090B" };
@@ -84,8 +88,14 @@ export function handleTicksXAxis(label: string, index: number) {
   return formattedDate;
 }
 
-export function handleTicksYAxis(value: number, currencySymbol?: string, numTrailing?: number) {
-  return value === 0 ? 0 : (currencySymbol ?? "") + formatPriceValue(value, numTrailing);
+export function handleTicksYAxis(
+  value: number,
+  currencySymbol?: string,
+  numTrailing?: number
+) {
+  return value === 0
+    ? 0
+    : (currencySymbol ?? "") + formatPriceValue(value, numTrailing);
 }
 
 export function handleLabelText(

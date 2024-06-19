@@ -13,7 +13,9 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 import AnalysisChart from "./AnalysisChart";
+import AnalysisLegend from "./AnalysisLegend";
 import Panel from "../Theme/Panel";
+import Loader from "../Loader";
 
 const AnalysisWrapper = () => {
   const series = useAnalysisSeries();
@@ -29,17 +31,26 @@ const AnalysisWrapper = () => {
   });
 
   const someLoading = responses.some((r) => r.isPending);
+  const allLoading = responses.every((r) => r.isPending);
+  const noneSelected = series.length === 0;
 
   return (
     <div className="w-full flex justify-center">
       <Panel
         className={cn(
-          "w-table-xl h-[800px] p-6 mb-[20vh]",
+          "w-table-xl min-h-[800px] p-6 mb-[20vh]",
           someLoading && "animate-pulse"
         )}
       >
-        {someLoading ? (
-          <p className="text-center text-muted-foreground">Loading...</p>
+        {noneSelected && (
+          <p className="text-muted-foreground text-lg text-italic">
+            No data to display.
+          </p>
+        )}
+        {allLoading ? (
+          <div className="w-full h-full flex items-center justify-center">
+            <Loader />
+          </div>
         ) : (
           <ErrorBoundary
             fallback={
@@ -48,14 +59,17 @@ const AnalysisWrapper = () => {
               </p>
             }
           >
-            <AnalysisChart
-              series={series}
-              rawData={responses.map((r) => r.data!)}
-              mode={mode}
-              currency={currency}
-              theme={theme}
-              timeLength={timeLength}
-            />
+            <div className="h-[700px]">
+              <AnalysisChart
+                series={series}
+                rawData={responses.filter((r) => r.data).map((r) => r.data!)}
+                mode={mode}
+                currency={currency}
+                theme={theme}
+                timeLength={timeLength}
+              />
+            </div>
+            <AnalysisLegend series={series} />
           </ErrorBoundary>
         )}
       </Panel>

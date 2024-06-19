@@ -39,10 +39,10 @@ import {
 } from "@/hooks/useAssetQueries";
 
 export type AnalysisDataMode =
-  | "price"
-  | "rate of return"
-  | "volume"
-  | "market cap";
+  | "Price"
+  | "Market Cap"
+  | "Total Volume"
+  | "Rate of Return";
 export type AnalysisAxis = "left" | "right";
 export type AnalysisSeries = {
   axis: AnalysisAxis;
