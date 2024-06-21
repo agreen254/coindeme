@@ -4,11 +4,15 @@ import type {
   Dataset,
 } from "../types";
 
+import { DEFAULT_DECIMATION_THRESHOLD } from "@/validation/defaults";
 import { decimateData } from "../decimateData";
 import { unwrapDataset } from "../unwrapDataset";
 
-export function prepareAxes(data: (number | null)[][]): Dataset {
-  const decimatedData = decimateData(data);
+export function prepareAxes(
+  data: (number | null)[][],
+  threshold: number = DEFAULT_DECIMATION_THRESHOLD
+): Dataset {
+  const decimatedData = decimateData(data, threshold);
   return unwrapDataset(decimatedData);
 }
 

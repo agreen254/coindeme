@@ -2,6 +2,7 @@ import { ChartOptions } from "chart.js";
 import {
   AnalysisDataMode,
   AnalysisSeries,
+  AnalysisView,
   Currency,
   ThemeType,
 } from "../types";
@@ -10,6 +11,7 @@ import {
   gridColor,
   gridNegativeColor,
   handleTicksYAxis,
+  handleLabelText,
 } from "./compareGeneralHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
 import { getCurrencySymbol } from "../getCurrencySymbol";
@@ -20,7 +22,8 @@ export function getOptions(
   names: string[],
   theme: ThemeType,
   series: AnalysisSeries[],
-  mode: AnalysisDataMode
+  mode: AnalysisDataMode,
+  view: AnalysisView
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -52,12 +55,29 @@ export function getOptions(
         padding: {
           bottom: 24,
         },
-        text:
-          mode === "Rate of Return"
-            ? "Rate of Return (%)"
-            : `${mode} (${currency.toUpperCase()})`,
+        text: (() => {
+          if (mode === "Rate of Return") return "Rate of Return (%)";
+          else
+            return `${
+              view === "Logarithmic" ? "log[" + mode + "]" : mode
+            } (${currency.toUpperCase()})`;
+        })(),
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, theme),
+      tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
+        callbacks: {
+          label: function (item) {
+            const newItem = {
+              ...item,
+              raw:
+                // show the actual value instead of the log value
+                view === "Logarithmic"
+                  ? Math.pow(10, item.raw as number)
+                  : (item.raw as number),
+            };
+            return handleLabelText(newItem, currency, currencySymbol, names);
+          },
+        },
+      }),
     },
     interaction: {
       intersect: false,

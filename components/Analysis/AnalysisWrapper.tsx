@@ -5,15 +5,18 @@ import { ErrorBoundary } from "react-error-boundary";
 import {
   type AnalysisDataMode,
   analysisDataModes,
-  analysisValueScales,
+  AnalysisView,
+  analysisViews,
 } from "@/utils/types";
 import { cn } from "@/utils/cn";
 import {
+  useAnalysisActions,
+  useAnalysisDecimationThreshold,
   useAnalysisDataMode,
   useAnalysisSeries,
   useAnalysisTimeLength,
+  useAnalysisView,
 } from "@/hooks/useAnalysis";
-import { useAnalysisActions } from "@/hooks/useAnalysis";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
@@ -28,9 +31,13 @@ const AnalysisWrapper = () => {
   const series = useAnalysisSeries();
   const timeLength = useAnalysisTimeLength();
   const mode = useAnalysisDataMode();
+  const view = useAnalysisView();
   const currency = useUserCurrencySetting();
   const theme = useThemeTyped();
-  const { setDataMode, setSeriesAxisById } = useAnalysisActions();
+  const decimationThreshold = useAnalysisDecimationThreshold();
+  const thresholdOptions = [Infinity, 25, 50, 100, 150];
+  const { setDecimationThreshold, setDataMode, setView, setSeriesAxisById } =
+    useAnalysisActions();
 
   const responses = useComparisonChartQueries({
     ids: series.map((s) => s.id),
@@ -46,11 +53,23 @@ const AnalysisWrapper = () => {
     const newMode = e.currentTarget.value as AnalysisDataMode;
 
     if (newMode === "Rate of Return") {
-      // do not try to take logarithm here because rate of return can be negative
-      // rate of return always starts at 0
+      setView("Linear");
       series.forEach((s) => setSeriesAxisById(s.id, "left"));
     }
     setDataMode(newMode);
+  }
+
+  function handleViewChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newView = e.currentTarget.value as AnalysisView;
+    setView(newView);
+  }
+
+  function handleDecimationThresholdChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    let newThreshold = Number(e.currentTarget.value);
+    newThreshold = Number.isNaN(newThreshold) ? Infinity : newThreshold;
+    setDecimationThreshold(Number(newThreshold));
   }
 
   return (
@@ -86,6 +105,8 @@ const AnalysisWrapper = () => {
                 currency={currency}
                 theme={theme}
                 timeLength={timeLength}
+                decimationThreshold={decimationThreshold}
+                view={view}
               />
             </div>
             <div className="flex gap-x-4 mt-4">
@@ -95,24 +116,46 @@ const AnalysisWrapper = () => {
               <div className="mr-4 w-1/2 flex justify-end gap-x-20">
                 <div>
                   <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
-                    Scale:
+                    View
                   </p>
-                  {analysisValueScales.map((scale) => (
-                    <div key={scale}>
+                  {analysisViews.map((v) => (
+                    <div key={v}>
                       <input
                         type="radio"
-                        id={scale}
-                        value={scale}
+                        id={v}
+                        value={v}
                         className="mr-1 disabled:hover:cursor-not-allowed"
                         disabled={mode === "Rate of Return"}
+                        checked={view === v}
+                        onChange={handleViewChange}
                       />
-                      <label htmlFor={scale}>{scale}</label>
+                      <label htmlFor={v}>{v}</label>
                     </div>
                   ))}
                 </div>
                 <div>
                   <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
-                    Dataset:
+                    Decimation
+                  </p>
+                  {thresholdOptions.map((opt) => (
+                    <div key={opt}>
+                      <input
+                        type="radio"
+                        id={"compression" + opt.toString()}
+                        value={opt}
+                        className="mr-1 disabled:hover:cursor-not-allowed"
+                        checked={decimationThreshold === opt}
+                        onChange={handleDecimationThresholdChange}
+                      />
+                      <label htmlFor={"compression" + opt.toString()}>
+                        {opt === Infinity ? "None" : `${opt} points`}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
+                    Data
                   </p>
                   {analysisDataModes.map((dataMode) => (
                     <div key={dataMode}>

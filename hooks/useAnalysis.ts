@@ -1,17 +1,21 @@
 import { create } from "zustand";
-import { AnalysisDataMode, AnalysisSeries } from "@/utils/types";
+import { AnalysisDataMode, AnalysisSeries, AnalysisView } from "@/utils/types";
 
 type AnalysisState = {
+  decimationThreshold: number;
   dataMode: AnalysisDataMode;
   series: AnalysisSeries[];
   timeLength: number;
+  view: AnalysisView;
 
   actions: AnalysisActions;
 };
 
 type AnalysisActions = {
+  setDecimationThreshold: (threshol: number) => void;
   setDataMode: (mode: AnalysisState["dataMode"]) => void;
   setTimeLength: (length: AnalysisState["timeLength"]) => void;
+  setView: (view: AnalysisState["view"]) => void;
 
   setSeriesAxisById: (id: string, axis: AnalysisSeries["axis"]) => void;
   setSeriesNameById: (id: string, name: AnalysisSeries["name"]) => void;
@@ -19,6 +23,7 @@ type AnalysisActions = {
   addSeries: (series: AnalysisSeries) => void;
 };
 
+const initDecimationThreshold = Infinity;
 const initDataMode: AnalysisDataMode = "Price";
 const initSeries: AnalysisSeries[] = [
   {
@@ -35,13 +40,18 @@ const initSeries: AnalysisSeries[] = [
 const initTimeLength = 7;
 
 const useAnalysis = create<AnalysisState>((set) => ({
+  decimationThreshold: initDecimationThreshold,
   dataMode: initDataMode,
   series: initSeries,
   timeLength: initTimeLength,
+  view: "Linear",
 
   actions: {
+    setDecimationThreshold: (threshold) =>
+      set(() => ({ decimationThreshold: threshold })),
     setDataMode: (mode) => set(() => ({ dataMode: mode })),
     setTimeLength: (length) => set(() => ({ timeLength: length })),
+    setView: (view) => set(() => ({ view: view })),
 
     setSeriesAxisById: (id, axis) =>
       set((state) => ({
@@ -62,6 +72,9 @@ const useAnalysis = create<AnalysisState>((set) => ({
   },
 }));
 
+export const useAnalysisDecimationThreshold = () => {
+  return useAnalysis((state) => state.decimationThreshold);
+};
 export const useAnalysisDataMode = () => {
   return useAnalysis((state) => state.dataMode);
 };
@@ -70,6 +83,9 @@ export const useAnalysisSeries = () => {
 };
 export const useAnalysisTimeLength = () => {
   return useAnalysis((state) => state.timeLength);
+};
+export const useAnalysisView = () => {
+  return useAnalysis((state) => state.view);
 };
 
 export const useAnalysisActions = () => {

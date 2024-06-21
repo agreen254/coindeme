@@ -1,34 +1,50 @@
-import { AnalysisDataMode, ComparisonChartResponse } from "../types";
+import {
+  AnalysisDataMode,
+  AnalysisView,
+  ComparisonChartResponse,
+} from "../types";
 import { prepareAxes } from "./prepareComparisonData";
 
 export function prepareAnalysisData(
   data: ComparisonChartResponse[],
-  property: AnalysisDataMode
+  property: AnalysisDataMode,
+  decimationThreshold: number,
+  view: AnalysisView
 ) {
+  const getLabels = (field: keyof ComparisonChartResponse) =>
+    prepareAxes(data[0][field], decimationThreshold).x;
+  const getValues = (field: keyof ComparisonChartResponse) =>
+    data.map((series) => {
+      const seriesValues = prepareAxes(series[field], decimationThreshold).y;
+      return view === "Logarithmic"
+        ? seriesValues.map((v) => Math.log10(v))
+        : seriesValues;
+    });
+  const getLabelsAndValues = (field: keyof ComparisonChartResponse) => {
+    return {
+      label: getLabels(field),
+      values: getValues(field),
+    };
+  };
+
   switch (property) {
     case "Price": {
-      return {
-        label: prepareAxes(data[0]["prices"]).x,
-        values: data.map((series) => prepareAxes(series["prices"]).y),
-      };
+      return getLabelsAndValues("prices");
     }
     case "Market Cap": {
-      return {
-        label: prepareAxes(data[0]["market_caps"]).x,
-        values: data.map((series) => prepareAxes(series["market_caps"]).y),
-      };
+      return getLabelsAndValues("market_caps");
     }
     case "Total Volume": {
-      return {
-        label: prepareAxes(data[0]["total_volumes"]).x,
-        values: data.map((series) => prepareAxes(series["total_volumes"]).y),
-      };
+      return getLabelsAndValues("total_volumes");
     }
     case "Rate of Return": {
       return {
-        label: prepareAxes(data[0]["prices"]).x,
+        label: getLabels("prices"),
         values: data.map((series) => {
-          const initSeries = prepareAxes(series["prices"]).y;
+          const initSeries = prepareAxes(
+            series["prices"],
+            decimationThreshold
+          ).y;
           const baseValue = initSeries[0];
           return initSeries.map((currentValue) =>
             getRateOfReturn(baseValue, currentValue)

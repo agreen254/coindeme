@@ -5,6 +5,7 @@ import "chartjs-adapter-date-fns";
 import {
   AnalysisDataMode,
   AnalysisSeries,
+  AnalysisView,
   ComparisonChartResponse,
   Currency,
   ThemeType,
@@ -20,6 +21,8 @@ type Props = {
   currency: Currency;
   theme: ThemeType;
   timeLength: number;
+  decimationThreshold: number;
+  view: AnalysisView;
 };
 
 const AnalysisChart = ({
@@ -29,8 +32,15 @@ const AnalysisChart = ({
   currency,
   theme,
   timeLength,
+  decimationThreshold,
+  view,
 }: Props) => {
-  const { label, values } = prepareAnalysisData(rawData, mode);
+  const { label, values } = prepareAnalysisData(
+    rawData,
+    mode,
+    decimationThreshold,
+    view
+  );
 
   const data: ChartData<"line"> = {
     labels: label,
@@ -55,7 +65,8 @@ const AnalysisChart = ({
         series.map((s) => s.name),
         theme,
         series,
-        mode
+        mode,
+        view
       )}
     />
   );

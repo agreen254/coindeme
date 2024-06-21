@@ -46,8 +46,8 @@ export const analysisDataModes = [
 ] as const;
 export type AnalysisDataMode = (typeof analysisDataModes)[number];
 
-export const analysisValueScales = ["linear", "logarithmic"] as const;
-export type AnalysisValueScale = (typeof analysisValueScales)[number];
+export const analysisViews = ["Linear", "Logarithmic"] as const;
+export type AnalysisView = (typeof analysisViews)[number];
 
 export type AnalysisAxis = "left" | "right";
 export type AnalysisSeries = {
