@@ -9,12 +9,12 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import AnalysisChart from "./AnalysisChart";
 import AnalysisLegend from "./AnalysisLegend";
-import AnalysisViewSelector from "./AnalysisViewSelector";
-import Panel from "../Theme/Panel";
-import Loader from "../Loader";
+import AnalysisViewSelector from "./AnalysisSelectors/AnalysisViewSelector";
+import AnalysisDataSelector from "./AnalysisSelectors/AnalysisDataSelector";
+import AnalysisDecimationSelector from "./AnalysisSelectors/AnalysisDecimationSelector";
 import AnalysisRowWithProvider from "./AnalysisRow/AnalysisRow";
-import AnalysisDataSelector from "./AnalysisDataSelector";
-import AnalysisDecimationSelector from "./AnalysisDecimationSelector";
+import Loader from "../Loader";
+import Panel from "../Theme/Panel";
 
 const AnalysisWrapper = () => {
   const series = useAnalysisSeries();
