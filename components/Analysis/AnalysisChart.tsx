@@ -1,40 +1,37 @@
+"use client";
+
 import { type ChartData } from "chart.js";
 import { Line } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 
-import {
-  AnalysisDataMode,
-  AnalysisSeries,
-  AnalysisView,
-  ComparisonChartResponse,
-  Currency,
-  ThemeType,
-} from "@/utils/types";
+import { ComparisonChartResponse } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/analysisHelpers";
 import { prepareAnalysisData } from "@/utils/comparisonChartHelpers/prepareAnalysisData";
+import {
+  useAnalysisDataMode,
+  useAnalysisDecimationThreshold,
+  useAnalysisSeries,
+  useAnalysisTimeLength,
+  useAnalysisView,
+} from "@/hooks/useAnalysis";
+import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+import { useThemeTyped } from "@/hooks/useThemeTyped";
 
 type Props = {
-  series: AnalysisSeries[];
   rawData: ComparisonChartResponse[];
-  mode: AnalysisDataMode;
-  currency: Currency;
-  theme: ThemeType;
-  timeLength: number;
-  decimationThreshold: number;
-  view: AnalysisView;
 };
 
-const AnalysisChart = ({
-  series,
-  rawData,
-  mode,
-  currency,
-  theme,
-  timeLength,
-  decimationThreshold,
-  view,
-}: Props) => {
+const AnalysisChart = ({ rawData }: Props) => {
+  const series = useAnalysisSeries();
+  const names = series.map((s) => s.name);
+  const mode = useAnalysisDataMode();
+  const currency = useUserCurrencySetting();
+  const theme = useThemeTyped();
+  const timeLength = useAnalysisTimeLength();
+  const decimationThreshold = useAnalysisDecimationThreshold();
+  const view = useAnalysisView();
+
   const { label, values } = prepareAnalysisData(
     rawData,
     mode,
@@ -62,7 +59,7 @@ const AnalysisChart = ({
       options={getOptions(
         currency,
         timeLength,
-        series.map((s) => s.name),
+        names,
         theme,
         series,
         mode,
