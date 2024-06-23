@@ -66,6 +66,18 @@ export function getOptions(
       tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
         callbacks: {
           label: function (item) {
+            if (mode === "Rate of Return") {
+              return (
+                names[item.datasetIndex] +
+                ": " +
+                Intl.NumberFormat("en-US", {
+                  maximumFractionDigits: 2,
+                  signDisplay: "negative",
+                }).format(item.raw as number) +
+                "%"
+              );
+            }
+
             const newItem = {
               ...item,
               raw:
@@ -118,7 +130,7 @@ export function getOptions(
               : gridColor[theme],
         },
         ticks: {
-          color: (c) => (c["tick"]["value"] < 0 ? "Red" : "Gray"),
+          color: (c) => (c.tick.value < 0 ? "Red" : "Gray"),
           callback: function (val) {
             const tick = handleTicksYAxis(val as number, currencySymbol);
             return mode === "Rate of Return"
