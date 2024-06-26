@@ -57,20 +57,13 @@ export function getOptions(
         },
         text: titleTextCallback(mode, view, currency),
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
-        callbacks: {
-          label: function (item) {
-            return tooltipLabelCallback(
-              item,
-              mode,
-              view,
-              currency,
-              currencySymbol,
-              names
-            );
-          },
-        },
-      }),
+      tooltip: defaultTooltip(
+        currency,
+        currencySymbol,
+        names,
+        theme,
+        analysisTooltipOverrides(mode, view, currency, currencySymbol, names)
+      ),
     },
     interaction: {
       intersect: false,
@@ -109,9 +102,7 @@ export function getOptions(
         },
         ticks: {
           color: (c) => tickColorCallback(c),
-          callback: function (val) {
-            return tickValueCallback(val, mode, view, currencySymbol);
-          },
+          callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
         },
       },
       y1: {
@@ -127,10 +118,9 @@ export function getOptions(
         },
         ticks: {
           color: (c) => tickColorCallback(c),
-          callback: function (val) {
-            return tickValueCallback(val, mode, view, currencySymbol);
-          },
+          callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
         },
+
         // https://www.chartjs.org/docs/latest/api/classes/Scale.html#beforebuildticks
         // small description contained in the `CoreScaleOptions` interface in index.d.ts
         beforeBuildTicks: function (scale) {
@@ -161,6 +151,21 @@ function titleTextCallback(
   return `${
     view === "Logarithmic" ? "log[" + mode + "]" : mode
   } (${currency.toUpperCase()})`;
+}
+
+function analysisTooltipOverrides(
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  currency: Currency,
+  currencySymbol: string,
+  names: string[]
+) {
+  return {
+    callbacks: {
+      label: (item: TooltipItem<"line" | "bar">) =>
+        tooltipLabelCallback(item, mode, view, currency, currencySymbol, names),
+    },
+  };
 }
 
 function tooltipLabelCallback(
@@ -208,12 +213,12 @@ function tickValueCallback(
   view: AnalysisView,
   currencySymbol: string
 ) {
-  const tick = handleTicksYAxis(value as number, currencySymbol);
+  const tick = String(handleTicksYAxis(value as number, currencySymbol));
   if (mode === "Rate of Return") {
-    return String(tick).replace(currencySymbol, "") + "%";
+    return tick.replace(currencySymbol, "") + "%";
   }
   if (view === "Logarithmic") {
-    return String(tick).replace(currencySymbol, "");
+    return tick.replace(currencySymbol, "");
   }
   return tick;
 }
