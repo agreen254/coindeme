@@ -23,6 +23,12 @@ type AnalysisActions = {
   addSeries: (series: AnalysisSeries) => void;
 };
 
+export const emptySeries: AnalysisSeries = {
+  axis: "left",
+  id: "",
+  name: "",
+};
+
 const initDecimationThreshold = Infinity;
 const initDataMode: AnalysisDataMode = "Price";
 const initSeries: AnalysisSeries[] = [

@@ -21,7 +21,7 @@ const AnalysisWrapper = () => {
   const currency = useUserCurrencySetting();
 
   const responses = useComparisonChartQueries({
-    ids: series.map((s) => s.id),
+    ids: series.filter((s) => s.id).map((s) => s.id),
     currency: currency,
     days: String(timeLength),
   });
