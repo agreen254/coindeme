@@ -37,7 +37,7 @@ const AnalysisLegend = ({ series }: Props) => {
       {series.length < 3 && (
         <button onClick={() => addSeries(emptySeries)}>
           <AddIcon className="w-6 h-6 ml-2 mr-4 text-green-600 inline transition-all hover:scale-110" />
-          <span className="text-lg">Add Series</span>
+          <span className="text-xl">Add Series</span>
         </button>
       )}
     </>

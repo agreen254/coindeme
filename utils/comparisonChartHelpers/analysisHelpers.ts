@@ -177,7 +177,7 @@ function tooltipLabelCallback(
       ": " +
       Intl.NumberFormat("en-US", {
         maximumFractionDigits: 2,
-        signDisplay: "negative",
+        signDisplay: "auto",
       }).format(item.raw as number) +
       "%"
     );
