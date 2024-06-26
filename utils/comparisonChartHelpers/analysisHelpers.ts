@@ -1,4 +1,4 @@
-import { ChartOptions } from "chart.js";
+import { ChartOptions, ScriptableScaleContext, TooltipItem } from "chart.js";
 import {
   AnalysisDataMode,
   AnalysisSeries,
@@ -55,38 +55,19 @@ export function getOptions(
         padding: {
           bottom: 24,
         },
-        text: (() => {
-          if (mode === "Rate of Return") return "Rate of Return (%)";
-          else
-            return `${
-              view === "Logarithmic" ? "log[" + mode + "]" : mode
-            } (${currency.toUpperCase()})`;
-        })(),
+        text: titleTextCallback(mode, view, currency),
       },
       tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
         callbacks: {
           label: function (item) {
-            if (mode === "Rate of Return") {
-              return (
-                names[item.datasetIndex] +
-                ": " +
-                Intl.NumberFormat("en-US", {
-                  maximumFractionDigits: 2,
-                  signDisplay: "negative",
-                }).format(item.raw as number) +
-                "%"
-              );
-            }
-
-            const newItem = {
-              ...item,
-              raw:
-                // show the actual value instead of the log value
-                view === "Logarithmic"
-                  ? Math.pow(10, item.raw as number)
-                  : (item.raw as number),
-            };
-            return handleLabelText(newItem, currency, currencySymbol, names);
+            return tooltipLabelCallback(
+              item,
+              mode,
+              view,
+              currency,
+              currencySymbol,
+              names
+            );
           },
         },
       }),
@@ -124,18 +105,12 @@ export function getOptions(
           color: gridColor[theme],
         },
         grid: {
-          color: (c) =>
-            c["tick"]["value"] < 0
-              ? gridNegativeColor[theme]
-              : gridColor[theme],
+          color: (c) => gridColorCallback(c, theme),
         },
         ticks: {
-          color: (c) => (c.tick.value < 0 ? "Red" : "Gray"),
+          color: (c) => tickColorCallback(c),
           callback: function (val) {
-            const tick = handleTicksYAxis(val as number, currencySymbol);
-            return mode === "Rate of Return"
-              ? String(tick).replace(currencySymbol, "") + "%"
-              : tick;
+            return tickValueCallback(val, mode, view, currencySymbol);
           },
         },
       },
@@ -148,18 +123,12 @@ export function getOptions(
           color: gridColor[theme],
         },
         grid: {
-          color: (c) =>
-            c["tick"]["value"] < 0
-              ? gridNegativeColor[theme]
-              : gridColor[theme],
+          color: (c) => gridColorCallback(c, theme),
         },
         ticks: {
-          color: (c) => (c["tick"]["value"] < 0 ? "Red" : "Gray"),
+          color: (c) => tickColorCallback(c),
           callback: function (val) {
-            const tick = handleTicksYAxis(val as number, currencySymbol);
-            return mode === "Rate of Return"
-              ? String(tick).replace(currencySymbol, "") + "%"
-              : tick;
+            return tickValueCallback(val, mode, view, currencySymbol);
           },
         },
         // https://www.chartjs.org/docs/latest/api/classes/Scale.html#beforebuildticks
@@ -181,4 +150,70 @@ export function getOptions(
       },
     },
   };
+}
+
+function titleTextCallback(
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  currency: Currency
+) {
+  if (mode === "Rate of Return") return "Rate of Return (%)";
+  return `${
+    view === "Logarithmic" ? "log[" + mode + "]" : mode
+  } (${currency.toUpperCase()})`;
+}
+
+function tooltipLabelCallback(
+  item: TooltipItem<"line" | "bar">,
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  currency: Currency,
+  currencySymbol: string,
+  names: string[]
+) {
+  if (mode === "Rate of Return") {
+    return (
+      names[item.datasetIndex] +
+      ": " +
+      Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 2,
+        signDisplay: "negative",
+      }).format(item.raw as number) +
+      "%"
+    );
+  }
+
+  const newItem = {
+    ...item,
+    raw:
+      // show the actual value instead of the log value
+      view === "Logarithmic"
+        ? Math.pow(10, item.raw as number)
+        : (item.raw as number),
+  };
+  return handleLabelText(newItem, currency, currencySymbol, names);
+}
+
+function gridColorCallback(c: ScriptableScaleContext, theme: ThemeType) {
+  return c.tick.value < 0 ? gridNegativeColor[theme] : gridColor[theme];
+}
+
+function tickColorCallback(c: ScriptableScaleContext) {
+  return c.tick.value < 0 ? "Red" : "Gray";
+}
+
+function tickValueCallback(
+  value: string | number,
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  currencySymbol: string
+) {
+  const tick = handleTicksYAxis(value as number, currencySymbol);
+  if (mode === "Rate of Return") {
+    return String(tick).replace(currencySymbol, "") + "%";
+  }
+  if (view === "Logarithmic") {
+    return String(tick).replace(currencySymbol, "");
+  }
+  return tick;
 }

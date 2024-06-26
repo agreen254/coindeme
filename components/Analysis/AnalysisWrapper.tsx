@@ -12,7 +12,6 @@ import AnalysisLegend from "./AnalysisLegend";
 import AnalysisViewSelector from "./AnalysisSelectors/AnalysisViewSelector";
 import AnalysisDataSelector from "./AnalysisSelectors/AnalysisDataSelector";
 import AnalysisDecimationSelector from "./AnalysisSelectors/AnalysisDecimationSelector";
-import AnalysisRowWithProvider from "./AnalysisRow/AnalysisRow";
 import Loader from "../Loader";
 import Panel from "../Theme/Panel";
 
@@ -79,9 +78,6 @@ const AnalysisWrapper = () => {
             </div>
           </ErrorBoundary>
         )}
-      </Panel>
-      <Panel className="mt-4">
-        <AnalysisRowWithProvider initId="bitcoin" />
       </Panel>
     </div>
   );
