@@ -1,7 +1,6 @@
 "use client";
 
-import { PlusCircle as AddIcon } from "lucide-react";
-import { XCircle as DeleteIcon } from "lucide-react";
+import { PlusCircle as AddIcon, XCircle as DeleteIcon } from "lucide-react";
 
 import { AnalysisSeries } from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
