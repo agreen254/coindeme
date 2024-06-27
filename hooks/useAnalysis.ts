@@ -18,9 +18,9 @@ type AnalysisActions = {
   setView: (view: AnalysisState["view"]) => void;
 
   setSeriesAxisById: (id: string, axis: AnalysisSeries["axis"]) => void;
-  setSeriesNameById: (id: string, name: AnalysisSeries["name"]) => void;
   removeSeriesById: (id: string) => void;
   addSeries: (series: AnalysisSeries) => void;
+  updateSeries: (index: number, id: string, name: string) => void;
 };
 
 export const emptySeries: AnalysisSeries = {
@@ -65,16 +65,16 @@ const useAnalysis = create<AnalysisState>((set) => ({
           s.id === id ? { ...s, axis: axis } : s
         ),
       })),
-    setSeriesNameById: (id, name) =>
-      set((state) => ({
-        series: state.series.map((s) =>
-          s.id === id ? { ...s, name: name } : s
-        ),
-      })),
     removeSeriesById: (id) =>
       set((state) => ({ series: state.series.filter((s) => s.id !== id) })),
     addSeries: (series) =>
       set((state) => ({ series: [...state.series, series] })),
+    updateSeries: (index, id, name) =>
+      set((state) => ({
+        series: state.series.map((s, i) =>
+          i === index ? { id, name, axis: s.axis } : s
+        ),
+      })),
   },
 }));
 

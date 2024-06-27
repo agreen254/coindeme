@@ -8,10 +8,8 @@ import DropdownProvider from "@/providers/DropdownProvider";
 import { initializeNewDropdown } from "@/hooks/useDropdownStore";
 import AnalysisRowInput from "./AnalysisRowInput";
 
-import Panel from "../../Theme/Panel";
-
 type Props = {
-  initId: string | undefined;
+  initId?: string;
 };
 
 const AnalysisRow = ({ initId }: Props) => {
@@ -21,7 +19,7 @@ const AnalysisRow = ({ initId }: Props) => {
   const [coinQuery, setCoinQuery] = useState<string>(initId ?? "");
 
   return (
-    <Panel className="w-[500px] relative flex">
+    <span className="relative">
       <AnalysisRowInput
         dropdownId={ANALYSIS_DROPDOWN_ID}
         coinId={coinId}
@@ -30,7 +28,7 @@ const AnalysisRow = ({ initId }: Props) => {
         setQuery={setCoinQuery}
         activeIdHandler={() => null}
       />
-    </Panel>
+    </span>
   );
 };
 
