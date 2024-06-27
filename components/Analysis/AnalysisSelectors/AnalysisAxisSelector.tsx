@@ -17,21 +17,21 @@ const AnalysisAxisSelector = ({ series }: Props) => {
 
   return (
     <span className="flex">
-      {axes.map((ax) => (
-        <>
+      {axes.map((axis) => (
+        <span key={series.id + axis}>
           <input
             type="radio"
-            id={series.id + ax}
-            value={ax}
-            checked={series.axis === ax}
+            id={series.id + axis}
+            value={axis}
+            checked={series.axis === axis}
             onChange={handleAxisChange}
             disabled={mode === "Rate of Return"}
-            className="mr-1"
+            className="mr-1 disabled:cursor-not-allowed"
           />
-          <label htmlFor={series.id + ax} className="text-lg mr-3">
-            {ax}
+          <label htmlFor={series.id + axis} className="text-sm uppercase mr-3">
+            {axis}
           </label>
-        </>
+        </span>
       ))}
     </span>
   );

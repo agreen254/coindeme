@@ -12,6 +12,7 @@ import AnalysisLegend from "./AnalysisLegend";
 import AnalysisViewSelector from "./AnalysisSelectors/AnalysisViewSelector";
 import AnalysisDataSelector from "./AnalysisSelectors/AnalysisDataSelector";
 import AnalysisDecimationSelector from "./AnalysisSelectors/AnalysisDecimationSelector";
+import AnalysisTimeSelector from "./AnalysisSelectors/AnalysisTimeSelector";
 import Loader from "../Loader";
 import Panel from "../Theme/Panel";
 
@@ -70,6 +71,9 @@ const AnalysisWrapper = () => {
                 </div>
                 <div>
                   <AnalysisDecimationSelector />
+                </div>
+                <div>
+                  <AnalysisTimeSelector />
                 </div>
                 <div>
                   <AnalysisDataSelector />

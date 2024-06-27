@@ -31,6 +31,7 @@ const AnalysisLegend = ({ series }: Props) => {
             style={{ backgroundColor: chartColorSets[idx].startColor.hex }}
           ></div>
           <span className="text-xl mr-6">{s.name}</span>
+          {/* Do not allow user to change axes if there is not a valid id entered yet */}
           {s.id && <AnalysisAxisSelector series={s} />}
         </div>
       ))}
