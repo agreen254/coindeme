@@ -17,10 +17,9 @@ type Props = {
 const AnalysisLegend = ({ series }: Props) => {
   const { addSeries, removeSeriesById } = useAnalysisActions();
 
-  // cannot delete if it is the last data series with a valid id
+  // cannot delete if it is the only data series total or the only one with a valid id
   const cannotDelete = (id: string) =>
-    series.length === 1 ||
-    (!!id && series.some(s => s.id));
+    series.length === 1 || (!!id && series.filter((s) => s.id).length === 1);
 
   // cannot add two new series with empty ids (duplicate keys)
   const hasEmptyId = series.some((s) => s.id === "");
@@ -46,8 +45,8 @@ const AnalysisLegend = ({ series }: Props) => {
             className="inline w-8 h-[6px] mr-2"
             style={{ backgroundColor: chartColorSets[idx].startColor.hex }}
           ></div>
+          <AnalysisRowWithProvider series={s} index={idx} />
           <span className="text-xl mr-6">{s.name}</span>
-          <AnalysisRowWithProvider />
           {/* Do not allow user to change axis if there is not a valid id entered yet */}
           {s.id && <AnalysisAxisSelector series={s} />}
         </div>

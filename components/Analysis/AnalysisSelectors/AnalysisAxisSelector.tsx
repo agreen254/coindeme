@@ -18,7 +18,7 @@ const AnalysisAxisSelector = ({ series }: Props) => {
   return (
     <span className="flex">
       {axes.map((axis) => (
-        <span key={series.id + axis}>
+        <span key={series.id + axis} className="flex items-center">
           <input
             type="radio"
             id={series.id + axis}

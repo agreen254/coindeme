@@ -28,7 +28,7 @@ const AnalysisDataSelector = () => {
         Data
       </p>
       {analysisDataModes.map((dataMode) => (
-        <div key={dataMode}>
+        <div key={dataMode} className="flex items-center my-1">
           <input
             type="radio"
             id={dataMode}

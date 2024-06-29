@@ -24,7 +24,7 @@ const AnalysisTimeSelector = () => {
         Time
       </p>
       {times.map((time) => (
-        <div key={time.label}>
+        <div key={time.label} className="flex items-center my-1">
           <input
             type="radio"
             id={time.label}

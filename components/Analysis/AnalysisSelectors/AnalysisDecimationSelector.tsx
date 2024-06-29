@@ -24,7 +24,7 @@ const AnalysisDecimationSelector = () => {
         Decimation
       </p>
       {thresholdOptions.map((opt) => (
-        <div key={opt}>
+        <div key={opt} className="flex items-center my-1">
           <input
             type="radio"
             id={"compression" + opt.toString()}

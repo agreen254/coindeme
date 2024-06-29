@@ -23,7 +23,7 @@ const AnalysisViewSelector = () => {
         View
       </p>
       {analysisViews.map((v) => (
-        <div key={v}>
+        <div key={v} className="flex items-center my-1">
           <input
             type="radio"
             id={v}

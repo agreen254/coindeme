@@ -119,7 +119,7 @@ const AnalysisRowInput = ({
         autoComplete="off"
         spellCheck="false"
         searchResults={results}
-        className="h-11 w-[50%] text-lg p-2 pb-4 pl-10 rounded-none bg-inherit focus:outline-none border-b border-transparent focus:border-slice focus:border-grad-r-blue"
+        className="p-2 text-xl rounded-lg mr-2 dark:bg-black bg-white"
         localQuery={query}
         setLocalQuery={setQuery}
         onKeyDown={handleKeyDown}
@@ -128,7 +128,7 @@ const AnalysisRowInput = ({
         ref={clickAwayRef}
         dropdownId={dropdownId}
         key="searchResults"
-        className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
+        className="w-[320px] max-h-[320px] overflow-y-auto dark:bg-black bg-white border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
       >
         {results.map((wrapper, idx) => (
           <DropdownMenuItem
