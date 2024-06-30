@@ -98,10 +98,10 @@ export function getOptions(
           color: gridColor[theme],
         },
         grid: {
-          color: (c) => gridColorCallback(c, theme),
+          color: (c) => gridColorCallback(c, theme, mode),
         },
         ticks: {
-          color: (c) => tickColorCallback(c),
+          color: (c) => tickColorCallback(c, mode),
           callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
         },
       },
@@ -114,10 +114,10 @@ export function getOptions(
           color: gridColor[theme],
         },
         grid: {
-          color: (c) => gridColorCallback(c, theme),
+          color: (c) => gridColorCallback(c, theme, mode),
         },
         ticks: {
-          color: (c) => tickColorCallback(c),
+          color: (c) => tickColorCallback(c, mode),
           callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
         },
 
@@ -199,12 +199,18 @@ function tooltipLabelCallback(
   return handleLabelText(newItem, currency, currencySymbol, names);
 }
 
-function gridColorCallback(c: ScriptableScaleContext, theme: ThemeType) {
-  return c.tick.value <= 0 ? gridNegativeColor[theme] : gridColor[theme];
+function gridColorCallback(
+  c: ScriptableScaleContext,
+  theme: ThemeType,
+  mode: AnalysisDataMode
+) {
+  return c.tick.value <= 0 && mode === "Rate of Return"
+    ? gridNegativeColor[theme]
+    : gridColor[theme];
 }
 
-function tickColorCallback(c: ScriptableScaleContext) {
-  return c.tick.value <= 0 ? "Red" : "Gray";
+function tickColorCallback(c: ScriptableScaleContext, mode: AnalysisDataMode) {
+  return c.tick.value <= 0 && mode === "Rate of Return" ? "Red" : "Gray";
 }
 
 function tickValueCallback(
