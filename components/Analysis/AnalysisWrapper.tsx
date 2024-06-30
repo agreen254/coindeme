@@ -45,12 +45,12 @@ const AnalysisWrapper = () => {
               </p>
             }
           >
-            <div className="h-[700px]">
+            <div className="h-[700px] mb-8">
               <AnalysisChart
                 rawData={responses.filter((r) => r.data).map((r) => r.data!)}
               />
             </div>
-            <div className="flex gap-x-4 mt-4">
+            <div className="flex gap-x-4">
               <div className="w-1/2">
                 <AnalysisLegend />
               </div>

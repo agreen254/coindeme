@@ -17,6 +17,7 @@ import {
 } from "@/hooks/useAnalysis";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
+import { useExcelSheet } from "@/hooks/useExcelSheet";
 
 type Props = {
   rawData: ComparisonChartResponse[];
@@ -32,12 +33,15 @@ const AnalysisChart = ({ rawData }: Props) => {
   const decimationThreshold = useAnalysisDecimationThreshold();
   const view = useAnalysisView();
 
-  const { label, values } = prepareAnalysisData(
+  const preparedData = prepareAnalysisData(
     rawData,
     mode,
     decimationThreshold,
     view
   );
+  const { label, values } = preparedData;
+
+  const exportData = useExcelSheet(preparedData, series, mode, view, currency);
 
   const data: ChartData<"line"> = {
     labels: label,
@@ -54,18 +58,21 @@ const AnalysisChart = ({ rawData }: Props) => {
   };
 
   return (
-    <Line
-      data={data}
-      options={getOptions(
-        currency,
-        timeLength,
-        names,
-        theme,
-        series,
-        mode,
-        view
-      )}
-    />
+    <>
+      <button onClick={exportData}>Export Data</button>
+      <Line
+        data={data}
+        options={getOptions(
+          currency,
+          timeLength,
+          names,
+          theme,
+          series,
+          mode,
+          view
+        )}
+      />
+    </>
   );
 };
 
