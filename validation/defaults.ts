@@ -15,6 +15,7 @@ export const DEFAULT_MARKET_ORDER: MarketFetchOrder = "called_index";
 export const DEFAULT_MARKET_ORDER_BY: MarketFetchOrderBy = "asc";
 export const DEFAULT_MARKET_TABLE_MODE: MarketTableMode = "paginated";
 
-export const ANALYSIS_DROPDOWN_ID = "analysisCoin";
-
 export const DEFAULT_DECIMATION_THRESHOLD = 150;
+
+export const ANALYSIS_DROPDOWN_ID = "analysisCoin";
+export const MAX_NUM_ANALYSIS_SERIES = 3;

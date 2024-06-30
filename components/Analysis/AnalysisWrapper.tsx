@@ -8,7 +8,7 @@ import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 
 import AnalysisChart from "./AnalysisChart";
-import AnalysisLegend from "./AnalysisLegend";
+import AnalysisLegend from "./AnalysisLegend/AnalysisLegend";
 import AnalysisViewSelector from "./AnalysisSelectors/AnalysisViewSelector";
 import AnalysisDataSelector from "./AnalysisSelectors/AnalysisDataSelector";
 import AnalysisDecimationSelector from "./AnalysisSelectors/AnalysisDecimationSelector";
@@ -63,7 +63,7 @@ const AnalysisWrapper = () => {
             </div>
             <div className="flex gap-x-4 mt-4">
               <div className="w-1/2">
-                <AnalysisLegend series={series} />
+                <AnalysisLegend />
               </div>
               <div className="mr-4 w-1/2 flex justify-end gap-x-20">
                 <div>

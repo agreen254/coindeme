@@ -200,11 +200,11 @@ function tooltipLabelCallback(
 }
 
 function gridColorCallback(c: ScriptableScaleContext, theme: ThemeType) {
-  return c.tick.value < 0 ? gridNegativeColor[theme] : gridColor[theme];
+  return c.tick.value <= 0 ? gridNegativeColor[theme] : gridColor[theme];
 }
 
 function tickColorCallback(c: ScriptableScaleContext) {
-  return c.tick.value < 0 ? "Red" : "Gray";
+  return c.tick.value <= 0 ? "Red" : "Gray";
 }
 
 function tickValueCallback(

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
 import {
@@ -8,6 +10,7 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
 
+import { useAnalysisActions } from "@/hooks/useAnalysis";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
@@ -20,26 +23,22 @@ import {
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+import { AnalysisSeries } from "@/utils/types";
 
 type Props = {
   dropdownId: string;
-  coinId: string;
-  setCoinId: React.Dispatch<React.SetStateAction<string>>;
-  query: string;
-  setQuery: React.Dispatch<React.SetStateAction<string>>;
-  activeIdHandler: () => void;
+  series: AnalysisSeries;
+  index: number;
 };
 
-const AnalysisRowInput = ({
-  dropdownId,
-  coinId,
-  setCoinId,
-  query,
-  setQuery,
-  activeIdHandler,
-}: Props) => {
+const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
   const currency = useUserCurrencySetting();
   const market = useMarketQuery(currency, "market_cap", "desc");
+
+  const coinId = series.id;
+  const [query, setQuery] = useState<string>(series.name);
+
+  const { updateSeries } = useAnalysisActions();
 
   const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
   const { setIsUsingMouse, setSelectedIndex } =
@@ -58,7 +57,6 @@ const AnalysisRowInput = ({
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    activeIdHandler();
     switch (e.key) {
       case "ArrowUp": {
         e.preventDefault();
@@ -86,8 +84,9 @@ const AnalysisRowInput = ({
         if (results.length > 0 && results.length > selectedIndex) {
           const id =
             selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
-          setQuery(coinNameFromId(id, targets));
-          setCoinId(id);
+          const name = coinNameFromId(id, targets);
+          setQuery(name);
+          updateSeries(index, id, name);
         }
         resetDropdown();
         break;
@@ -119,7 +118,7 @@ const AnalysisRowInput = ({
         autoComplete="off"
         spellCheck="false"
         searchResults={results}
-        className="p-2 text-xl rounded-lg mr-2 dark:bg-black bg-white"
+        className="p-2 text-xl rounded-lg w-[320px] mr-2 dark:bg-black bg-white"
         localQuery={query}
         setLocalQuery={setQuery}
         onKeyDown={handleKeyDown}
@@ -143,12 +142,10 @@ const AnalysisRowInput = ({
                 idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
               )}
               onClick={() => {
-                setCoinId(wrapper.id);
-                setQuery(
-                  wrapper.kind === "symbol"
-                    ? wrapper.otherText
-                    : wrapper.result.target
-                );
+                const id = results[selectedIndex].id;
+                const name = coinNameFromId(id, targets);
+                setQuery(name);
+                updateSeries(index, id, name);
                 resetDropdown();
               }}
               onMouseEnter={() => {
@@ -172,4 +169,4 @@ const AnalysisRowInput = ({
   );
 };
 
-export default AnalysisRowInput;
+export default AnalysisSeriesSelector;
