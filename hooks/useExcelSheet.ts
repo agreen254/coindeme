@@ -24,7 +24,7 @@ export const useExcelSheet = (
     const workbookTitle = titleTextCallback(mode, view, currency);
 
     const worksheetData = unixTimestamps
-      .map((l) => fromUnixTime(l))
+      .map((stamp) => fromUnixTime(stamp / 1000))
       .map((time, dataIdx) => {
         const namedValues = series.reduce((acc, curr, seriesIdx) => {
           return {
@@ -35,7 +35,7 @@ export const useExcelSheet = (
 
         // [{timestamp: ___, bitcoin: ___, ethereum: ___}, ...]
         return {
-          timestamp: time,
+          timestamp: time.toISOString(),
           ...namedValues,
         };
       });
