@@ -19,7 +19,7 @@ const AnalysisDecimationSelector = () => {
   }
 
   return (
-    <>
+    <div>
       <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
         Decimation
       </p>
@@ -38,7 +38,7 @@ const AnalysisDecimationSelector = () => {
           </label>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const AnalysisTimeSelector = () => {
   }
 
   return (
-    <>
+    <div>
       <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
         Time
       </p>
@@ -36,7 +36,7 @@ const AnalysisTimeSelector = () => {
           <label htmlFor={time.label}>{time.label}</label>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

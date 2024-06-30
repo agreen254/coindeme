@@ -13,7 +13,6 @@ import AnalysisViewSelector from "./AnalysisSelectors/AnalysisViewSelector";
 import AnalysisDataSelector from "./AnalysisSelectors/AnalysisDataSelector";
 import AnalysisDecimationSelector from "./AnalysisSelectors/AnalysisDecimationSelector";
 import AnalysisTimeSelector from "./AnalysisSelectors/AnalysisTimeSelector";
-import Loader from "../Loader";
 import Panel from "../Theme/Panel";
 
 const AnalysisWrapper = () => {
@@ -29,26 +28,16 @@ const AnalysisWrapper = () => {
 
   const someLoading = responses.some((r) => r.isPending);
   const allLoading = responses.every((r) => r.isPending);
-  const noneSelected = series.length === 0;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center mb-[20vh]">
+    <div className="w-full flex flex-col items-center justify-center">
       <Panel
         className={cn(
-          "w-table-xl min-h-[800px] p-6",
+          "w-table-xl min-h-[1000px] p-6 mb-[20vh]",
           someLoading && "animate-pulse"
         )}
       >
-        {noneSelected && (
-          <p className="text-muted-foreground text-lg text-italic">
-            No data to display.
-          </p>
-        )}
-        {allLoading ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <Loader />
-          </div>
-        ) : (
+        {!allLoading && (
           <ErrorBoundary
             fallback={
               <p className="text-center text-destructive text-2xl">
@@ -66,18 +55,10 @@ const AnalysisWrapper = () => {
                 <AnalysisLegend />
               </div>
               <div className="mr-4 w-1/2 flex justify-end gap-x-20">
-                <div>
-                  <AnalysisViewSelector />
-                </div>
-                <div>
-                  <AnalysisDecimationSelector />
-                </div>
-                <div>
-                  <AnalysisTimeSelector />
-                </div>
-                <div>
-                  <AnalysisDataSelector />
-                </div>
+                <AnalysisViewSelector />
+                <AnalysisDecimationSelector />
+                <AnalysisTimeSelector />
+                <AnalysisDataSelector />
               </div>
             </div>
           </ErrorBoundary>

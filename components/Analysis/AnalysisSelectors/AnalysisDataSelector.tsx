@@ -23,7 +23,7 @@ const AnalysisDataSelector = () => {
   }
 
   return (
-    <>
+    <div>
       <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
         Data
       </p>
@@ -40,7 +40,7 @@ const AnalysisDataSelector = () => {
           <label htmlFor={dataMode}>{dataMode}</label>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
