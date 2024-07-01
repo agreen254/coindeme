@@ -41,7 +41,14 @@ const AnalysisChart = ({ rawData }: Props) => {
   );
   const { label, values } = preparedData;
 
-  const exportData = useExcelSheet(preparedData, series, mode, view, currency);
+  const exportData = useExcelSheet(
+    preparedData,
+    series,
+    mode,
+    view,
+    timeLength,
+    currency
+  );
 
   const data: ChartData<"line"> = {
     labels: label,
@@ -59,7 +66,12 @@ const AnalysisChart = ({ rawData }: Props) => {
 
   return (
     <>
-      <button onClick={exportData}>Export Data</button>
+      <button
+        onClick={exportData}
+        className="py-2 px-4 rounded-md bg-black border border-gray-500 hover:border-gray-300"
+      >
+        Export Data 
+      </button>
       <Line
         data={data}
         options={getOptions(
