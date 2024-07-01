@@ -38,6 +38,24 @@ import {
   useAssetHistoryQueries,
 } from "@/hooks/useAssetQueries";
 
+export const analysisDataModes = [
+  "Price",
+  "Market Cap",
+  "Total Volume",
+  "Rate of Return",
+] as const;
+export type AnalysisDataMode = (typeof analysisDataModes)[number];
+
+export const analysisViews = ["Linear", "Logarithmic"] as const;
+export type AnalysisView = (typeof analysisViews)[number];
+
+export type AnalysisAxis = "left" | "right";
+export type AnalysisSeries = {
+  axis: AnalysisAxis;
+  id: string;
+  name: string;
+};
+
 export type AssetValidator = z.infer<typeof assetValidatorSchema>;
 export type Asset = z.infer<typeof assetSchema>;
 export type AssetHistory = z.infer<typeof assetHistorySchema>;
