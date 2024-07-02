@@ -33,7 +33,7 @@ const AnalysisWrapper = () => {
     <div className="w-full flex flex-col items-center justify-center">
       <Panel
         className={cn(
-          "w-table-xl min-h-[1000px] p-6 mb-[20vh]",
+          "w-table-xl relative min-h-[1000px] p-6 mb-[20vh]",
           someLoading && "animate-pulse"
         )}
       >

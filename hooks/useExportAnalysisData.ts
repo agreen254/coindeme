@@ -19,7 +19,7 @@ import { reverseTimeSelectorsMap as timesMap } from "@/utils/maps";
  *
  * https://docs.sheetjs.com/docs/demos/frontend/react/
  */
-export const useExcelSheet = (
+export const useExportAnalysisData = (
   data: ReturnType<typeof prepareAnalysisData>,
   series: AnalysisSeries[],
   mode: AnalysisDataMode,
@@ -37,7 +37,9 @@ export const useExcelSheet = (
     const worksheet = utils.json_to_sheet(worksheetData);
 
     const coinNames = series.map((s) => s.name);
-    const filename = getFilename(coinNames, mode, view, timeLength, currency);
+    const filename = getFilename(coinNames, mode, view, timeLength);
+
+    console.log(worksheetData);
 
     utils.book_append_sheet(workbook, worksheet, workbookTitle);
     writeFileXLSX(workbook, filename, { compression: true });
@@ -61,7 +63,10 @@ function getWorksheetData(
 
       // [{timestamp: ___, bitcoin: ___, ethereum: ___}, ...]
       return {
-        timestamp: time.toISOString(),
+        timestamp: time.toLocaleString("en-US", {
+          dateStyle: "short",
+          timeStyle: "short",
+        }),
         ...namedValues,
       };
     });
@@ -71,13 +76,12 @@ function getFilename(
   coinNames: string[],
   mode: AnalysisDataMode,
   view: AnalysisView,
-  timeLength: number,
-  currency: Currency
+  timeLength: number
 ) {
   const viewSaveFormat = view.toLowerCase();
   const modeSaveFormat = mode.toLowerCase().split(" ").join("-");
   const namesSaveFormat = coinNames.map((n) =>
-    n.toLowerCase().split(" ").join()
+    n.toLowerCase().split(" ").join("")
   );
   const timeLengthSaveFormat = timesMap.get(String(timeLength));
   const dateSaveFormat = new Date().toLocaleDateString("en-US", {
@@ -87,7 +91,6 @@ function getFilename(
   return (
     [
       ...namesSaveFormat,
-      currency,
       modeSaveFormat,
       viewSaveFormat,
       timeLengthSaveFormat,

@@ -17,7 +17,9 @@ import {
 } from "@/hooks/useAnalysis";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
-import { useExcelSheet } from "@/hooks/useExcelSheet";
+import { useExportAnalysisData } from "@/hooks/useExportAnalysisData";
+
+import AnalysisDownloadButton from "./AnalysisDownloadButton";
 
 type Props = {
   rawData: ComparisonChartResponse[];
@@ -41,7 +43,7 @@ const AnalysisChart = ({ rawData }: Props) => {
   );
   const { label, values } = preparedData;
 
-  const exportData = useExcelSheet(
+  const exportData = useExportAnalysisData(
     preparedData,
     series,
     mode,
@@ -66,12 +68,9 @@ const AnalysisChart = ({ rawData }: Props) => {
 
   return (
     <>
-      <button
-        onClick={exportData}
-        className="py-2 px-4 rounded-md bg-black border border-gray-500 hover:border-gray-300"
-      >
-        Export Data 
-      </button>
+      <div className="absolute top-2 right-2">
+        <AnalysisDownloadButton downloadCallback={exportData} />
+      </div>
       <Line
         data={data}
         options={getOptions(
