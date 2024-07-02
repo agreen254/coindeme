@@ -27,24 +27,50 @@ export const useExportAnalysisData = (
   timeLength: number,
   currency: Currency
 ) => {
-  return useCallback(() => {
-    const { label, values } = data;
-
-    const workbook = utils.book_new();
-    const workbookTitle = titleTextCallback(mode, view, currency);
-
-    const worksheetData = getWorksheetData(label, values, series);
-    const worksheet = utils.json_to_sheet(worksheetData);
-
-    const coinNames = series.map((s) => s.name);
-    const filename = getFilename(coinNames, mode, view, timeLength);
-
-    utils.book_append_sheet(workbook, worksheet, workbookTitle);
-    writeFileXLSX(workbook, filename, { compression: true });
-  }, [data, series, mode, view, currency]);
+  return useCallback(
+    (format: string) => {
+      switch (format) {
+        case "xlsx": {
+          exportAsXLSX(data, series, mode, view, timeLength, currency);
+          return;
+        }
+        case "csv": {
+          exportAsCSV(data, series, mode, view, timeLength, currency);
+          return;
+        }
+        default: {
+          return;
+        }
+      }
+    },
+    [data, series, mode, view, timeLength, currency]
+  );
 };
 
-function getWorksheetData(
+function exportAsXLSX(
+  data: ReturnType<typeof prepareAnalysisData>,
+  series: AnalysisSeries[],
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  timeLength: number,
+  currency: Currency
+) {
+  const { label, values } = data;
+
+  const workbook = utils.book_new();
+  const workbookTitle = titleTextCallback(mode, view, currency);
+
+  const worksheetData = getWorksheetDataXLSX(label, values, series);
+  const worksheet = utils.json_to_sheet(worksheetData);
+
+  const coinNames = series.map((s) => s.name);
+  const filename = getFilename(coinNames, mode, view, timeLength, "xlsx");
+
+  utils.book_append_sheet(workbook, worksheet, workbookTitle);
+  writeFileXLSX(workbook, filename, { compression: true });
+}
+
+function getWorksheetDataXLSX(
   unixTimestamps: number[],
   values: number[][],
   series: AnalysisSeries[]
@@ -70,11 +96,29 @@ function getWorksheetData(
     });
 }
 
+/**
+ * https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+ *
+ * see: kolypto's answer
+ */
+function exportAsCSV(
+  data: ReturnType<typeof prepareAnalysisData>,
+  series: AnalysisSeries[],
+  mode: AnalysisDataMode,
+  view: AnalysisView,
+  timeLength: number,
+  currency: Currency
+) {
+  const coinNames = series.map((s) => s.name);
+  const filename = getFilename(coinNames, mode, view, timeLength, "csv");
+}
+
 function getFilename(
   coinNames: string[],
   mode: AnalysisDataMode,
   view: AnalysisView,
-  timeLength: number
+  timeLength: number,
+  format: string
 ) {
   const viewSaveFormat = view.toLowerCase();
   const modeSaveFormat = mode.toLowerCase().split(" ").join("-");
@@ -93,6 +137,8 @@ function getFilename(
       viewSaveFormat,
       timeLengthSaveFormat,
       dateSaveFormat,
-    ].join("-") + ".xlsx"
+    ].join("-") +
+    "." +
+    format
   );
 }

@@ -19,7 +19,7 @@ import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
 import { useExportAnalysisData } from "@/hooks/useExportAnalysisData";
 
-import AnalysisDownloadButton from "./AnalysisDownloadButton";
+import AnalysisExportMenu from "./AnalysisExportMenu";
 
 type Props = {
   rawData: ComparisonChartResponse[];
@@ -69,7 +69,7 @@ const AnalysisChart = ({ rawData }: Props) => {
   return (
     <>
       <div className="absolute top-2 right-2">
-        <AnalysisDownloadButton downloadCallback={exportData} />
+        <AnalysisExportMenu downloadCallback={exportData} />
       </div>
       <Line
         data={data}

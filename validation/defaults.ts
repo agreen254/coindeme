@@ -18,4 +18,5 @@ export const DEFAULT_MARKET_TABLE_MODE: MarketTableMode = "paginated";
 export const DEFAULT_DECIMATION_THRESHOLD = 150;
 
 export const ANALYSIS_DROPDOWN_ID = "analysisCoin";
+export const ANALYSIS_EXPORT_FORMATS = ["xlsx", "csv"] as const;
 export const MAX_NUM_ANALYSIS_SERIES = 3;
