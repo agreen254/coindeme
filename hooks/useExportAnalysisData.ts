@@ -39,8 +39,6 @@ export const useExportAnalysisData = (
     const coinNames = series.map((s) => s.name);
     const filename = getFilename(coinNames, mode, view, timeLength);
 
-    console.log(worksheetData);
-
     utils.book_append_sheet(workbook, worksheet, workbookTitle);
     writeFileXLSX(workbook, filename, { compression: true });
   }, [data, series, mode, view, currency]);
