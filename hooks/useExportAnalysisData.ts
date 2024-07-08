@@ -206,7 +206,6 @@ function getFilename(
   extension: string,
   currency: Currency
 ) {
-  const currencySaveFormat = mode === "Rate of Return" ? "" : currency;
   const viewSaveFormat = view.toLowerCase();
   const modeSaveFormat = mode.toLowerCase().split(" ").join("-");
   const namesSaveFormat = coinNames.map((n) =>
@@ -221,7 +220,7 @@ function getFilename(
     [
       ...namesSaveFormat,
       modeSaveFormat,
-      currencySaveFormat,
+      currency,
       viewSaveFormat,
       timeLengthSaveFormat,
       dateSaveFormat,
