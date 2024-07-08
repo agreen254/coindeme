@@ -28,8 +28,8 @@ export const useExportAnalysisData = (
   currency: Currency
 ) => {
   return useCallback(
-    (format: string) => {
-      switch (format) {
+    (extension: string) => {
+      switch (extension) {
         case "xlsx": {
           exportAsXLSX(data, series, mode, view, timeLength, currency);
           return;
@@ -64,7 +64,14 @@ function exportAsXLSX(
   const worksheet = utils.json_to_sheet(worksheetData);
 
   const coinNames = series.map((s) => s.name);
-  const filename = getFilename(coinNames, mode, view, timeLength, "xlsx");
+  const filename = getFilename(
+    coinNames,
+    mode,
+    view,
+    timeLength,
+    "xlsx",
+    currency
+  );
 
   utils.book_append_sheet(workbook, worksheet, workbookTitle);
   writeFileXLSX(workbook, filename, { compression: true });
@@ -115,32 +122,72 @@ function exportAsCSV(
   const { label, values } = data;
 
   const coinNames = series.map((s) => s.name);
-  const csvData = getDataCSV(coinNames, [label, ...values]);
-  const filename = getFilename(coinNames, mode, view, timeLength, "csv");
+  const timestamps = label.map((stamp) =>
+    fromUnixTime(stamp / 1000)
+      .toLocaleString("en-US", { dateStyle: "short", timeStyle: "short" })
+      .replaceAll(",", "")
+  );
+
+  const csvColumnData = [timestamps, ...values];
+  const csvColumnHeaders = ["timestamps", ...coinNames];
+
+  const csvData = getDataCSV(csvColumnHeaders, csvColumnData);
+  const filename = getFilename(
+    coinNames,
+    mode,
+    view,
+    timeLength,
+    "csv",
+    currency
+  );
 
   const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
 
-  const pom = document.createElement("a");
-  pom.id = "EXPORT_CSV";
-  pom.href = url;
-  pom.setAttribute("download", filename);
-  pom.click();
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.setAttribute("download", filename);
+  downloadLink.click();
 
   // clean up
-  pom.remove();
+  downloadLink.remove();
   URL.revokeObjectURL(url);
 }
 
-function getDataCSV(names: string[], values: number[][]) {
+function getDataCSV(headers: string[], values: (string | number)[][]) {
   /**
+   * Transpose the array to stack the data vertically instead of horizontally.
+   * This is necessary to properly stack the values underneath the headers.
+   * The sheets library used for xlsx exporting does this automatically for us,
+   * but it is necessary to do for manual csv exporting.
+   *
+   * Have: [
+   *   [1, 2, 3, 4, 5],
+   *   [1, 2, 3, 4, 5],
+   *   [1, 2, 3, 4, 5]
+   * ]
+   *
+   * Want: [
+   *   [1, 1, 1],
+   *   [2, 2, 2],
+   *   [3, 3, 3],
+   *   [4, 4, 4],
+   *   [5, 5, 5]
+   * ]
+   *
    * https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
    */
-  const transposedValues = values[0].map((_, i) => values.map((x) => x[i]));
-  const headers = ["timestamp", ...names];
+  const transposedValues = values[0].map((_, rowIndex) =>
+    values.map((row) => row[rowIndex])
+  );
   const dataAsArray = [headers, ...transposedValues];
 
-  // turn array to csv-compatible string
+  /**
+   * Turn array into a csv-compatible string.
+   *
+   * Each value needs to be surrounded in double quotes and delimited with a comma.
+   * Lines are separated with a carriage return (\r used for Windows compatability) and a newline character.
+   */
   return dataAsArray
     .map((row) =>
       row
@@ -156,8 +203,10 @@ function getFilename(
   mode: AnalysisDataMode,
   view: AnalysisView,
   timeLength: number,
-  format: string
+  extension: string,
+  currency: Currency
 ) {
+  const currencySaveFormat = mode === "Rate of Return" ? "" : currency;
   const viewSaveFormat = view.toLowerCase();
   const modeSaveFormat = mode.toLowerCase().split(" ").join("-");
   const namesSaveFormat = coinNames.map((n) =>
@@ -172,11 +221,12 @@ function getFilename(
     [
       ...namesSaveFormat,
       modeSaveFormat,
+      currencySaveFormat,
       viewSaveFormat,
       timeLengthSaveFormat,
       dateSaveFormat,
     ].join("-") +
     "." +
-    format
+    extension
   );
 }
