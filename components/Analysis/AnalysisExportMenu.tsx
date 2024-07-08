@@ -22,9 +22,7 @@ const AnalysisExportMenu = ({ downloadCallback }: Props) => {
         value="export"
         className="p-2 pl-8 uppercase text-sm border border-zinc-200 dark:border-zinc-700 rounded-sm"
       >
-        <option value="export" disabled hidden>
-          export
-        </option>
+        <option value="export" disabled>export as</option>
         {ANALYSIS_EXPORT_FORMATS.map((f) => (
           <option key={f} value={f}>
             {f}

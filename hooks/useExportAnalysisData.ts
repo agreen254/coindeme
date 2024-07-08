@@ -13,7 +13,7 @@ import { prepareAnalysisData } from "@/utils/comparisonChartHelpers/prepareAnaly
 import { reverseTimeSelectorsMap as timesMap } from "@/utils/maps";
 
 /**
- * Relevant docs for exporting data:
+ * Relevant docs for exporting excel data:
  *
  * https://docs.sheetjs.com/docs/getting-started/examples/export/
  *
@@ -78,12 +78,15 @@ function getWorksheetDataXLSX(
   return unixTimestamps
     .map((stamp) => fromUnixTime(stamp / 1000))
     .map((time, dataIdx) => {
-      const namedValues = series.reduce((acc, curr, seriesIdx) => {
-        return {
-          ...acc,
-          [curr.name]: values[seriesIdx][dataIdx],
-        };
-      }, {});
+      const namedValues = series.reduce(
+        (valuePairs, currentSeries, seriesIdx) => {
+          return {
+            ...valuePairs,
+            [currentSeries.name]: values[seriesIdx][dataIdx],
+          };
+        },
+        {}
+      );
 
       // [{timestamp: ___, bitcoin: ___, ethereum: ___}, ...]
       return {
@@ -109,8 +112,43 @@ function exportAsCSV(
   timeLength: number,
   currency: Currency
 ) {
+  const { label, values } = data;
+
   const coinNames = series.map((s) => s.name);
+  const csvData = getDataCSV(coinNames, [label, ...values]);
   const filename = getFilename(coinNames, mode, view, timeLength, "csv");
+
+  const blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const pom = document.createElement("a");
+  pom.id = "EXPORT_CSV";
+  pom.href = url;
+  pom.setAttribute("download", filename);
+  pom.click();
+
+  // clean up
+  pom.remove();
+  URL.revokeObjectURL(url);
+}
+
+function getDataCSV(names: string[], values: number[][]) {
+  /**
+   * https://stackoverflow.com/questions/17428587/transposing-a-2d-array-in-javascript
+   */
+  const transposedValues = values[0].map((_, i) => values.map((x) => x[i]));
+  const headers = ["timestamp", ...names];
+  const dataAsArray = [headers, ...transposedValues];
+
+  // turn array to csv-compatible string
+  return dataAsArray
+    .map((row) =>
+      row
+        .map(String)
+        .map((value) => `"${value}"`)
+        .join(",")
+    )
+    .join("\r\n");
 }
 
 function getFilename(
