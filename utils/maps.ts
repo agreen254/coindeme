@@ -9,6 +9,15 @@ export const comparisonChartsTimeSelectorsMap = new Map<string, string>([
   ["1Y", "365"],
 ]);
 
+export const reverseTimeSelectorsMap = new Map<string, string>([
+  ["1", "1D"],
+  ["7", "7D"],
+  ["14", "14D"],
+  ["31", "1M"],
+  ["180", "6M"],
+  ["365", "1Y"],
+]);
+
 export const currencyMap = new Map<Currency, string>([
   ["usd", "$"],
   ["eur", "€"],

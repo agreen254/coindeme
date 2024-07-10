@@ -17,6 +17,9 @@ import {
 } from "@/hooks/useAnalysis";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
+import { useExportAnalysisData } from "@/hooks/useExportAnalysisData";
+
+import AnalysisExportMenu from "./AnalysisExportMenu";
 
 type Props = {
   rawData: ComparisonChartResponse[];
@@ -32,11 +35,21 @@ const AnalysisChart = ({ rawData }: Props) => {
   const decimationThreshold = useAnalysisDecimationThreshold();
   const view = useAnalysisView();
 
-  const { label, values } = prepareAnalysisData(
+  const preparedData = prepareAnalysisData(
     rawData,
     mode,
     decimationThreshold,
     view
+  );
+  const { label, values } = preparedData;
+
+  const exportData = useExportAnalysisData(
+    preparedData,
+    series,
+    mode,
+    view,
+    timeLength,
+    currency
   );
 
   const data: ChartData<"line"> = {
@@ -54,18 +67,23 @@ const AnalysisChart = ({ rawData }: Props) => {
   };
 
   return (
-    <Line
-      data={data}
-      options={getOptions(
-        currency,
-        timeLength,
-        names,
-        theme,
-        series,
-        mode,
-        view
-      )}
-    />
+    <>
+      <div className="absolute top-3 right-3">
+        <AnalysisExportMenu downloadCallback={exportData} />
+      </div>
+      <Line
+        data={data}
+        options={getOptions(
+          currency,
+          timeLength,
+          names,
+          theme,
+          series,
+          mode,
+          view
+        )}
+      />
+    </>
   );
 };
 

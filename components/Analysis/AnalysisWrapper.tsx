@@ -33,7 +33,7 @@ const AnalysisWrapper = () => {
     <div className="w-full flex flex-col items-center justify-center">
       <Panel
         className={cn(
-          "w-table-xl min-h-[1000px] p-6 mb-[20vh]",
+          "w-table-xl relative min-h-[1000px] p-6 mb-[20vh]",
           someLoading && "animate-pulse"
         )}
       >
@@ -45,12 +45,12 @@ const AnalysisWrapper = () => {
               </p>
             }
           >
-            <div className="h-[700px]">
+            <div className="h-[700px] mb-8">
               <AnalysisChart
                 rawData={responses.filter((r) => r.data).map((r) => r.data!)}
               />
             </div>
-            <div className="flex gap-x-4 mt-4">
+            <div className="flex gap-x-4">
               <div className="w-1/2">
                 <AnalysisLegend />
               </div>

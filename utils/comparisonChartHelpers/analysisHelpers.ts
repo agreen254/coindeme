@@ -142,7 +142,7 @@ export function getOptions(
   };
 }
 
-function titleTextCallback(
+export function titleTextCallback(
   mode: AnalysisDataMode,
   view: AnalysisView,
   currency: Currency
