@@ -10,12 +10,15 @@ const config = {
   ],
   prefix: "",
   theme: {
+    screens: {
+      "screen-xl": "1500px",
+      "screen-lg": "1200px",
+      "screen-md": "900px",
+      "screen-sm": "640px",
+    },
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
     extend: {
       boxShadow: {
@@ -81,6 +84,7 @@ const config = {
       },
       width: {
         "table-xl": "1467px",
+        "table-lg": "1150px",
       },
       keyframes: {
         "accordion-down": {

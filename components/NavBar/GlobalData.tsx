@@ -37,22 +37,24 @@ const GlobalData = () => {
     },
   } = data;
 
-  const HorizontalDivider = () => (
-    <span className="w-[1px] h-6 bg-black/20 dark:bg-white/10" />
+  const VerticalDivider = ({ className }: { className?: string }) => (
+    <span
+      className={cn("w-[1px] h-6 bg-black/20 dark:bg-white/10", className)}
+    />
   );
 
   return (
     <div className="flex justify-center h-[52px] border-y border-black/20 dark:border-white/10 text-sm">
-      <div className="w-table-xl flex justify-between items-center px-4">
-        <span>
+      <div className="w-table-xl flex screen-lg:justify-between justify-center screen-lg:gap-x-0 gap-x-12 items-center px-4 mx-6">
+        <span className="hidden screen-lg:block ml-0">
           <HandCoinsIcon className="w-6 h-6 inline text-default" />
           <span className="ml-1 mr-2 font-semibold text-muted-foreground">
             Coins
           </span>
           <span>{num_active_coins}</span>
         </span>
-        <HorizontalDivider />
-        <span>
+        <VerticalDivider className="hidden screen-lg:block" />
+        <span className="hidden screen-lg:block">
           <span>
             <ExchangeIcon className="w-6 h-6 inline fill-default" />
           </span>
@@ -61,7 +63,7 @@ const GlobalData = () => {
           </span>
           <span>{num_markets}</span>
         </span>
-        <HorizontalDivider />
+        <VerticalDivider className="hidden screen-lg:block" />
         <span>
           <CaretIcon
             className={cn(
@@ -72,7 +74,7 @@ const GlobalData = () => {
           />
           {currencySymbol + formatPriceValue(total_market_cap[currency])}
         </span>
-        <HorizontalDivider />
+        <VerticalDivider />
         <span className="flex items-center">
           {currencySymbol + formatPriceValue(total_volume[currency])}
           <ProgressWidget
@@ -83,7 +85,7 @@ const GlobalData = () => {
             }
           />
         </span>
-        <HorizontalDivider />
+        <VerticalDivider />
         <span className="flex items-center">
           <Image
             width={25}
@@ -100,7 +102,7 @@ const GlobalData = () => {
             progressPercentage={btc_market_percentage}
           />
         </span>
-        <HorizontalDivider />
+        <VerticalDivider />
         <span className="flex items-center">
           <Image
             width={25}
