@@ -5,6 +5,8 @@ import {
   marketFetchOrderSchema,
   marketTableModeSchema,
 } from "@/validation/schema";
+import { NextURL } from "next/dist/server/web/next-url";
+import { auth } from "./validation/auth";
 import {
   MARKET_FIELD_KEY,
   MARKET_ORDER_KEY,
@@ -15,7 +17,6 @@ import {
   DEFAULT_MARKET_ORDER_BY,
   DEFAULT_MARKET_TABLE_MODE,
 } from "./validation/defaults";
-import { NextURL } from "next/dist/server/web/next-url";
 import { validateSearchParams } from "./validation/searchParamsValidator";
 import type { SearchParamValidationUnit } from "./utils/types";
 
@@ -69,6 +70,7 @@ function handleMarketSearchParams(url: NextURL, searchParams: URLSearchParams) {
   return flag ? NextResponse.redirect(url) : null;
 }
 
+
 export function middleware(req: NextRequest) {
   const nextUrl = req.nextUrl;
   const searchParams = req.nextUrl.searchParams;
@@ -78,6 +80,7 @@ export function middleware(req: NextRequest) {
       return handleMarketSearchParams(nextUrl, searchParams);
     }
     default: {
+      auth();
       return null;
     }
   }
