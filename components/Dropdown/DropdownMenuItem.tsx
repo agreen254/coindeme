@@ -1,7 +1,8 @@
 "use client";
 
-import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
 import { useEffect, useRef } from "react";
+import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
+import { cn } from "@/utils/cn";
 
 interface DropdownMenuItemProps extends React.HTMLAttributes<HTMLDivElement> {
   dropdownId: string;
@@ -25,7 +26,11 @@ const DropdownMenuItem = ({
   }, [selectedIndex, isUsingMouse]);
 
   return (
-    <div ref={ref} {...props}>
+    <div
+      ref={ref}
+      {...props}
+      className={cn("text-sm screen-sm:text-base", props.className)}
+    >
       {props.children}
     </div>
   );

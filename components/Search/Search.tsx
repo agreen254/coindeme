@@ -46,7 +46,7 @@ const Search = ({ dropdownId }: Props) => {
 
   return (
     <div className="flex justify-center">
-      <div ref={clickAwayRef} className="relative mb-2">
+      <div ref={clickAwayRef} className="relative">
         <label htmlFor="mainSearch" className="sr-only">
           Search Coins
         </label>
@@ -56,8 +56,9 @@ const Search = ({ dropdownId }: Props) => {
           disabled={!targets}
           searchResults={results}
           className="pr-5 pl-12 py-[9px] w-[320px] rounded-md dark:bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
+          autoComplete="off"
         />
-        <SearchIcon className="w-[18px] h-[18px] inline absolute left-4 top-[12px] fill-default" />
+        <SearchIcon className="hidden screen-sm:inline w-[18px] h-[18px] absolute left-4 top-[12px] fill-default" />
         <DropdownMenu
           dropdownId={dropdownId}
           key="searchResults"

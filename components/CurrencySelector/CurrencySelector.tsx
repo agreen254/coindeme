@@ -63,7 +63,7 @@ const CurrencySelector = ({ dropdownId }: Props) => {
             className={cn(
               currency === entry[0] && "text-menu-highlight",
               index === selectedIndex &&
-                "bg-zinc-200 dark:bg-zinc-600 first:rounded-t-md last:rounded-b-md text-inherit"
+                "bg-zinc-200 dark:bg-zinc-600 first:rounded-t-md last:rounded-b-md"
             )}
           >
             <button

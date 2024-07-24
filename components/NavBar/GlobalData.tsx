@@ -44,9 +44,9 @@ const GlobalData = () => {
   );
 
   return (
-    <div className="flex justify-center h-[52px] border-y border-black/20 dark:border-white/10 text-sm">
-      <div className="w-table-xl flex screen-lg:justify-between justify-center screen-lg:gap-x-0 gap-x-12 items-center px-4 mx-6">
-        <span className="hidden screen-lg:block ml-0">
+    <div className="flex justify-center h-[52px] border-y border-black/20 dark:border-white/10 text-xs screen-sm:text-sm">
+      <div className="max-w-table-xl w-[90%] gap-x-2 flex justify-between items-center">
+        <span className="hidden screen-lg:block">
           <HandCoinsIcon className="w-6 h-6 inline text-default" />
           <span className="ml-1 mr-2 font-semibold text-muted-foreground">
             Coins
@@ -64,7 +64,7 @@ const GlobalData = () => {
           <span>{num_markets}</span>
         </span>
         <VerticalDivider className="hidden screen-lg:block" />
-        <span>
+        <span className="hidden screen-md:block">
           <CaretIcon
             className={cn(
               "w-4 h-4 inline mr-1",
@@ -74,18 +74,18 @@ const GlobalData = () => {
           />
           {currencySymbol + formatPriceValue(total_market_cap[currency])}
         </span>
-        <VerticalDivider />
+        <VerticalDivider className="hidden screen-md:block" />
         <span className="flex items-center">
           {currencySymbol + formatPriceValue(total_volume[currency])}
           <ProgressWidget
-            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            containerClassName="screen-sm:w-16 w-8 ml-2 bg-black/20 dark:bg-white/20"
             progressClassName="bg-black/30 dark:bg-white"
             progressPercentage={
               total_market_cap[currency] / total_volume[currency]
             }
           />
         </span>
-        <VerticalDivider />
+        <VerticalDivider className="hidden screen-md:block" />
         <span className="flex items-center">
           <Image
             width={25}
@@ -93,16 +93,15 @@ const GlobalData = () => {
             className="-translate-y-[1px] mr-2"
             src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
             alt="bitcoin logo"
-            priority
           />
           {formatPriceChangePercentage(btc_market_percentage)}%
           <ProgressWidget
-            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            containerClassName="screen-sm:w-16 w-8 ml-2 bg-black/20 dark:bg-white/20"
             progressClassName="bg-bitcoin"
             progressPercentage={btc_market_percentage}
           />
         </span>
-        <VerticalDivider />
+        <VerticalDivider className="hidden screen-md:block" />
         <span className="flex items-center">
           <Image
             width={25}
@@ -110,11 +109,10 @@ const GlobalData = () => {
             className="-translate-y-[2px] mr-1"
             src="https://assets.coingecko.com/coins/images/279/large/ethereum.png"
             alt="ethereum logo"
-            priority
           />
           {formatPriceChangePercentage(eth_market_percentage)}%
           <ProgressWidget
-            containerClassName="w-16 ml-2 bg-black/20 dark:bg-white/20"
+            containerClassName="screen-sm:w-16 w-8 ml-2 bg-black/20 dark:bg-white/20"
             progressClassName="bg-eth"
             progressPercentage={eth_market_percentage}
           />

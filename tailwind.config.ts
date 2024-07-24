@@ -86,6 +86,9 @@ const config = {
         "table-xl": "1467px",
         "table-lg": "1150px",
       },
+      maxWidth: {
+        "table-xl": "1467px",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
