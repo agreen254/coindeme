@@ -111,7 +111,7 @@ const SearchActivator = forwardRef(
       <input
         ref={ref}
         type="search"
-        placeholder={props.disabled ? "" : "Search Coins"}
+        placeholder={props.disabled ? "" : "Search"}
         value={props.value || query}
         onChange={(e) => handleUpdateQuery(e)}
         onKeyDown={(e) => handleSearchKeyEvents(e)}

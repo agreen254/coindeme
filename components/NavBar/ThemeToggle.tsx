@@ -28,7 +28,7 @@ const ThemeToggle = () => {
   return (
     <div className="flex items-center gap-x-4 rounded-md shadow-top shadow-zinc-500/60">
       <button
-        className="p-2 border rounded-md bg-white dark:bg-white/10 hover:bg-stone-300 dark:hover:bg-stone-600 transition-colors"
+        className="p-2 border rounded-md bg-white dark:bg-white/10 hover:bg-stone-300 dark:hover:bg-stone-600 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 transition-colors"
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       >
         <span className="sr-only">Change Theme</span>

@@ -1,4 +1,10 @@
 import type { Config } from "tailwindcss";
+import {
+  SCREEN_SIZE_XL,
+  SCREEN_SIZE_LG,
+  SCREEN_SIZE_MD,
+  SCREEN_SIZE_SM,
+} from "./validation/defaults";
 
 const config = {
   darkMode: ["class"],
@@ -11,10 +17,10 @@ const config = {
   prefix: "",
   theme: {
     screens: {
-      "screen-xl": "1500px",
-      "screen-lg": "1200px",
-      "screen-md": "900px",
-      "screen-sm": "640px",
+      "screen-xl": `${SCREEN_SIZE_XL}px`,
+      "screen-lg": `${SCREEN_SIZE_LG}px`,
+      "screen-md": `${SCREEN_SIZE_MD}px`,
+      "screen-sm": `${SCREEN_SIZE_SM}px`,
     },
     container: {
       center: true,

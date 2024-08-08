@@ -55,14 +55,14 @@ const Search = ({ dropdownId }: Props) => {
           id="mainSearch"
           disabled={!targets}
           searchResults={results}
-          className="pr-5 pl-12 py-[9px] w-[320px] rounded-md dark:bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
+          className="pr-2 pl-12 py-[9px] w-[min(320px,100%)] rounded-md dark:bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
           autoComplete="off"
         />
-        <SearchIcon className="hidden screen-sm:inline w-[18px] h-[18px] absolute left-4 top-[12px] fill-default" />
+        <SearchIcon className="w-[18px] h-[18px] absolute left-4 top-[12px] fill-default" />
         <DropdownMenu
           dropdownId={dropdownId}
           key="searchResults"
-          className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
+          className="w-[min(320px,100%)] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
         >
           {results.map((wrapper, idx) => (
             <DropdownMenuItem
@@ -75,7 +75,7 @@ const Search = ({ dropdownId }: Props) => {
                 tabIndex={-1}
                 onClick={resetDropdown}
                 className={cn(
-                  "indent-3 py-1 block",
+                  "-indent-3 pl-6 pr-2 py-1 block",
                   idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
                 )}
                 onMouseEnter={() => {
