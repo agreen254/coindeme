@@ -4,6 +4,7 @@ import {
   SCREEN_SIZE_LG,
   SCREEN_SIZE_MD,
   SCREEN_SIZE_SM,
+  SCREEN_SIZE_XS,
 } from "./validation/defaults";
 
 const config = {
@@ -21,6 +22,7 @@ const config = {
       "screen-lg": `${SCREEN_SIZE_LG}px`,
       "screen-md": `${SCREEN_SIZE_MD}px`,
       "screen-sm": `${SCREEN_SIZE_SM}px`,
+      "screen-xs": `${SCREEN_SIZE_XS}px`,
     },
     container: {
       center: true,

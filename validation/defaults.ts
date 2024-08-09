@@ -25,3 +25,4 @@ export const SCREEN_SIZE_XL = 1500;
 export const SCREEN_SIZE_LG = 1200;
 export const SCREEN_SIZE_MD = 900;
 export const SCREEN_SIZE_SM = 640;
+export const SCREEN_SIZE_XS = 375;
