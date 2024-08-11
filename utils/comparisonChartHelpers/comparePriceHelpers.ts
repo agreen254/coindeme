@@ -1,5 +1,5 @@
 import type { ChartOptions, ScriptableContext } from "chart.js";
-import type { Currency, ThemeType } from "../types";
+import type { ChartResponsiveValues, Currency, ThemeType } from "../types";
 
 import { defaultTooltip } from "./compareGeneralHelpers";
 import { getCurrencySymbol } from "../getCurrencySymbol";
@@ -52,7 +52,8 @@ export function getOptions(
   currency: Currency,
   days: number,
   names: string[],
-  theme: ThemeType
+  theme: ThemeType,
+  responsiveValues: ChartResponsiveValues
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -83,7 +84,13 @@ export function getOptions(
         },
         text: `Price (${currency.toUpperCase()})`,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, theme),
+      tooltip: defaultTooltip(
+        currency,
+        currencySymbol,
+        names,
+        theme,
+        responsiveValues
+      ),
     },
     interaction: {
       intersect: false,

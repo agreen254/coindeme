@@ -1,4 +1,4 @@
-import { MarketFetchField, type Currency } from "./types";
+import { MarketFetchField, ScreenSize, type Currency } from "./types";
 
 export const comparisonChartsTimeSelectorsMap = new Map<string, string>([
   ["1D", "1"],
@@ -30,4 +30,28 @@ export const currencyEntries = Array.from(currencyMap.entries());
 export const marketFetchParamMap = new Map<MarketFetchField, string>([
   ["market_cap", "market cap"],
   ["volume", "volume"],
+]);
+
+export const chartTitleFontSizeMap = new Map<ScreenSize, number>([
+  ["XS", 14],
+  ["SM", 16],
+  ["MD", 20],
+  ["LG", 22],
+  ["XL", 24],
+]);
+
+export const tooltipFontSizeMap = new Map<ScreenSize, number>([
+  ["XS", 8],
+  ["SM", 10],
+  ["MD", 14],
+  ["LG", 16],
+  ["XL", 18],
+]);
+
+export const tooltipPaddingSizeMap = new Map<ScreenSize, number>([
+  ["XS", 6],
+  ["SM", 8],
+  ["MD", 12],
+  ["LG", 14],
+  ["XL", 16],
 ]);

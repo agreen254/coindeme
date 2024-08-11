@@ -7,6 +7,7 @@ import { useCarouselHasNoneSelected } from "@/hooks/useCarousel";
 
 import ComparisonChartsLegend from "./ComparisonChartsLegend";
 import PriceComparisonChart from "./PriceComparisonChart";
+import { useResponsiveChart } from "@/hooks/useResponsiveChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
+  const responsiveValues = useResponsiveChart();
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
 
@@ -34,7 +36,11 @@ const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
         }
       >
         <div className="h-[calc(100%-40px)]">
-          <PriceComparisonChart chartData={chartData} coinNames={coinNames} />
+          <PriceComparisonChart
+            chartData={chartData}
+            coinNames={coinNames}
+            responsiveValues={responsiveValues}
+          />
         </div>
         <ComparisonChartsLegend />
       </ErrorBoundary>

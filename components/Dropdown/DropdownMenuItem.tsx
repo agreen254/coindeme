@@ -29,7 +29,7 @@ const DropdownMenuItem = ({
     <div
       ref={ref}
       {...props}
-      className={cn("text-sm screen-sm:text-base", props.className)}
+      className={cn("text-sm screen-sm:text-base z-100", props.className)}
     >
       {props.children}
     </div>

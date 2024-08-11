@@ -11,7 +11,7 @@ import {
 } from "./compareGeneralHelpers";
 import { roundDigits } from "../formatHelpers";
 import { getMinTimeUnit } from "../getMinTimeUnit";
-import { ThemeType } from "../types";
+import { ChartResponsiveValues, ThemeType } from "../types";
 
 interface ExchangeOptionConfig {
   coinOneName: string;
@@ -21,6 +21,7 @@ interface ExchangeOptionConfig {
   len: number;
   days: number;
   theme: ThemeType;
+  responsiveValues: ChartResponsiveValues;
 }
 
 export const getOptions = ({
@@ -30,6 +31,7 @@ export const getOptions = ({
   coinTwoSymbol,
   days,
   theme,
+  responsiveValues,
 }: ExchangeOptionConfig): ChartOptions<"line"> => ({
   elements: {
     point: {
@@ -50,7 +52,7 @@ export const getOptions = ({
       position: "top",
       display: true,
       font: {
-        size: 22,
+        size: responsiveValues.titleFontSize,
       },
       text:
         coinOneName +
@@ -67,16 +69,16 @@ export const getOptions = ({
       borderWidth: 1,
       caretPadding: 4,
       caretSize: 8,
-      padding: 16,
+      padding: responsiveValues.tooltipPaddingSize,
       position: "nearest",
       yAlign: "center",
       usePointStyle: true,
       displayColors: false,
       titleFont: {
-        size: 18
+        size: responsiveValues.tooltipFontSize,
       },
       bodyFont: {
-        size: 16
+        size: responsiveValues.tooltipFontSize,
       },
 
       callbacks: {

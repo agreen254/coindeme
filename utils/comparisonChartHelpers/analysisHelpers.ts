@@ -3,6 +3,7 @@ import {
   AnalysisDataMode,
   AnalysisSeries,
   AnalysisView,
+  ChartResponsiveValues,
   Currency,
   ThemeType,
 } from "../types";
@@ -23,7 +24,8 @@ export function getOptions(
   theme: ThemeType,
   series: AnalysisSeries[],
   mode: AnalysisDataMode,
-  view: AnalysisView
+  view: AnalysisView,
+  responsiveValues: ChartResponsiveValues,
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -62,6 +64,7 @@ export function getOptions(
         currencySymbol,
         names,
         theme,
+        responsiveValues,
         analysisTooltipOverrides(mode, view, currency, currencySymbol, names)
       ),
     },

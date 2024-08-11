@@ -3,7 +3,10 @@
 import type { ChartData } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-import type { ComparisonChartResponse } from "@/utils/types";
+import type {
+  ChartResponsiveValues,
+  ComparisonChartResponse,
+} from "@/utils/types";
 import { prepareComparisonData } from "@/utils/comparisonChartHelpers/prepareComparisonData";
 import {
   getOptionsOverlapped,
@@ -19,9 +22,14 @@ import { useThemeTyped } from "@/hooks/useThemeTyped";
 type Props = {
   chartData: ComparisonChartResponse[];
   coinNames: string[];
+  responsiveValues: ChartResponsiveValues;
 };
 
-const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
+const VolumeOverlapComparisonChart = ({
+  chartData,
+  coinNames,
+  responsiveValues,
+}: Props) => {
   const time = parseInt(useComparisonChartTime());
   const currency = useUserCurrencySetting();
   const coinLabels = useCarouselSelectedElements();
@@ -66,7 +74,8 @@ const VolumeOverlapComparisonChart = ({ chartData, coinNames }: Props) => {
         time,
         coinNames,
         coinLabels,
-        theme
+        theme,
+        responsiveValues
       )}
     />
   );

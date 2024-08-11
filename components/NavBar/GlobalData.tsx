@@ -45,7 +45,7 @@ const GlobalData = () => {
 
   return (
     <div className="flex justify-center h-[52px] border-y border-black/20 dark:border-white/10 text-xs screen-sm:text-sm">
-      <div className="max-w-table-xl w-[calc(100%-3rem)] screen-md:w-[calc(100%-4rem)] flex justify-between items-center">
+      <div className="max-w-table-xl w-[90vw] flex justify-between items-center">
         <span className="hidden screen-lg:block">
           <HandCoinsIcon className="w-6 h-6 inline text-default" />
           <span className="ml-1 mr-2 font-semibold text-muted-foreground">
