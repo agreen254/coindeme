@@ -25,9 +25,9 @@ const Portfolio = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex w-[1296px] justify-between items-start">
+      <div className="flex w-[90vw] screen-xl:w-table-xl justify-between items-start">
         <div>
-          <h2 className="text-4xl">Your Assets</h2>
+          <h2 className="text-xl screen-xl:text-4xl screen-lg:text-3xl screen-md:text-2xl">Your Assets</h2>
         </div>
         <AssetModalWrapper role="add" />
       </div>
