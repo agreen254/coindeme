@@ -157,8 +157,9 @@ const Converter = ({
       </Panel>
       <button
         className={cn(
-          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rotate-90 screen-xl:rotate-0 rounded-full p-1 z-10 border border-default focus:outline-menu-highlight/70",
-          response.isPending && "animate-pulse"
+          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rotate-90 screen-xl:rotate-0 z-10 rounded-full p-1 border border-default focus:outline-menu-highlight/70",
+          response.isPending && "animate-pulse",
+          topMenuIsVisible && "-z-10 screen-xl:z-0"
         )}
         onClick={swapPositions}
       >

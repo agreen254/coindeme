@@ -67,6 +67,7 @@ export function getOptions(
       line: {
         fill: true,
         tension: 0.1,
+        borderWidth: responsiveValues.lineThickness,
       },
     },
     plugins: {
@@ -77,7 +78,7 @@ export function getOptions(
         display: true,
         align: "start",
         font: {
-          size: 22,
+          size: responsiveValues.titleFontSize,
         },
         padding: {
           bottom: 18,
@@ -113,6 +114,9 @@ export function getOptions(
         ticks: {
           autoSkip: true,
           maxTicksLimit: 7,
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
       },
       y: {
@@ -125,6 +129,9 @@ export function getOptions(
         ticks: {
           callback: function (val) {
             return handleTicksYAxis(val as number, currencySymbol);
+          },
+          font: {
+            size: responsiveValues.tickFontSize,
           },
         },
       },

@@ -83,7 +83,7 @@ export function getOptionsStacked(
         currencySymbol,
         names,
         theme,
-        responsiveValues,
+        responsiveValues
       ),
     },
     interaction: {
@@ -250,6 +250,9 @@ export function getOptionsOverlapped(
         ticks: {
           autoSkip: true,
           maxTicksLimit: 7,
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
       },
       y: {
@@ -263,6 +266,9 @@ export function getOptionsOverlapped(
         ticks: {
           callback: function (val) {
             return handleTicksYAxis(val as number, currencySymbol);
+          },
+          font: {
+            size: responsiveValues.tickFontSize,
           },
         },
         stacked: true,
