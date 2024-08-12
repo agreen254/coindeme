@@ -1,8 +1,10 @@
 import { ChartResponsiveValues } from "@/utils/types";
 import {
-  tooltipFontSizeMap,
-  tooltipPaddingSizeMap,
+  chartTooltipFontSizeMap,
+  chartTooltipPaddingSizeMap,
   chartTitleFontSizeMap,
+  chartTickFontSizeMap,
+  chartLineThicknessMap,
 } from "@/utils/maps";
 import { useScreenSize } from "./useScreenSize";
 
@@ -15,8 +17,10 @@ export const useResponsiveChart = (): ChartResponsiveValues => {
   const screenSize = useScreenSize();
 
   return {
-    tooltipFontSize: tooltipFontSizeMap.get(screenSize)!,
-    tooltipPaddingSize: tooltipPaddingSizeMap.get(screenSize)!,
+    tooltipFontSize: chartTooltipFontSizeMap.get(screenSize)!,
+    tooltipPaddingSize: chartTooltipPaddingSizeMap.get(screenSize)!,
     titleFontSize: chartTitleFontSizeMap.get(screenSize)!,
+    tickFontSize: chartTickFontSizeMap.get(screenSize)!,
+    lineThickness: chartLineThicknessMap.get(screenSize)!,
   };
 };

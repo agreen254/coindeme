@@ -23,7 +23,7 @@ const AnalysisDataSelector = () => {
   }
 
   return (
-    <div>
+    <div className="min-w-fit text-nowrap">
       <p className="text-sm font-medium uppercase dark:text-zinc-300 text-zinc-700 mb-1">
         Data
       </p>

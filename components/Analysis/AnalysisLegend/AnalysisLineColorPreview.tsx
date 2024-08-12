@@ -5,7 +5,7 @@ type Props = {
 const AnalysisLineColorPreview = ({ color }: Props) => {
   return (
     <div
-      className="inline w-8 h-[6px] mr-2"
+      className="min-w-4 w-8 h-[6px] screen-sm:mr-1 mr-2"
       style={{ backgroundColor: color }}
     ></div>
   );

@@ -25,7 +25,7 @@ const AnalysisDeleteButton = ({ activeSeriesId }: Props) => {
     >
       <DeleteIcon
         className={cn(
-          "w-6 h-6 mr-4 inline text-red-500",
+          "w-6 h-6 mr-2 screen-sm:mr-4 inline text-red-500",
           cannotDelete(activeSeriesId) && "text-muted-foreground"
         )}
       />

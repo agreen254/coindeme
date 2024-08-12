@@ -42,6 +42,7 @@ export const getOptions = ({
     line: {
       fill: true,
       tension: 0.5,
+      borderWidth: responsiveValues.lineThickness,
     },
   },
   plugins: {

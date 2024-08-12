@@ -40,7 +40,7 @@ export const chartTitleFontSizeMap = new Map<ScreenSize, number>([
   ["XL", 24],
 ]);
 
-export const tooltipFontSizeMap = new Map<ScreenSize, number>([
+export const chartTooltipFontSizeMap = new Map<ScreenSize, number>([
   ["XS", 8],
   ["SM", 10],
   ["MD", 14],
@@ -48,10 +48,26 @@ export const tooltipFontSizeMap = new Map<ScreenSize, number>([
   ["XL", 18],
 ]);
 
-export const tooltipPaddingSizeMap = new Map<ScreenSize, number>([
+export const chartTooltipPaddingSizeMap = new Map<ScreenSize, number>([
   ["XS", 6],
   ["SM", 8],
   ["MD", 12],
   ["LG", 14],
   ["XL", 16],
+]);
+
+export const chartTickFontSizeMap = new Map<ScreenSize, number>([
+  ["XS", 8],
+  ["SM", 10],
+  ["MD", 12],
+  ["LG", 12],
+  ["XL", 14],
+]);
+
+export const chartLineThicknessMap = new Map<ScreenSize, number>([
+  ["XS", 1],
+  ["SM", 1.25],
+  ["MD", 1.5],
+  ["LG", 1.75],
+  ["XL", 2],
 ]);

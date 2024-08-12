@@ -23,7 +23,9 @@ const AnalysisAddButton = () => {
           hasEmptyId && "text-muted-foreground"
         )}
       />
-      <span className="text-xl">Add Series</span>
+      <span className="text-sm screen-lg:text-base screen-xl:text-lg">
+        Add Series
+      </span>
     </button>
   );
 };

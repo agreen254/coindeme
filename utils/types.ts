@@ -87,6 +87,8 @@ export type ChartResponsiveValues = {
   tooltipFontSize: number;
   tooltipPaddingSize: number;
   titleFontSize: number;
+  tickFontSize: number;
+  lineThickness: number;
 }
 
 export type CoinCurrentRequest = z.infer<typeof coinCurrentRequestSchema>;
