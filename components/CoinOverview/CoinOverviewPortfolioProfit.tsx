@@ -64,7 +64,9 @@ const CoinOverviewPortfolioProfit = ({ id }: Props) => {
   return (
     <p>
       <span className="text-muted-foreground mr-2">Portfolio Profit: </span>
-      <span className="text-xl">{profit}</span>
+      <span className="text-lg screen-sm:text-xl whitespace-nowrap">
+        {profit}
+      </span>
     </p>
   );
 };

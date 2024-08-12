@@ -19,13 +19,13 @@ const CoinPage = ({ params: { id } }: Props) => {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-[1467px]">
-        <div className="w-full flex items-start justify-center gap-x-6">
+      <div className="w-[90vw] screen-xl:w-table-xl">
+        <div className="w-full grid grid-cols-1 screen-md:grid-cols-2 screen-xl:grid-cols-3 screen-xl:grid-rows-2 gap-6 h-auto screen-xl:h-[450px]">
           <CoinOverviewMainPanel response={response} />
           <CoinOverviewFirstDataPanel response={response} />
           <CoinOverviewSecondDataPanel response={response} />
         </div>
-        <div className="w-full flex items-start justify-start gap-x-6">
+        <div className="grid grid-cols-1 screen-xl:grid-cols-3 gap-x-6 mb-[20vh]">
           <CoinOverviewDescription response={response} />
           <CoinOverviewLinksPanel response={response} />
         </div>

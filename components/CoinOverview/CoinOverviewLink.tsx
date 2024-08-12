@@ -28,8 +28,8 @@ const CoinOverviewLink = ({ className, link, isLoading }: Props) => {
   }, [hasCopied, setHasCopied]);
 
   return (
-    <Panel className={cn(isLoading && "animate-pulse", className)}>
-      <div className="w-full flex justify-center items-center">
+    <Panel className={cn("py-4", isLoading && "animate-pulse", className)}>
+      <div className="w-full flex justify-center items-center text-sm screen-sm:text-base screen-md:text-lg">
         {link && (
           <>
             <Link href={link} target="_blank">

@@ -27,10 +27,10 @@ type Props = {
 const StackedCaretAndTime = ({ val, time }: { val: number; time: string }) => {
   const iconCn =
     val > 0
-      ? "h-5 w-5 mr-2 -mb-2 inline fill-market-up"
-      : "h-5 w-5 mr-2 inline fill-market-down rotate-180";
+      ? "h-5 w-5 mr-1 screen-xs:mr-2 -mb-2 inline fill-market-up"
+      : "h-5 w-5 mr-1 screen-xs:mr-2 inline fill-market-down rotate-180";
   const timeCn = cn(
-    "text-sm dark:font-light",
+    "text-xs screen-sm:text-sm dark:font-light",
     val <= 0 && "-mb-2",
     time.length === 3 ? "-translate-x-[1px]" : "translate-x-[1px]" // make sure time is centered above/below caret
   );
@@ -54,7 +54,9 @@ const StackedCaretAndTime = ({ val, time }: { val: number; time: string }) => {
           </>
         )}
       </div>
-      <span className="text-xl">{fmtPriceChange(val)}%</span>
+      <span className="text-sm screen-sm:text-lg screen-lg:text-xl">
+        {fmtPriceChange(val)}%
+      </span>
     </div>
   );
 };
@@ -69,7 +71,7 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
   return (
     <Panel
       className={cn(
-        "min-w-[432px] min-h-[400px] max-h-[400px] p-8 pt-6",
+        "p-4 screen-xs:p-8 pt-6 row-span-2",
         response.isPending && "animate-pulse"
       )}
     >
@@ -102,29 +104,27 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
 
           return (
             <>
-              <p className="font-semibold text-4xl">
+              <p className="font-semibold text-2xl screen-xs:text-3xl screen-xl:text-4xl">
                 {fmt(current_price[currency])}
               </p>
-              <div className="space-x-6 flex justify-between my-2">
+              <div className="space-x-2 screen-sm:space-x-6 flex justify-between my-2">
                 <StackedCaretAndTime val={change_24h[currency]} time="24h" />
                 <StackedCaretAndTime val={change_7d[currency]} time="7d" />
                 <StackedCaretAndTime val={change_30d[currency]} time="30d" />
               </div>
               <div className="w-full rounded-full h-[1px] my-4 bg-black/35 dark:bg-white/35"></div>
-              <div className="text-lg">
+              <div className="text-base screen-xs:text-lg">
                 <p>
                   <AllTimeHighIcon
                     strokeWidth={1.25}
                     className="w-8 h-8 mr-2 text-market-up inline"
                   />
-                  <span className="min-w-[130px] inline-block">
-                    All-Time High:
-                  </span>
-                  <span className="text-xl dark:font-medium">
+                  <span className="inline-block mr-2">All-Time High:</span>
+                  <span className="text-base screen-xs:text-xl dark:font-medium">
                     {fmt(ath[currency])}
                   </span>
                 </p>
-                <p className="indent-10 -mt-1 text-base text-black/40 dark:text-white/50">
+                <p className="indent-10 -mt-1 text-xs screen-xs:text-base text-black/40 dark:text-white/50">
                   {athDateString}
                 </p>
                 <p className="mt-3">
@@ -132,14 +132,12 @@ const CoinOverviewFirstDataPanel = ({ response }: Props) => {
                     strokeWidth={1.25}
                     className="w-8 h-8 mr-2 text-market-down inline"
                   />
-                  <span className="min-w-[130px] inline-block">
-                    All-Time Low:
-                  </span>
-                  <span className="text-xl dark:font-medium">
+                  <span className="inline-block mr-2">All-Time Low:</span>
+                  <span className="text-base screen-xs:text-xl dark:font-medium">
                     {fmt(atl[currency])}
                   </span>
                 </p>
-                <p className="indent-10 -mt-1 text-base text-black/40 dark:text-white/50">
+                <p className="indent-10 -mt-1 text-xs screen-xs:text-base text-black/40 dark:text-white/50">
                   {atlDateString}
                 </p>
               </div>

@@ -17,14 +17,11 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
   const homepage = response.data?.links.homepage[0];
 
   return (
-    <div className="min-h-[400px]">
+    <div className="grid grid-rows-4 grid-cols-1 row-span-2">
       <Panel
-        className={cn(
-          "w-[432px] h-[312px]",
-          response.isPending && "animate-pulse"
-        )}
+        className={cn("row-span-3", response.isPending && "animate-pulse")}
       >
-        <div className="flex flex-col items-center mt-14 mb-3">
+        <div className="flex flex-col items-center mt-14">
           {response.data ? (
             <>
               <Image
@@ -35,8 +32,10 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
                 priority
               />
               <h2 className="mt-1">
-                <span className="text-4xl">{response.data.name} </span>
-                <span className="uppercase text-3xl font-semibold text-zinc-600 dark:text-zinc-400">
+                <span className="text-2xl screen-md:text-4xl">
+                  {response.data.name}{" "}
+                </span>
+                <span className="uppercase text-lg screen-md:text-3xl font-semibold text-zinc-600 dark:text-zinc-400">
                   {response.data.symbol}
                 </span>
               </h2>
@@ -45,8 +44,8 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
             <BitcoinIcon className="w-[80px] h-[80px] rounded-full text-black/85 dark:text-white/15" />
           )}
         </div>
-        <div className="my-8">
-          <ErrorBoundary fallback={<div className="h-10"></div>}>
+        <div className="my-4 screen-md:my-8">
+          <ErrorBoundary fallback={<></>}>
             <CoinOverviewCategoriesCarousel response={response} />
           </ErrorBoundary>
         </div>
@@ -55,7 +54,7 @@ const CoinOverviewMainPanel = ({ response }: Props) => {
         link={homepage}
         isLoading={response.isPending}
         className={cn(
-          "flex justify-center items-center h-[72px] w-full mt-4 text-lg",
+          "flex justify-center items-center w-full mt-4 text-lg",
           response.isPending && "animate-pulse"
         )}
       />

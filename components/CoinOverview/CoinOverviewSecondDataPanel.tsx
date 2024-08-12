@@ -108,7 +108,7 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
   return (
     <Panel
       className={cn(
-        "w-full h-[400px]",
+        "row-span-2 col-span-1 screen-md:col-span-2 screen-xl:col-span-1",
         response.isPending && "animate-pulse"
       )}
     >
@@ -117,13 +117,13 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
           {entries.map((entry) => (
             <li
               key={entry.label}
-              className="grid grid-cols-2 items-center text-lg"
+              className="grid grid-cols-1 screen-sm:grid-cols-2 items-center text-lg"
             >
-              <span className="font-light">
+              <span className="font-light -indent-8 ml-8 translate-y-[2px] -mb-2">
                 <LiDataIcon />
-                {entry.label}
+                <span>{entry.label}</span>
               </span>
-              <span className="text-xl font-medium -translate-y-1">
+              <span className="text-lg screen-sm:text-xl font-medium ml-[60px] screen-sm:ml-2 mb-4 screen-sm:mb-0">
                 <span className="mr-2">{entry.value}</span>
                 <span className="font-medium">
                   {entry.useSymbol && response.data.symbol.toUpperCase()}

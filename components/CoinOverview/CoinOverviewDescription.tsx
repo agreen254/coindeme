@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { HTMLReactParserOptions, Element } from "html-react-parser";
 import parse from "html-react-parser";
 
@@ -12,19 +11,6 @@ type Props = {
 
 const CoinOverviewDescription = ({ response }: Props) => {
   const description = response.data?.description.en;
-
-  const [canExpand, setCanExpand] = useState<boolean>(false);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const isCollapsed = canExpand && !isExpanded;
-
-  // check the height of the description container using a ref;
-  // determine if the description is long enough to show the "read more" button
-  const expandRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (expandRef.current?.scrollHeight) {
-      setCanExpand(expandRef.current.scrollHeight > 300);
-    }
-  }, [response, canExpand, setCanExpand]);
 
   const parserOptions: HTMLReactParserOptions = {
     replace(domNode) {
@@ -46,25 +32,9 @@ const CoinOverviewDescription = ({ response }: Props) => {
       : "No description provided.";
   })();
 
-  const expandCn = isCollapsed
-    ? "bg-[linear-gradient(to_bottom,black_60%,transparent_100%)] dark:bg-[linear-gradient(to_bottom,white_60%,transparent_100%)] bg-clip-text text-transparent h-[300px]"
-    : "h-auto bg-inherit";
-
   return (
-    <div className="mt-8">
-      <div ref={expandRef} className="relative w-[888px] overflow-hidden">
-        <p className={expandCn}>{descriptionDisplay}</p>
-      </div>
-      {canExpand && (
-        <button
-          className="mb-[20vh] hover:underline hover:underline-offset-[6px] dark:text-menu-highlight text-menu-highlight"
-          onClick={() =>
-            isExpanded ? setIsExpanded(false) : setIsExpanded(true)
-          }
-        >
-          {isExpanded ? "Read Less" : "Read More"}
-        </button>
-      )}
+    <div className="mt-8 col-span-1 screen-xl:col-span-2">
+      <p>{descriptionDisplay}</p>
     </div>
   );
 };
