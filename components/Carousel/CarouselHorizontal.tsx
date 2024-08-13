@@ -1,17 +1,18 @@
 "use client";
 
-import type { MarketQueryResult } from "@/utils/types";
-
-import { flatMarketRes } from "@/utils/flatMarketRes";
-import { useCallback, useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-
-import CarouselCard from "./CarouselCard";
-import CarouselSkeleton from "./CarouselSkeleton";
 import {
   ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+
+import { useNumSlidesToScroll } from "@/hooks/useNumSlidesToScroll";
+import type { MarketQueryResult } from "@/utils/types";
+import { flatMarketRes } from "@/utils/flatMarketRes";
+
+import CarouselCard from "./CarouselCard";
+import CarouselSkeleton from "./CarouselSkeleton";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -24,6 +25,7 @@ type Props = {
 const CarouselHorizontal = ({
   queryResult: { data, isError, isPending },
 }: Props) => {
+  const slidesToScroll = useNumSlidesToScroll();
   const carouselData = flatMarketRes(data?.pages);
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -32,7 +34,7 @@ const CarouselHorizontal = ({
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
     loop: false,
-    slidesToScroll: 6,
+    slidesToScroll: slidesToScroll,
   });
 
   const scrollPrev = useCallback(() => {
@@ -57,21 +59,29 @@ const CarouselHorizontal = ({
     }
   }, [emblaApi, handleScroll]);
 
-  const handleCarouselRender = () => {
+  const carousel = (() => {
     if (isPending) {
-      return <CarouselSkeleton pulse />;
+      return (
+        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden">
+          <CarouselSkeleton pulse />;
+        </div>
+      );
     } else if (!data && isError) {
-      return <CarouselSkeleton pulse={false} />;
+      return (
+        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden">
+          <CarouselSkeleton pulse={false} />;
+        </div>
+      );
     } else {
       return carouselData?.map((coinData) => (
         <CarouselCard key={coinData.id + "carousel"} coinData={coinData} />
       ));
     }
-  };
+  })();
 
   return (
-    <div className="flex justify-center relative w-table-xl">
-      <div className="absolute -left-9 top-[10px] z-10">
+    <div className="flex justify-center relative w-[90vw] screen-xl:w-table-xl">
+      <div className="absolute screen-xl:mb-0 left-0 screen-xl:-left-9 top-20 screen-xl:top-[10px] z-10">
         <label htmlFor="scrollPrev" className="sr-only">
           Scroll carousel backward
         </label>
@@ -87,14 +97,14 @@ const CarouselHorizontal = ({
           />
         </button>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-12 screen-xl:mb-0">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex w-table-xl space-x-2">
-            {handleCarouselRender()}
+          <div className="flex w-[calc(90vw)] screen-xl:w-table-xl space-x-2">
+            {carousel}
           </div>
         </div>
       </div>
-      <div className="absolute -right-9 top-[10px]">
+      <div className="absolute left-14 screen-xl:left-auto screen-xl:-right-9 top-20 screen-xl:top-[10px] z-10">
         <label htmlFor="scrollNext" className="sr-only">
           Scroll carousel forward
         </label>
