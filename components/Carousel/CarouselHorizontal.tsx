@@ -62,14 +62,14 @@ const CarouselHorizontal = ({
   const carousel = (() => {
     if (isPending) {
       return (
-        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden">
-          <CarouselSkeleton pulse />;
+        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden flex gap-x-2">
+          <CarouselSkeleton pulse />
         </div>
       );
     } else if (!data && isError) {
       return (
-        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden">
-          <CarouselSkeleton pulse={false} />;
+        <div className="w-[90vw] screen-xl:w-table-xl overflow-x-hidden flex gap-x-2">
+          <CarouselSkeleton pulse={false} />
         </div>
       );
     } else {
