@@ -31,7 +31,7 @@ const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   }
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="h-full p-4 max-w-[90vw]">
       <ErrorBoundary
         fallback={
           <p className="text-sm text-center text-destructive">

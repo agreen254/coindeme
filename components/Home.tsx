@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <main className="flex flex-col items-center gap-y-4">
       <CarouselWrapper queryResult={queryResult} />
-      <div className="flex justify-between w-table-xl gap-x-12">
+      <div className="w-[90vw] screen-xl:w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
       </div>
       <div className="mt-2 w-table-xl overflow-x-auto">

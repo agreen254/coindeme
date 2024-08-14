@@ -40,14 +40,14 @@ const ComparisonChartsWrapper = () => {
   const pulseChartBackground = chartRes.some((res) => res.isLoading);
 
   return (
-    <div className="w-full relative">
+    <div className="relative">
       <CarouselClearButton className="ml-4 mb-2 px-3 py-2 hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors disabled:cursor-not-allowed">
         Clear Selection
       </CarouselClearButton>
-      <div className="flex w-full h-[600px] justify-center gap-x-4">
+      <div className="grid screen-lg:grid-cols-2 gap-4">
         <Panel
           className={cn(
-            "rounded-2xl w-1/2",
+            "rounded-2xl h-[min(50vh,600px)] screen-xl:h-[600px]",
             pulseChartBackground && "animate-pulse"
           )}
         >
@@ -58,7 +58,7 @@ const ComparisonChartsWrapper = () => {
         </Panel>
         <Panel
           className={cn(
-            "rounded-2xl w-1/2",
+            "rounded-2xl h-[min(50vh,600px)] screen-xl:h-[600px]",
             pulseChartBackground && "animate-pulse"
           )}
         >
