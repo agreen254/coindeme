@@ -21,11 +21,19 @@ const AnalysisLegend = () => {
         const lineColor = chartColorSets[idx].startColor.hex;
 
         return (
-          <div key={id} className="flex items-center ml-2 my-4">
-            <AnalysisDeleteButton activeSeriesId={id} />
-            <AnalysisLineColorPreview color={lineColor} />
-            <AnalysisSeriesSelectorProvider series={s} index={idx} />
-            {hasValidId && <AnalysisAxisSelector series={s} />}
+          <div key={id} className="flex flex-wrap items-center ml-2 mb-8 screen-sm:my-4">
+            <div className="-order-1 screen-sm:order-1">
+              <AnalysisDeleteButton activeSeriesId={id} />
+            </div>
+            <div className="-order-2 screen-sm:order-2">
+              <AnalysisLineColorPreview color={lineColor} />
+            </div>
+            <div className="-order-4 screen-sm:order-3">
+              <AnalysisSeriesSelectorProvider series={s} index={idx} />
+            </div>
+            <div className="-order-3 screen-sm:order-4">
+              {hasValidId && <AnalysisAxisSelector series={s} />}
+            </div>
           </div>
         );
       })}

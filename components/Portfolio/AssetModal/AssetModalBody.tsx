@@ -312,7 +312,7 @@ const AssetModalBody = (
         isOpen && "flex flex-col"
       )}
     >
-      <div className="w-[886px] min-h-[400px] p-12 rounded-xl dark:bg-zinc-900 bg-zinc-50 border dark:border-zinc-800 border-zinc-200">
+      <div className="w-[90vw] max-w-[886px] min-h-[400px] p-6 screen-sm:p-12 rounded-xl dark:bg-zinc-900 bg-zinc-50 border dark:border-zinc-800 border-zinc-200">
         <div className="flex justify-between">
           <h2 className="text-xl ml-1">
             {assetId ? "Edit Asset" : "Add Asset"}
@@ -328,8 +328,8 @@ const AssetModalBody = (
             <CloseIcon className="w-6 h-6 hover:scale-110 transition-transform" />
           </button>
         </div>
-        <div className="flex justify-between gap-8 mt-8">
-          <div className="w-[297px] h-[241px] flex justify-center items-center rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60">
+        <div className="gap-8 mt-8 grid grid-cols-1 screen-sm:grid-cols-2">
+          <div className="h-[241px] flex justify-center items-center rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60">
             {coinId && (
               <div>
                 <Image
@@ -344,7 +344,7 @@ const AssetModalBody = (
               </div>
             )}
           </div>
-          <div className="w-[460px] flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-4 row-start-1 screen-sm:row-auto">
             <AssetModalCoinSearch
               ref={clickAwaySearchRef}
               className="w-full relative"
@@ -385,7 +385,7 @@ const AssetModalBody = (
                 ref={coinDropdownRef}
                 dropdownId={searchDropdownId}
                 key="searchResults"
-                className="w-[460px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-default absolute top-[52px] z-10"
+                className="max-w-[calc(90vw-3rem)] w-[460px] max-h-[320px] overflow-y-auto bg-dropdown border border-stone-300 overscroll-contain font-normal rounded-md text-default absolute top-[52px] z-10"
               >
                 {searchResults.map((wrapper, idx) => (
                   <DropdownMenuItem

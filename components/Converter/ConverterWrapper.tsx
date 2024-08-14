@@ -64,7 +64,7 @@ const ConverterWrapper = () => {
       </DropdownProvider>
       <Panel
         className={cn(
-          "w-full h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl",
+          "w-[90vw] screen-xl:w-[min(1467px,100vw-4rem)] h-[40vh] screen-lg:h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl",
           !hasData && "animate-pulse"
         )}
       >
@@ -81,7 +81,7 @@ const ConverterWrapper = () => {
         )}
       </Panel>
 
-      <Panel className="rounded-lg inline-flex justify-end mb-[20vh] p-1 gap-x-1">
+      <Panel className="rounded-lg inline-flex flex-wrap  mb-[20vh] p-1 gap-x-1 max-w-[90vw]">
         <ConverterChartTimeSelector
           nDays={nDays}
           setNDays={setNDays}

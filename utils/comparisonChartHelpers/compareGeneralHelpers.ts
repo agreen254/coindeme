@@ -1,4 +1,9 @@
-import type { ChartColorSet, Currency, ThemeType } from "../types";
+import type {
+  ChartColorSet,
+  ChartResponsiveValues,
+  Currency,
+  ThemeType,
+} from "../types";
 
 import { formatSmallNum } from "../formatHelpers";
 import { formatPriceValue } from "../formatHelpers";
@@ -135,6 +140,7 @@ export function defaultTooltip(
   currencySymbol: string,
   names: string[],
   theme: ThemeType,
+  responsiveValues: ChartResponsiveValues,
   overrides?: TooltipOptions
 ): TooltipOptions {
   return {
@@ -145,17 +151,17 @@ export function defaultTooltip(
     borderWidth: 1,
     caretPadding: 4,
     caretSize: 8,
-    padding: 16,
+    padding: responsiveValues.tooltipPaddingSize,
     position: "nearest",
     yAlign: "center",
     usePointStyle: true,
     ...overrides,
     titleFont: {
-      size: 16,
+      size: responsiveValues.tooltipFontSize,
       ...overrides?.titleFont,
     },
     bodyFont: {
-      size: 16,
+      size: responsiveValues.tooltipFontSize,
       ...overrides?.bodyFont,
     },
     callbacks: {

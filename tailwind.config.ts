@@ -1,4 +1,11 @@
 import type { Config } from "tailwindcss";
+import {
+  SCREEN_SIZE_XL,
+  SCREEN_SIZE_LG,
+  SCREEN_SIZE_MD,
+  SCREEN_SIZE_SM,
+  SCREEN_SIZE_XS,
+} from "./validation/defaults";
 
 const config = {
   darkMode: ["class"],
@@ -10,12 +17,16 @@ const config = {
   ],
   prefix: "",
   theme: {
+    screens: {
+      "screen-xl": `${SCREEN_SIZE_XL}px`,
+      "screen-lg": `${SCREEN_SIZE_LG}px`,
+      "screen-md": `${SCREEN_SIZE_MD}px`,
+      "screen-sm": `${SCREEN_SIZE_SM}px`,
+      "screen-xs": `${SCREEN_SIZE_XS}px`,
+    },
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
     },
     extend: {
       boxShadow: {
@@ -80,6 +91,10 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       width: {
+        "table-xl": "1467px",
+        "table-lg": "1150px",
+      },
+      maxWidth: {
         "table-xl": "1467px",
       },
       keyframes: {

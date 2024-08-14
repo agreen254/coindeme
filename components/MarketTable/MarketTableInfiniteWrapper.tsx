@@ -34,7 +34,7 @@ const MarketTableInfiniteWrapper = ({
    */
   return (
     <div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col mb-[100vh] screen-lg:mb-[20vh]">
         <MarketTableCaption />
         <InfiniteScroll
           dataLength={tableData?.length || 0}

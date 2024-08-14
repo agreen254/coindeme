@@ -23,6 +23,7 @@ const ToastContainer = () => {
           theme === "dark" ? "50%" : "75%"
         })`,
         border: "1px solid rgb(0, 177, 167)",
+        backdropFilter: "blur(16px)",
       },
     },
     error: {
@@ -35,6 +36,7 @@ const ToastContainer = () => {
           theme === "dark" ? "50%" : "75%"
         })`,
         border: "1px solid rgb(254, 34, 100)",
+        backdropFilter: "blur(16px)",
       },
     },
   };

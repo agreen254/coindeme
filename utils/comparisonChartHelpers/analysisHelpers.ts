@@ -3,6 +3,7 @@ import {
   AnalysisDataMode,
   AnalysisSeries,
   AnalysisView,
+  ChartResponsiveValues,
   Currency,
   ThemeType,
 } from "../types";
@@ -23,7 +24,8 @@ export function getOptions(
   theme: ThemeType,
   series: AnalysisSeries[],
   mode: AnalysisDataMode,
-  view: AnalysisView
+  view: AnalysisView,
+  responsiveValues: ChartResponsiveValues
 ): ChartOptions<"line"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -40,6 +42,7 @@ export function getOptions(
       line: {
         fill: true,
         tension: 0.1,
+        borderWidth: responsiveValues.lineThickness,
       },
     },
     plugins: {
@@ -48,9 +51,9 @@ export function getOptions(
       },
       title: {
         display: true,
-        align: "center",
+        align: "start",
         font: {
-          size: 22,
+          size: responsiveValues.titleFontSize,
         },
         padding: {
           bottom: 24,
@@ -62,6 +65,7 @@ export function getOptions(
         currencySymbol,
         names,
         theme,
+        responsiveValues,
         analysisTooltipOverrides(mode, view, currency, currencySymbol, names)
       ),
     },
@@ -87,6 +91,9 @@ export function getOptions(
         ticks: {
           autoSkip: true,
           maxTicksLimit: 12,
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
       },
       y: {
@@ -103,6 +110,9 @@ export function getOptions(
         ticks: {
           color: (c) => tickColorCallback(c, mode),
           callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
       },
       y1: {
@@ -119,6 +129,9 @@ export function getOptions(
         ticks: {
           color: (c) => tickColorCallback(c, mode),
           callback: (val) => tickValueCallback(val, mode, view, currencySymbol),
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
 
         // https://www.chartjs.org/docs/latest/api/classes/Scale.html#beforebuildticks

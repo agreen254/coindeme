@@ -14,10 +14,10 @@ const VolumeChartSwitcher = ({ isPending }: Props) => {
   const { changeMode } = useVolumeChartActions();
 
   return (
-    <Panel className="rounded-2xl inline-flex p-1 gap-x-1 font-light">
+    <Panel className="rounded-lg inline-flex p-1 gap-x-1 font-light text-sm screen-sm:text-base">
       <button
         className={cn(
-          "min-w-[80px] px-3 py-2 rounded-xl dark:hover:bg-teal-900/80 hover:bg-teal-300 transition-colors disabled:cursor-not-allowed",
+          "min-w-[80px] px-3 py-2 rounded-md dark:hover:bg-teal-900/80 hover:bg-teal-300 transition-colors disabled:cursor-not-allowed",
           isSelected("overlap") &&
             "dark:hover:bg-teal-800 dark:bg-teal-900/80 hover:bg-teal-300 bg-teal-500/80",
           isPending && "text-muted animate-pulse"
@@ -25,11 +25,11 @@ const VolumeChartSwitcher = ({ isPending }: Props) => {
         onClick={() => changeMode("overlap")}
         disabled={isPending}
       >
-        overlap
+        Overlap Volumes
       </button>
       <button
         className={cn(
-          "min-w-[80px] px-3 py-2 rounded-xl dark:hover:bg-teal-900/80 hover:bg-teal-300 transition-colors disabled:cursor-not-allowed",
+          "min-w-[80px] px-3 py-2 rounded-md dark:hover:bg-teal-900/80 hover:bg-teal-300 transition-colors disabled:cursor-not-allowed",
           isSelected("stack") &&
             "dark:hover:bg-teal-800 hover:bg-teal-300 dark:bg-teal-900/80 bg-teal-500/80",
           isPending && "text-muted animate-pulse"
@@ -37,7 +37,7 @@ const VolumeChartSwitcher = ({ isPending }: Props) => {
         onClick={() => changeMode("stack")}
         disabled={isPending}
       >
-        stack
+        Stack Volumes
       </button>
     </Panel>
   );

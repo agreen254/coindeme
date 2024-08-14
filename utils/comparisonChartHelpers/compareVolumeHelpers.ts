@@ -2,7 +2,12 @@ import type { ChartOptions, ScriptableContext } from "chart.js";
 import { sort } from "fast-sort";
 import "chartjs-adapter-date-fns";
 
-import type { Currency, OverlappedVolumeData, ThemeType } from "../types";
+import type {
+  ChartResponsiveValues,
+  Currency,
+  OverlappedVolumeData,
+  ThemeType,
+} from "../types";
 import { arrayOfNs } from "../arrayHelpers";
 import {
   chartColorSets,
@@ -52,7 +57,8 @@ export function getOptionsStacked(
   currency: Currency,
   days: number,
   names: string[],
-  theme: ThemeType
+  theme: ThemeType,
+  responsiveValues: ChartResponsiveValues
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -62,7 +68,7 @@ export function getOptionsStacked(
         display: true,
         align: "start",
         font: {
-          size: 22,
+          size: responsiveValues.titleFontSize,
         },
         padding: {
           bottom: 18,
@@ -72,7 +78,13 @@ export function getOptionsStacked(
       legend: {
         display: false,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, theme),
+      tooltip: defaultTooltip(
+        currency,
+        currencySymbol,
+        names,
+        theme,
+        responsiveValues
+      ),
     },
     interaction: {
       intersect: false,
@@ -129,7 +141,8 @@ export function getOptionsOverlapped(
   days: number,
   names: string[],
   ids: string[],
-  theme: ThemeType
+  theme: ThemeType,
+  responsiveValues: ChartResponsiveValues
 ): ChartOptions<"bar"> {
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -146,7 +159,7 @@ export function getOptionsOverlapped(
         display: true,
         align: "start",
         font: {
-          size: 22,
+          size: responsiveValues.titleFontSize,
         },
         padding: {
           bottom: 18,
@@ -156,54 +169,64 @@ export function getOptionsOverlapped(
       legend: {
         display: false,
       },
-      tooltip: defaultTooltip(currency, currencySymbol, names, theme, {
-        itemSort(a, b) {
-          return b.datasetIndex - a.datasetIndex;
-        },
-        callbacks: {
-          // make sure the overlapped volume data still shows the correct absolute values
-          // https://www.chartjs.org/docs/latest/configuration/tooltip.html#label-callback
-          label: function (item) {
-            let label = item.dataset.label || "";
-
-            const dataIdx = item.dataIndex;
-            const datasetIdx = item.datasetIndex;
-
-            let sumVolume = overlapValues[dataIdx][0].volume;
-            if (datasetIdx !== 0) {
-              // add up all the previous values
-              sumVolume = overlapValues[dataIdx].reduce((acc, current, idx) => {
-                return idx <= datasetIdx ? acc + current.volume : acc;
-              }, 0);
-            }
-
-            const id = overlapValues[dataIdx][datasetIdx].name;
-            const name = idsToNamesMap.get(id)!;
-            if (label) {
-              const formattedValue =
-                sumVolume > 0.01
-                  ? Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: currency,
-                    }).format(sumVolume)
-                  : currencySymbol + formatSmallNum(sumVolume);
-              label = " " + name + ": " + formattedValue;
-            }
-
-            return label;
+      tooltip: defaultTooltip(
+        currency,
+        currencySymbol,
+        names,
+        theme,
+        responsiveValues,
+        {
+          itemSort(a, b) {
+            return b.datasetIndex - a.datasetIndex;
           },
-          labelColor(item) {
-            const id = overlapValues[item.dataIndex][item.datasetIndex].name;
-            const idx = idsToNamesArr.findIndex((kv) => kv[0] === id);
-            return {
-              borderColor: chartColorSets[idx].highlightColor.hex,
-              backgroundColor: chartColorSets[idx].highlightColor.hex,
-              borderWidth: 0,
-              borderRadius: 2,
-            };
+          callbacks: {
+            // make sure the overlapped volume data still shows the correct absolute values
+            // https://www.chartjs.org/docs/latest/configuration/tooltip.html#label-callback
+            label: function (item) {
+              let label = item.dataset.label || "";
+
+              const dataIdx = item.dataIndex;
+              const datasetIdx = item.datasetIndex;
+
+              let sumVolume = overlapValues[dataIdx][0].volume;
+              if (datasetIdx !== 0) {
+                // add up all the previous values
+                sumVolume = overlapValues[dataIdx].reduce(
+                  (acc, current, idx) => {
+                    return idx <= datasetIdx ? acc + current.volume : acc;
+                  },
+                  0
+                );
+              }
+
+              const id = overlapValues[dataIdx][datasetIdx].name;
+              const name = idsToNamesMap.get(id)!;
+              if (label) {
+                const formattedValue =
+                  sumVolume > 0.01
+                    ? Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: currency,
+                      }).format(sumVolume)
+                    : currencySymbol + formatSmallNum(sumVolume);
+                label = " " + name + ": " + formattedValue;
+              }
+
+              return label;
+            },
+            labelColor(item) {
+              const id = overlapValues[item.dataIndex][item.datasetIndex].name;
+              const idx = idsToNamesArr.findIndex((kv) => kv[0] === id);
+              return {
+                borderColor: chartColorSets[idx].highlightColor.hex,
+                backgroundColor: chartColorSets[idx].highlightColor.hex,
+                borderWidth: 0,
+                borderRadius: 2,
+              };
+            },
           },
-        },
-      }),
+        }
+      ),
     },
     interaction: {
       intersect: false,
@@ -227,6 +250,9 @@ export function getOptionsOverlapped(
         ticks: {
           autoSkip: true,
           maxTicksLimit: 7,
+          font: {
+            size: responsiveValues.tickFontSize,
+          },
         },
       },
       y: {
@@ -240,6 +266,9 @@ export function getOptionsOverlapped(
         ticks: {
           callback: function (val) {
             return handleTicksYAxis(val as number, currencySymbol);
+          },
+          font: {
+            size: responsiveValues.tickFontSize,
           },
         },
         stacked: true,

@@ -16,11 +16,11 @@ const CoinOverviewLinksPanel = ({ response }: Props) => {
     .filter((l) => l !== "") ?? [null, null, null];
 
   return (
-    <div className="flex flex-col mt-4">
+    <div className="flex flex-col mt-4 screen-lg:w-[90vw] screen-xl:w-auto">
       {links.map((l, idx) => (
         <CoinOverviewLink
           key={"link" + idx}
-          className="flex justify-center items-center h-[72px] w-[555px] mt-4 text-lg"
+          className="flex justify-center items-center h-[72px] mt-4 text-lg"
           link={l}
           isLoading={response.isPending}
         />

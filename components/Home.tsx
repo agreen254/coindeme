@@ -15,11 +15,11 @@ const Home = () => {
   const queryResult = useMarketQuery(currency, field, "desc");
   return (
     <main className="flex flex-col items-center gap-y-4">
-      <CarouselWrapper axis="x" queryResult={queryResult} />
-      <div className="flex justify-between w-table-xl gap-x-12">
+      <CarouselWrapper queryResult={queryResult} />
+      <div className="w-[90vw] screen-xl:w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
       </div>
-      <div className="mt-2">
+      <div className="mt-2 w-[90vw] screen-xl:w-table-xl overflow-x-auto">
         <MarketTableMainWrapper queryResult={queryResult} />
       </div>
     </main>

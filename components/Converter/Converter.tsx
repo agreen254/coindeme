@@ -15,6 +15,7 @@ import type { MarketElementNoIdx } from "@/utils/types";
 
 import ConverterSearchInput from "./ConverterSearchInput";
 import Panel from "../Theme/Panel";
+import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
 
 type Props = {
   converterKeys: string[];
@@ -47,6 +48,10 @@ const Converter = ({
 
   const [coinOneQuery, setCoinOneQuery] = useState<string>("Bitcoin");
   const [coinTwoQuery, setCoinTwoQuery] = useState<string>("Ethereum");
+
+  const { isVisible: topMenuIsVisible } = useDropdownUnitFromId(
+    converterKeys[0]
+  );
 
   const conversionLabel = (data: MarketElementNoIdx) => {
     return `1 ${data.symbol.toUpperCase()} = ${getCurrencySymbol(
@@ -96,10 +101,10 @@ const Converter = ({
   ]);
 
   return (
-    <div className="flex relative w-[1467px] gap-6">
+    <div className="grid grid-cols-1 screen-xl:grid-cols-2 relative w-[90vw] screen-xl:w-[min(1467px,100vw-4rem)] gap-6">
       <Panel
         className={cn(
-          "flex relative flex-col p-4 w-1/2 rounded-lg",
+          "flex relative flex-col p-4 w-full rounded-lg z-100",
           response.isPending && "animate-pulse"
         )}
       >
@@ -152,8 +157,9 @@ const Converter = ({
       </Panel>
       <button
         className={cn(
-          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rounded-full p-1 z-10 border border-default focus:outline-menu-highlight/70",
-          response.isPending && "animate-pulse"
+          "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rotate-90 screen-xl:rotate-0 z-10 rounded-full p-1 border border-default focus:outline-menu-highlight/70",
+          response.isPending && "animate-pulse",
+          topMenuIsVisible && "-z-10 screen-xl:z-0"
         )}
         onClick={swapPositions}
       >
@@ -161,7 +167,8 @@ const Converter = ({
       </button>
       <Panel
         className={cn(
-          "flex relative flex-col p-4 w-1/2",
+          "flex relative flex-col p-4 w-full z-1",
+          topMenuIsVisible && "z-[-1]",
           response.isPending && "animate-pulse"
         )}
       >

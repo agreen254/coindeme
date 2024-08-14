@@ -18,6 +18,7 @@ import {
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
 import { useExportAnalysisData } from "@/hooks/useExportAnalysisData";
+import { useResponsiveChart } from "@/hooks/useResponsiveChart";
 
 import AnalysisExportMenu from "./AnalysisExportMenu";
 
@@ -34,6 +35,7 @@ const AnalysisChart = ({ rawData }: Props) => {
   const timeLength = useAnalysisTimeLength();
   const decimationThreshold = useAnalysisDecimationThreshold();
   const view = useAnalysisView();
+  const responsiveValues = useResponsiveChart();
 
   const preparedData = prepareAnalysisData(
     rawData,
@@ -80,7 +82,8 @@ const AnalysisChart = ({ rawData }: Props) => {
           theme,
           series,
           mode,
-          view
+          view,
+          responsiveValues
         )}
       />
     </>

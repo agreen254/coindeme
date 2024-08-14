@@ -118,7 +118,7 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
         autoComplete="off"
         spellCheck="false"
         searchResults={results}
-        className="p-2 text-xl rounded-lg w-[320px] mr-2 dark:bg-black bg-white"
+        className="p-2 text-sm screen-lg:text-base screen-xl:text-lg rounded-lg w-[260px] mr-2 dark:bg-black bg-white"
         localQuery={query}
         setLocalQuery={setQuery}
         onKeyDown={handleKeyDown}
@@ -127,7 +127,7 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
         ref={clickAwayRef}
         dropdownId={dropdownId}
         key="searchResults"
-        className="w-[320px] max-h-[320px] overflow-y-auto dark:bg-black bg-white border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
+        className="w-full max-w-[80vw] max-h-[320px] overflow-y-auto dark:bg-black bg-white border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[40px] z-10"
       >
         {results.map((wrapper, idx) => (
           <DropdownMenuItem

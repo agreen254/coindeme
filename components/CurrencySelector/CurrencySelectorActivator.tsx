@@ -59,17 +59,17 @@ const CurrencySelectorActivator = ({ dropdownId }: Props) => {
 
   return (
     <button
-      className="h-[42px] w-[108px] rounded-md flex justify-evenly items-center dark:bg-white/10 focus:outline-none focus:ring-[1px] focus:ring-black/50 dark:focus:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
+      className="h-[42px] w-auto screen-sm:w-[108px] px-4 screen-sm:px-0 text-sm screen-sm:text-base rounded-md flex justify-evenly items-center dark:bg-white/10 focus:outline-none focus:ring-[1px] focus:ring-black/50 dark:focus:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
       onClick={() => {
         setIsVisible(!isVisible);
       }}
       onKeyDown={(e) => handleCurrencyKeyEvents(e)}
     >
-      <CoinsIcon className="w-6 h-6 ml-2 inline fill-default" />
+      <CoinsIcon className="hidden screen-sm:inline w-6 h-6 ml-2 mr-2 fill-default" />
       {currency.toUpperCase()}
       <ChevronIcon
         className={cn(
-          "w-4 h-4 mr-2 inline transition-all",
+          "w-4 h-4 screen-sm:mr-2 inline transition-all",
           isVisible && "rotate-180"
         )}
       />

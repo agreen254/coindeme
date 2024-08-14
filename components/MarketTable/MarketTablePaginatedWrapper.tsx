@@ -62,41 +62,39 @@ const MarketTablePaginatedWrapper = ({
   };
 
   return (
-    <div>
-      <div className="flex flex-col items-center mb-12">
-        <MarketTableCaption
-          disableNextPage={disableNextPage}
-          disablePreviousPage={disablePreviousPage}
-          handleNextPage={handleNextPage}
-          handlePreviousPage={handlePreviousPage}
-        />
-        <MarketTable data={sortedData} initialIdx={50 * currentPage} />
-        {!isFetching && (
-          <div className="flex justify-center mt-4 gap-x-4">
-            <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
-              onClick={() => {
-                window.scrollTo(0, 0);
-                handlePreviousPage();
-              }}
-              disabled={disablePreviousPage}
-            >
-              <ChevronLeftIcon className="w-4 h-4" />
-            </button>
-            <button
-              className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
-              onClick={() => {
-                window.scrollTo(0, 0);
-                handleNextPage();
-              }}
-              disabled={disableNextPage}
-            >
-              <ChevronRightIcon className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-        {showLoader && <Loader />}
-      </div>
+    <div className="flex flex-col mb-[20vh]">
+      <MarketTableCaption
+        disableNextPage={disableNextPage}
+        disablePreviousPage={disablePreviousPage}
+        handleNextPage={handleNextPage}
+        handlePreviousPage={handlePreviousPage}
+      />
+      <MarketTable data={sortedData} initialIdx={50 * currentPage} />
+      {!isFetching && (
+        <div className="flex justify-center mt-4 gap-x-4">
+          <button
+            className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              handlePreviousPage();
+            }}
+            disabled={disablePreviousPage}
+          >
+            <ChevronLeftIcon className="w-4 h-4" />
+          </button>
+          <button
+            className="px-3 py-3 border rounded-lg hover:dark:bg-muted disabled:cursor-not-allowed"
+            onClick={() => {
+              window.scrollTo(0, 0);
+              handleNextPage();
+            }}
+            disabled={disableNextPage}
+          >
+            <ChevronRightIcon className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+      {showLoader && <Loader />}
     </div>
   );
 };

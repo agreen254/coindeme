@@ -20,7 +20,7 @@ const AnalysisExportMenu = ({ downloadCallback }: Props) => {
         onChange={handleExport}
         name="selectedFormat"
         value="export"
-        className="p-2 pl-8 uppercase text-sm border border-zinc-200 dark:border-zinc-700 rounded-sm"
+        className="p-2 pl-8 uppercase text-xs screen-sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-sm"
       >
         <option value="export" disabled>export as</option>
         {ANALYSIS_EXPORT_FORMATS.map((f) => (

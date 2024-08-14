@@ -18,13 +18,13 @@ const MarketTableSwapMode = () => {
   };
 
   return (
-    <div className="flex justify-end mb-2">
+    <div className="absolute screen-lg:static screen-lg:flex justify-end mb-2">
       <Link
         className="px-3 py-2 mr-4 hover:bg-muted/70 rounded-md text-sm text-primary/70 font-light transition-colors"
         href={handleTableMode()}
         scroll={false}
       >
-        Swap View
+        Change Table View
       </Link>
     </div>
   );

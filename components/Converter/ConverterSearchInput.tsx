@@ -128,7 +128,7 @@ const ConverterSearchInput = ({
         ref={clickAwayRef}
         dropdownId={dropdownId}
         key="searchResults"
-        className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
+        className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px]"
       >
         {results.map((wrapper, idx) => (
           <DropdownMenuItem

@@ -7,8 +7,8 @@ type Props = {
 
 const CarouselSkeleton = ({ pulse }: Props) => {
   const numSkeletonElements = 6;
-  const dummyArray = arrayOfSize(numSkeletonElements);
 
+  const dummyArray = arrayOfSize(numSkeletonElements);
   return dummyArray.map((_, idx) => (
     <div
       key={"carouselSkeleton" + idx}

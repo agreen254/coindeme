@@ -8,6 +8,7 @@ import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
+import { useResponsiveChart } from "@/hooks/useResponsiveChart";
 
 type ChartDataElement = NonNullable<
   ReturnType<typeof useComparisonChartQueries>[number]["data"]
@@ -29,6 +30,8 @@ const ConverterChart = ({
   days,
 }: Props) => {
   const theme = useThemeTyped();
+  const responsiveValues = useResponsiveChart();
+
   const coinRatioData = coinOneChartData.prices.map((p, idx) => {
     if (!coinTwoChartData.prices[idx]) return null;
 
@@ -63,6 +66,7 @@ const ConverterChart = ({
         len: coinOneChartData.prices.length,
         days: days,
         theme: theme,
+        responsiveValues: responsiveValues,
       })}
     />
   );

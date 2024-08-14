@@ -9,6 +9,7 @@ import { useVolumeChartMode } from "@/hooks/useVolumeChartMode";
 import ComparisonChartsLegend from "./ComparisonChartsLegend";
 import VolumeOverlapComparisonChart from "./VolumeOverlapComparisonChart";
 import VolumeStackComparisonChart from "./VolumeStackComparisonChart";
+import { useResponsiveChart } from "@/hooks/useResponsiveChart";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -19,6 +20,7 @@ const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   const hasNoneSelected = useCarouselHasNoneSelected();
   const hasNoData = chartData.length === 0;
   const mode = useVolumeChartMode();
+  const responsiveValues = useResponsiveChart();
 
   if (hasNoneSelected || hasNoData) {
     return (
@@ -29,7 +31,7 @@ const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
   }
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="h-full p-4 max-w-[90vw]">
       <ErrorBoundary
         fallback={
           <p className="text-sm text-center text-destructive">
@@ -39,9 +41,17 @@ const PriceComparisonChartWrapper = ({ chartData, coinNames }: Props) => {
       >
         <div className="h-[calc(100%-40px)]">
           {mode === "stack" ? (
-            <VolumeStackComparisonChart chartData={chartData} coinNames={coinNames} />
+            <VolumeStackComparisonChart
+              chartData={chartData}
+              coinNames={coinNames}
+              responsiveValues={responsiveValues}
+            />
           ) : (
-            <VolumeOverlapComparisonChart chartData={chartData} coinNames={coinNames} />
+            <VolumeOverlapComparisonChart
+              chartData={chartData}
+              coinNames={coinNames}
+              responsiveValues={responsiveValues}
+            />
           )}
         </div>
         <ComparisonChartsLegend />
