@@ -63,7 +63,7 @@ const MarketTablePaginatedWrapper = ({
 
   return (
     <div>
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-col items-center mb-[20vh]">
         <MarketTableCaption
           disableNextPage={disableNextPage}
           disablePreviousPage={disablePreviousPage}

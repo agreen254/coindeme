@@ -17,6 +17,7 @@ import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
+import { useNumVolumeBars } from "@/hooks/useNumVolumeBars";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -32,7 +33,13 @@ const VolumeStackComparisonChart = ({
   const currency = useUserCurrencySetting();
   const time = useComparisonChartTime();
   const coinLabels = useCarouselSelectedElements();
-  const { label, values } = prepareComparisonData(chartData, "total_volumes");
+  const numBars = useNumVolumeBars();
+
+  const { label, values } = prepareComparisonData(
+    chartData,
+    "total_volumes",
+    numBars
+  );
   const theme = useThemeTyped();
 
   const volumeChartData: ChartData<"bar"> = {

@@ -18,6 +18,7 @@ import { useCarouselSelectedElements } from "@/hooks/useCarousel";
 import { useComparisonChartTime } from "@/hooks/useComparisonChartTime";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
+import { useNumVolumeBars } from "@/hooks/useNumVolumeBars";
 
 type Props = {
   chartData: ComparisonChartResponse[];
@@ -33,9 +34,11 @@ const VolumeOverlapComparisonChart = ({
   const time = parseInt(useComparisonChartTime());
   const currency = useUserCurrencySetting();
   const coinLabels = useCarouselSelectedElements();
+  const numBars = useNumVolumeBars();
   const { label: x, values } = prepareComparisonData(
     chartData,
-    "total_volumes"
+    "total_volumes",
+    numBars
   );
   const overlapValues = overlapData(values, coinLabels);
   const theme = useThemeTyped();

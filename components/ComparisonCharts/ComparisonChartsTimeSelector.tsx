@@ -16,7 +16,7 @@ const ComparisonChartsTimeSelector = ({ isPending }: Props) => {
   const times = Array.from(comparisonChartsTimeSelectorsMap);
 
   return (
-    <Panel className="rounded-lg inline-flex p-1 gap-x-1">
+    <Panel className="rounded-lg inline-flex flex-wrap p-1 gap-x-1 text-sm screen-sm:text-base">
       {times.map(([displayTime, sendToApiTime]) => (
         <button
           key={sendToApiTime}

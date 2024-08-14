@@ -71,3 +71,11 @@ export const chartLineThicknessMap = new Map<ScreenSize, number>([
   ["LG", 1.75],
   ["XL", 2],
 ]);
+
+export const volumeBarDecimationMap = new Map<ScreenSize, number>([
+  ["XS", 30],
+  ["SM", 60],
+  ["MD", 90],
+  ["LG", 120],
+  ["XL", 150],
+]);

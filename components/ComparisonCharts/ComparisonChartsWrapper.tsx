@@ -68,7 +68,7 @@ const ComparisonChartsWrapper = () => {
           />
         </Panel>
       </div>
-      <div className="flex justify-between mt-[10px] mb-4">
+      <div className="flex flex-wrap gap-2 justify-between mt-[10px] mb-4">
         <ComparisonChartsTimeSelector isPending={pulseChartBackground} />
         <VolumeChartSwitcher isPending={pulseChartBackground} />
       </div>

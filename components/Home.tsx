@@ -19,7 +19,7 @@ const Home = () => {
       <div className="w-[90vw] screen-xl:w-table-xl gap-x-12">
         <ComparisonChartsWrapper />
       </div>
-      <div className="mt-2 w-table-xl overflow-x-auto">
+      <div className="mt-2 w-[90vw] screen-xl:w-table-xl overflow-x-auto">
         <MarketTableMainWrapper queryResult={queryResult} />
       </div>
     </main>

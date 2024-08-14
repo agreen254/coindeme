@@ -8,7 +8,11 @@ import {
 import { ScreenSize } from "@/utils/types";
 
 /**
- * Matches width of client screen to the screen sizes defined in tailwind.config.ts
+ * Matches width of the client screen to the screen sizes defined in tailwind.config.ts.
+ *
+ * Allows for dynamic adjustment of properties that can only be adjusted using javascript, such as the chart font sizes.
+ *
+ * Best paired with a hashmap to map each screen size to a corresponding value.
  */
 export const useScreenSize = (): ScreenSize => {
   const { width } = useWindowSize();
