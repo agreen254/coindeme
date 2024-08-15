@@ -64,23 +64,24 @@ const ConverterWrapper = () => {
       </DropdownProvider>
       <Panel
         className={cn(
-          "w-[90vw] screen-xl:w-[min(1467px,100vw-4rem)] h-[40vh] screen-lg:h-[600px] flex flex-col mt-4 mb-2 p-6 rounded-xl",
+          "w-[90vw] screen-xl:w-[1467px] aspect-square screen-xs:aspect-[5/4] screen-sm:aspect-[16/9] mt-4 mb-2 p-6 rounded-xl",
           !hasData && "animate-pulse"
         )}
       >
         {hasData && (
           <ErrorBoundary fallback={<></>}>
-            <ConverterChart
-              coinOneChartData={chartDataCoinOne.data}
-              coinTwoChartData={chartDataCoinTwo.data}
-              coinOneMarketData={coinOneData}
-              coinTwoMarketData={coinTwoData}
-              days={nDays}
-            />
+            <div className="h-full">
+              <ConverterChart
+                coinOneChartData={chartDataCoinOne.data}
+                coinTwoChartData={chartDataCoinTwo.data}
+                coinOneMarketData={coinOneData}
+                coinTwoMarketData={coinTwoData}
+                days={nDays}
+              />
+            </div>
           </ErrorBoundary>
         )}
       </Panel>
-
       <Panel className="rounded-lg inline-flex flex-wrap  mb-[20vh] p-1 gap-x-1 max-w-[90vw]">
         <ConverterChartTimeSelector
           nDays={nDays}

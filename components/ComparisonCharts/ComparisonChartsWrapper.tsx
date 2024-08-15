@@ -47,7 +47,7 @@ const ComparisonChartsWrapper = () => {
       <div className="grid screen-lg:grid-cols-2 gap-4">
         <Panel
           className={cn(
-            "rounded-2xl h-[min(50vh,600px)] screen-xl:h-[600px]",
+            "rounded-2xl aspect-square screen-xs:aspect-[16/9] screen-lg:aspect-[5/4]",
             pulseChartBackground && "animate-pulse"
           )}
         >
@@ -58,7 +58,7 @@ const ComparisonChartsWrapper = () => {
         </Panel>
         <Panel
           className={cn(
-            "rounded-2xl h-[min(50vh,600px)] screen-xl:h-[600px]",
+            "rounded-2xl aspect-square screen-xs:aspect-[16/9] screen-lg:aspect-[5/4]",
             pulseChartBackground && "animate-pulse"
           )}
         >
