@@ -73,19 +73,23 @@ const AnalysisChart = ({ rawData }: Props) => {
       <div className="absolute top-3 right-3">
         <AnalysisExportMenu downloadCallback={exportData} />
       </div>
-      <Line
-        data={data}
-        options={getOptions(
-          currency,
-          timeLength,
-          names,
-          theme,
-          series,
-          mode,
-          view,
-          responsiveValues
-        )}
-      />
+      <div className="w-full aspect-square screen-sm:aspect-[5/4] screen-md:aspect-[8/5] screen-xl:aspect-[16/9] mb-8">
+        <div className="h-full">
+          <Line
+            data={data}
+            options={getOptions(
+              currency,
+              timeLength,
+              names,
+              theme,
+              series,
+              mode,
+              view,
+              responsiveValues
+            )}
+          />
+        </div>
+      </div>
     </>
   );
 };

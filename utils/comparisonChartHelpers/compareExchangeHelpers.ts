@@ -100,8 +100,8 @@ export const getOptions = ({
     intersect: false,
     mode: "index",
   },
-  maintainAspectRatio: false,
   responsive: true,
+  maintainAspectRatio: false,
   scales: {
     x: {
       border: {
