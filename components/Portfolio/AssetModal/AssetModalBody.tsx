@@ -101,13 +101,12 @@ const AssetModalBody = (
   const coinSymbol = coinInfo?.symbol ?? "";
 
   // refs
-  const coinInputRef = useRef<HTMLInputElement>(null);
   const coinDropdownRef = useRef<HTMLDivElement>(null);
   const amountInputRef = useRef<HTMLInputElement>(null);
   const currencyButtonRef = useRef<HTMLButtonElement>(null);
   const currencyDropdownRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const clickAwaySearchRef: React.MutableRefObject<HTMLDivElement> =
+  const clickAwaySearchRef: React.MutableRefObject<HTMLInputElement> =
     useClickAway(() => {
       resetSearch();
       setCoinQuery(coinNameFromId(coinId, searchTargets));
@@ -270,7 +269,7 @@ const AssetModalBody = (
 
   useModalListener(
     modalRef,
-    assetId === "" ? coinInputRef : amountInputRef,
+    assetId === "" ? clickAwaySearchRef : amountInputRef,
     isOpen,
     handleModalExit,
     [coinDropdownRef, currencyDropdownRef]
@@ -346,7 +345,7 @@ const AssetModalBody = (
           </div>
           <div className="flex flex-col gap-y-4 row-start-1 screen-sm:row-auto">
             <AssetModalCoinSearch
-              ref={clickAwaySearchRef}
+              // ref={clickAwaySearchRef}
               className="w-full relative"
             >
               <XIcon
@@ -365,7 +364,7 @@ const AssetModalBody = (
                 search coins to declare asset
               </label>
               <SearchActivator
-                ref={coinInputRef}
+                ref={clickAwaySearchRef}
                 id="coinSearch"
                 type="text"
                 dropdownId={searchDropdownId}
