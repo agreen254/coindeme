@@ -62,7 +62,7 @@ const Search = ({ dropdownId }: Props) => {
         <DropdownMenu
           dropdownId={dropdownId}
           key="searchResults"
-          className="w-[min(320px,100%)] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-10"
+          className="w-[min(320px,100%)] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px] z-[100]"
         >
           {results.map((wrapper, idx) => (
             <DropdownMenuItem
