@@ -308,7 +308,7 @@ const AssetModalBody = (
       aria-hidden={!isOpen}
       ref={modalRef}
       className={cn(
-        "h-full w-full hidden justify-center items-center fixed top-0 left-0 backdrop-blur-md z-10",
+        "h-full w-full hidden justify-center items-center fixed top-0 left-0 backdrop-blur-md z-[100]",
         isOpen && "flex flex-col"
       )}
     >

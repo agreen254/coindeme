@@ -162,7 +162,7 @@ const AssetDisplay = ({ asset, assetCurrent, assetHistory }: Props) => {
       <Image
         alt={`${coinName} logo`}
         src={coinImage}
-        className="absolute top-2 left-2 pr-4"
+        className="absolute top-2 left-2 pr-4 z-10"
         height={55}
         width={55}
         priority
