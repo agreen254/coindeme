@@ -81,7 +81,7 @@ const CarouselHorizontal = ({
 
   return (
     <div className="flex justify-center relative w-[90vw] screen-xl:w-table-xl">
-      <div className="absolute screen-xl:mb-0 left-0 screen-xl:-left-9 top-20 screen-xl:top-[10px] z-10">
+      <div className="absolute screen-xl:mb-0 left-0 screen-xl:-left-9 top-20 screen-xl:top-[10px] z-1 screen-lg:z-10">
         <label htmlFor="scrollPrev" className="sr-only">
           Scroll carousel backward
         </label>
@@ -104,7 +104,7 @@ const CarouselHorizontal = ({
           </div>
         </div>
       </div>
-      <div className="absolute left-14 screen-xl:left-auto screen-xl:-right-9 top-20 screen-xl:top-[10px] z-10">
+      <div className="absolute left-14 screen-xl:left-auto screen-xl:-right-9 top-20 screen-xl:top-[10px] z-1 screen-lg:z-10">
         <label htmlFor="scrollNext" className="sr-only">
           Scroll carousel forward
         </label>
