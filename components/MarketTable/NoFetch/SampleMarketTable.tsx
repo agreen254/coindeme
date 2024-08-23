@@ -25,6 +25,7 @@ const SampleMarketTable = () => {
           handlePreviousPage={() => null}
           disableNextPage={true}
           disablePreviousPage={true}
+          numRecords={0}
         />
         <MarketTable data={sortedData} initialIdx={0} />
       </div>
