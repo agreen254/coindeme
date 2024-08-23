@@ -12,7 +12,7 @@ import "./globals.css";
 const openSans = OpenSans({ subsets: ["latin", "greek"] });
 
 export const metadata: Metadata = {
-  title: "Crypto App",
+  title: "CoinDeme",
   description: "Aaron Green's implementation of the crypto app",
 };
 
