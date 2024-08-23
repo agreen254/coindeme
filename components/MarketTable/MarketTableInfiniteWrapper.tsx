@@ -11,6 +11,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "@/components/Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
+import { getNumMarketRecords } from "@/utils/getNumMarketRecords";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -35,7 +36,7 @@ const MarketTableInfiniteWrapper = ({
   return (
     <div>
       <div className="flex flex-col mb-[100vh] screen-lg:mb-[20vh]">
-        <MarketTableCaption />
+        <MarketTableCaption numRecords={getNumMarketRecords(data)} />
         <InfiniteScroll
           dataLength={tableData?.length || 0}
           next={fetchNextPage}
