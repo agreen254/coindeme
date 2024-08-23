@@ -10,7 +10,7 @@ import {
 } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
 
-import { useAnalysisActions } from "@/hooks/useAnalysis";
+import { useAnalysisActions, useAnalysisSeries } from "@/hooks/useAnalysis";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
@@ -34,6 +34,10 @@ type Props = {
 const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
   const currency = useUserCurrencySetting();
   const market = useMarketQuery(currency, "market_cap", "desc");
+
+  const inUseSeriesIds = useAnalysisSeries().map((s) => s.id);
+  const seriesAlreadyInUse = (maybeNewSeriesId: string) =>
+    inUseSeriesIds.includes(maybeNewSeriesId);
 
   const coinId = series.id;
   const [query, setQuery] = useState<string>(series.name);
@@ -81,7 +85,11 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
         }
         // if there are no results nothing will happen,
         // otherwise if user hits enter with nothing selected then default to the first result
-        if (results.length > 0 && results.length > selectedIndex) {
+        if (
+          results.length > 0 &&
+          results.length > selectedIndex &&
+          !seriesAlreadyInUse(results[0].id)
+        ) {
           const id =
             selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
           const name = coinNameFromId(id, targets);
@@ -138,7 +146,7 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
             <button
               tabIndex={-1}
               className={cn(
-                "indent-3 py-1 block w-full text-start",
+                "indent-3 py-1 block w-full text-start disabled:line-through",
                 idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
               )}
               onClick={() => {
@@ -152,6 +160,7 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
                 setIsUsingMouse(true);
                 setSelectedIndex(idx);
               }}
+              disabled={seriesAlreadyInUse(wrapper.id)}
             >
               {wrapper.kind === "symbol"
                 ? HandleSymbolMatch(wrapper)
