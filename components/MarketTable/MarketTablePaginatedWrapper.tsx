@@ -17,6 +17,7 @@ import { useMarketParams } from "@/hooks/useMarketParams";
 import Loader from "../Loader";
 import MarketTable from "./MarketTable";
 import MarketTableCaption from "./MarketTableCaption";
+import { getNumMarketRecords } from "@/utils/getNumMarketRecords";
 
 type Props = {
   queryResult: MarketQueryResult;
@@ -68,6 +69,7 @@ const MarketTablePaginatedWrapper = ({
         disablePreviousPage={disablePreviousPage}
         handleNextPage={handleNextPage}
         handlePreviousPage={handlePreviousPage}
+        numRecords={getNumMarketRecords(data)}
       />
       <MarketTable data={sortedData} initialIdx={50 * currentPage} />
       {!isFetching && (

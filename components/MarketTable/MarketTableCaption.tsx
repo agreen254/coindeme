@@ -5,10 +5,7 @@ import { Coins as CoinsIcon } from "lucide-react";
 
 import CaretIcon from "@/Icons/Caret";
 import { marketFetchParamMap } from "@/utils/maps";
-import {
-  useMarketTableCurrentPage,
-  useMarketTableNumFetchedPages,
-} from "@/hooks/useMarketTable";
+import { useMarketTableCurrentPage } from "@/hooks/useMarketTable";
 import { useMarketParams } from "@/hooks/useMarketParams";
 import {
   MARKET_FIELD_KEY,
@@ -22,6 +19,7 @@ type Props = {
   disableNextPage?: boolean;
   handleNextPage?: () => void;
   handlePreviousPage?: () => void;
+  numRecords: number;
 };
 
 const MarketTableCaption = ({
@@ -29,14 +27,13 @@ const MarketTableCaption = ({
   disableNextPage,
   handleNextPage,
   handlePreviousPage,
+  numRecords,
 }: Props) => {
   const { field, tableMode, order, orderBy } = useMarketParams();
   const otherField = field === "market_cap" ? "volume" : "market_cap";
-
   const currentPage = useMarketTableCurrentPage();
-  const totalPages = useMarketTableNumFetchedPages();
 
-  const handlePageDisplay = () => {
+  const recordDisplay = (() => {
     if (tableMode === "paginated") {
       const range =
         currentPage === 0
@@ -44,10 +41,9 @@ const MarketTableCaption = ({
           : `${currentPage * 50 + 1}-${50 * (currentPage + 1)}`;
       return `top ${range}`;
     } else {
-      const numRecords = totalPages * 50;
       return `top ${numRecords}`;
     }
-  };
+  })();
 
   return (
     <div className="flex justify-between w-table-xl mt-8 screen-lg:mt-auto pt-4 -mb-1 gap-x-2 rounded-t-xl bg-white dark:bg-zinc-900/70 dark:border-zinc-900/70 opacity-90 shadow-[0_-1px_2px_0_#A1A1AA] dark:shadow-[0_-1px_2px_0_#404040]">
@@ -56,7 +52,7 @@ const MarketTableCaption = ({
           <CoinsIcon className="w-6 h-6 mr-2 -translate-y-1 inline" />
         </span>
         <span className="mr-2 text-2xl font-bold uppercase">
-          {handlePageDisplay()}
+          {recordDisplay}
         </span>
         <span className="mr-2 text-lg text-gray-600 dark:text-gray-200 font-normal uppercase">
           by
