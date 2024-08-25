@@ -1,15 +1,25 @@
-import { useRouter } from "next/router";
 import { CustomKeyEvents, SearchResultWrapper } from "@/utils/types";
-import { useDropdownUnitFromId } from "./useDropdownStore";
+import {
+  useDropdownResetFromId,
+  useDropdownUnitFromId,
+} from "./useDropdownStore";
 import { useDropdownKeyEvents } from "./useDropdownKeyEvents";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const useSearchDropdownKeyEvents = (
   id: string,
-  searchResults: SearchResultWrapper[]
+  searchResults: SearchResultWrapper[],
+  setQuery: (_q: string) => void,
+  router: AppRouterInstance
 ) => {
-  const { isVisible, selectedIndex } = useDropdownUnitFromId(id);
+  const { selectedIndex } = useDropdownUnitFromId(id);
+  const resetDropdown = useDropdownResetFromId(id);
   const length = searchResults.length;
-  const router = useRouter();
+
+  const reset = () => {
+    resetDropdown();
+    setQuery("");
+  };
 
   const customEvents: CustomKeyEvents = {
     Enter: (e) => {
@@ -20,7 +30,11 @@ export const useSearchDropdownKeyEvents = (
             ? `/coin/${searchResults[0].id}`
             : `/coin/${searchResults[selectedIndex].id}`
         );
+        reset();
       }
+    },
+    Escape: (_) => {
+      reset();
     },
   };
 

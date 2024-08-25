@@ -3,7 +3,6 @@ import { CustomKeyEvents } from "@/utils/types";
 import {
   useDropdownSettersFromId,
   useDropdownUnitFromId,
-  useDropdownResetFromId,
 } from "./useDropdownStore";
 
 export const useDropdownKeyEvents = (
@@ -11,7 +10,6 @@ export const useDropdownKeyEvents = (
   dropdownLength: number,
   events: CustomKeyEvents
 ) => {
-  const resetDropdown = useDropdownResetFromId(id);
   const { selectedIndex } = useDropdownUnitFromId(id);
   const { setIsUsingMouse, setSelectedIndex } = useDropdownSettersFromId(id);
 
@@ -29,13 +27,9 @@ export const useDropdownKeyEvents = (
       setSelectedIndex(
         selectedIndex < dropdownLength - 1 ? selectedIndex + 1 : 0
       );
-    } else if (e.key === "Escape") {
-      resetDropdown();
     }
 
     // If the user-entered key matches one of the provided callbacks then execute that callback.
-    Object.entries(events).forEach(
-      ([callbackKey, callback]) => callbackKey === e.key && callback(e)
-    );
+    events[e.key]?.(e);
   };
 };

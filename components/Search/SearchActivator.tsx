@@ -1,16 +1,13 @@
 "use client";
 
-import { ChangeEvent, KeyboardEvent } from "react";
+import { ChangeEvent } from "react";
 import type { SearchResultWrapper } from "@/utils/types";
 
 import { forwardRef, type ForwardedRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
-import {
-  useDropdownResetFromId,
-  useDropdownSettersFromId,
-  useDropdownUnitFromId,
-} from "@/hooks/useDropdownStore";
+import { useDropdownSettersFromId } from "@/hooks/useDropdownStore";
+import { useSearchDropdownKeyEvents } from "@/hooks/useDropdownSearchKeyEvents";
 
 interface SearchActivatorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -45,58 +42,14 @@ const SearchActivator = forwardRef(
       ? [localQuery, setLocalQuery]
       : [navQuery, navSetQuery];
 
-    const { setIsUsingMouse, setIsVisible, setSelectedIndex } =
-      useDropdownSettersFromId(dropdownId);
-    const { selectedIndex } = useDropdownUnitFromId(dropdownId);
+    const { setIsVisible } = useDropdownSettersFromId(dropdownId);
 
-    const resetDropdown = useDropdownResetFromId(dropdownId);
-    const resetSearch = () => {
-      setQuery("");
-      resetDropdown();
-    };
-
-    const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
-      switch (e.key) {
-        case "ArrowUp": {
-          // stop the default event of jumping to the front/back of input text
-          e.preventDefault();
-          setIsUsingMouse(false);
-          setSelectedIndex(
-            selectedIndex > 0 ? selectedIndex - 1 : searchResults.length - 1
-          );
-          break;
-        }
-        case "ArrowDown": {
-          e.preventDefault();
-          setIsUsingMouse(false);
-          setSelectedIndex(
-            selectedIndex < searchResults.length - 1 ? selectedIndex + 1 : 0
-          );
-          break;
-        }
-        case "Enter": {
-          e.preventDefault();
-          // if there are no results nothing will happen,
-          // otherwise if user hits enter with nothing selected then default to the first result
-          if (
-            searchResults.length > 0 &&
-            searchResults.length > selectedIndex
-          ) {
-            router.push(
-              selectedIndex === -1
-                ? `/coin/${searchResults[0].id}`
-                : `/coin/${searchResults[selectedIndex].id}`
-            );
-            resetSearch();
-          }
-          break;
-        }
-        case "Escape": {
-          resetSearch();
-          break;
-        }
-      }
-    };
+    const handleSearchKeyEvents = useSearchDropdownKeyEvents(
+      dropdownId,
+      searchResults,
+      setQuery,
+      router
+    );
 
     const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
       setQuery(e.currentTarget.value);
