@@ -1,4 +1,4 @@
-import { CustomKeyEvents } from "@/utils/types";
+import { CustomKeyHandlers } from "@/utils/types";
 
 import {
   useDropdownSettersFromId,
@@ -8,7 +8,7 @@ import {
 export const useDropdownKeyEvents = (
   id: string,
   dropdownLength: number,
-  events: CustomKeyEvents
+  events: CustomKeyHandlers
 ) => {
   const { selectedIndex } = useDropdownUnitFromId(id);
   const { setIsUsingMouse, setSelectedIndex } = useDropdownSettersFromId(id);

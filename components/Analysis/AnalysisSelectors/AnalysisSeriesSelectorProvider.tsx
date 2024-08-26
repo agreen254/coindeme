@@ -19,7 +19,7 @@ const AnalysisSeriesSelectorProvider = ({ series, index }: Props) => {
       <span className="relative">
         <AnalysisSeriesSelector
           series={series}
-          index={index}
+          selectorIndex={index}
           dropdownId={ANALYSIS_DROPDOWN_ID}
         />
       </span>

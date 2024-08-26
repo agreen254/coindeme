@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
-import {
-  HandleNameMatch,
-  HandleSymbolMatch,
-} from "@/components/Search/SearchResultsHelpers";
+import { HighlightedSearchResult } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
 
 import { useAnalysisActions, useAnalysisSeries } from "@/hooks/useAnalysis";
@@ -16,119 +13,108 @@ import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import {
   useDropdownResetFromId,
-  useDropdownSettersFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
-import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
-import { AnalysisSeries } from "@/utils/types";
+import { processSearch } from "@/utils/getSearchElements";
+import { AnalysisSeries, CustomKeyHandlers } from "@/utils/types";
+import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
+import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
 
 type Props = {
   dropdownId: string;
   series: AnalysisSeries;
-  index: number;
+  selectorIndex: number;
 };
 
-const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
+const AnalysisSeriesSelector = ({
+  dropdownId,
+  series,
+  selectorIndex,
+}: Props) => {
+  const activatorId = useId();
   const currency = useUserCurrencySetting();
-  const market = useMarketQuery(currency, "market_cap", "desc");
-
-  const inUseSeriesIds = useAnalysisSeries().map((s) => s.id);
-  const seriesAlreadyInUse = (maybeNewSeriesId: string) =>
-    inUseSeriesIds.includes(maybeNewSeriesId);
-
-  const coinId = series.id;
-  const [query, setQuery] = useState<string>(series.name);
-
   const { updateSeries } = useAnalysisActions();
-
-  const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
-  const { setIsUsingMouse, setSelectedIndex } =
-    useDropdownSettersFromId(dropdownId);
-
-  const targets = getSearchTargets(market.data?.pages);
-  const name = coinNameFromId(coinId, targets);
-  const results = targets ? getSearchResults(targets, query) : [];
-
+  const { selectedIndex } = useDropdownUnitFromId(dropdownId);
   const resetDropdown = useDropdownResetFromId(dropdownId);
+  const marketData = useMarketQuery(currency, "market_cap", "desc").data?.pages;
+
+  const [searchQuery, setSearchQuery] = useState<string>(series.name);
+
+  const currentSeriesIds = useAnalysisSeries().map((s) => s.id);
+  const idIsInUse = (maybeNewSeriesId: string) =>
+    currentSeriesIds.includes(maybeNewSeriesId);
+
+  const { searchTargets, searchResults, numResults } = processSearch(
+    marketData,
+    searchQuery
+  );
+  const currentName = coinNameFromId(series.id, searchTargets);
+
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => {
-      setQuery(name);
+      setSearchQuery(currentName);
       resetDropdown();
     }
   );
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    switch (e.key) {
-      case "ArrowUp": {
-        e.preventDefault();
-        setIsUsingMouse(false);
-        setSelectedIndex(
-          selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
-        );
-        break;
-      }
-      case "ArrowDown": {
-        e.preventDefault();
-        setIsUsingMouse(false);
-        setSelectedIndex(
-          selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
-        );
-        break;
-      }
-      case "Enter": {
-        e.preventDefault();
-        if (!isVisible) {
-          break;
-        }
-        // if there are no results nothing will happen,
-        // otherwise if user hits enter with nothing selected then default to the first result
-        if (
-          results.length > 0 &&
-          results.length > selectedIndex &&
-          !seriesAlreadyInUse(results[0].id)
-        ) {
-          const id =
-            selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
-          const name = coinNameFromId(id, targets);
-          setQuery(name);
-          updateSeries(index, id, name);
-        }
-        resetDropdown();
-        break;
-      }
-      case "Escape": {
-        setQuery(name);
-        resetDropdown();
-        break;
-      }
-      case "Tab": {
-        setQuery(name);
-        if (isVisible) {
-          e.preventDefault();
-          break;
-        }
-      }
-    }
+  const handleMouseEnter = useDropdownMenuMouseEnter(dropdownId);
+  const keyEventHandlers: CustomKeyHandlers = {
+    Enter: (e) => {
+      e.preventDefault();
+
+      // nothing to do
+      if (numResults === 0) {
+        normalize();
+        return;
+      } else handleUpdate();
+    },
+    Escape: (_) => normalize(),
+    Tab: (_) => normalize(),
   };
+
+  const handleUpdate = () => {
+    // if the user hasn't selected a specific index (i.e. just focuses the input and hits enter)
+    // the selectedIndex value will be -1, but need it to behave like 0 to get the relevant id.
+    const adjustedIndex = selectedIndex === -1 ? 0 : selectedIndex;
+    const adjustedId = searchResults[adjustedIndex].id;
+    const canSelect = adjustedIndex >= 0 && !idIsInUse(adjustedId);
+
+    if (canSelect) {
+      const newCoinName = coinNameFromId(adjustedId, searchTargets);
+      setSearchQuery(newCoinName);
+      updateSeries(selectorIndex, adjustedId, newCoinName);
+    } else normalize();
+  };
+
+  const normalize = () => {
+    setSearchQuery(currentName);
+    resetDropdown();
+  };
+
+  const handleKeyDown = useDropdownKeyEvents(
+    dropdownId,
+    numResults,
+    keyEventHandlers
+  );
 
   return (
     <>
-      <label htmlFor="coinSearch" className="sr-only">
+      <label htmlFor={activatorId} className="sr-only">
         search coins
       </label>
       <SearchActivator
-        id="coinSearch"
+        id={activatorId}
         type="text"
         dropdownId={dropdownId}
         autoComplete="off"
         spellCheck="false"
-        searchResults={results}
+        searchResults={searchResults}
         className="p-2 text-sm screen-lg:text-base screen-xl:text-lg rounded-lg w-[260px] mr-2 dark:bg-black bg-white"
-        localQuery={query}
-        setLocalQuery={setQuery}
+        localQuery={searchQuery}
+        setLocalQuery={setSearchQuery}
         onKeyDown={handleKeyDown}
       />
       <DropdownMenu
@@ -137,38 +123,27 @@ const AnalysisSeriesSelector = ({ dropdownId, series, index }: Props) => {
         key="searchResults"
         className="w-full max-w-[80vw] max-h-[320px] overflow-y-auto dark:bg-black bg-white border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[40px] z-10"
       >
-        {results.map((wrapper, idx) => (
+        {searchResults.map((wrapper, menuItemIdx) => (
           <DropdownMenuItem
             dropdownId={dropdownId}
-            index={idx}
+            index={menuItemIdx}
             key={wrapper.result.target + "searchResult"}
           >
             <button
               tabIndex={-1}
               className={cn(
                 "indent-3 py-1 block w-full text-start disabled:line-through",
-                idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
+                menuItemIdx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
               )}
-              onClick={() => {
-                const id = results[selectedIndex].id;
-                const name = coinNameFromId(id, targets);
-                setQuery(name);
-                updateSeries(index, id, name);
-                resetDropdown();
-              }}
-              onMouseEnter={() => {
-                setIsUsingMouse(true);
-                setSelectedIndex(idx);
-              }}
-              disabled={seriesAlreadyInUse(wrapper.id)}
+              onClick={handleUpdate}
+              onMouseEnter={handleMouseEnter(menuItemIdx)}
+              disabled={idIsInUse(wrapper.id)}
             >
-              {wrapper.kind === "symbol"
-                ? HandleSymbolMatch(wrapper)
-                : HandleNameMatch(wrapper)}
+              <HighlightedSearchResult wrapper={wrapper} />
             </button>
           </DropdownMenuItem>
         ))}
-        {results.length === 0 && (
+        {searchResults.length === 0 && (
           <p className="italic text-muted-foreground font-medium py-1 indent-3">
             No results found.
           </p>

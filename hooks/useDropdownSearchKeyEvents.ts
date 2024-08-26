@@ -1,4 +1,4 @@
-import { CustomKeyEvents, SearchResultWrapper } from "@/utils/types";
+import { CustomKeyHandlers, SearchResultWrapper } from "@/utils/types";
 import {
   useDropdownResetFromId,
   useDropdownUnitFromId,
@@ -21,7 +21,7 @@ export const useSearchDropdownKeyEvents = (
     setQuery("");
   };
 
-  const customEvents: CustomKeyEvents = {
+  const customEvents: CustomKeyHandlers = {
     Enter: (e) => {
       e.preventDefault();
       if (length > 0 && length > selectedIndex) {

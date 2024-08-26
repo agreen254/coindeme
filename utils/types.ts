@@ -63,7 +63,7 @@ export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 
 export type Currency = z.infer<typeof currenciesUnionSchema>;
 
-export type CustomKeyEvents = {
+export type CustomKeyHandlers = {
   [key: string]: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
@@ -168,7 +168,7 @@ export type SearchTargets = {
 export type SearchResultWrapper = {
   result: Fuzzysort.Result;
   otherText: string; // store the name if the symbol is matched and vice-versa
-  kind: string;
+  kind: "name" | "symbol";
   id: string;
 };
 
