@@ -29,7 +29,8 @@ export const useDropdownKeyEvents = (
       );
     }
 
-    // If the user-entered key matches one of the provided callbacks then execute that callback.
+    // If there is a custom key event in passed `events` prop that matches the current
+    // key, invoke the relate callback.
     events[e.key]?.(e);
   };
 };

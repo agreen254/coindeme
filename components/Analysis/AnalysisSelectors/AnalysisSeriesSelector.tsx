@@ -18,7 +18,7 @@ import {
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
-import { processSearch } from "@/utils/getSearchElements";
+import { getAdjustedIdxAndId, processSearch } from "@/utils/getSearchElements";
 import { AnalysisSeries, CustomKeyHandlers } from "@/utils/types";
 import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
 import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
@@ -34,14 +34,14 @@ const AnalysisSeriesSelector = ({
   series,
   selectorIndex,
 }: Props) => {
+  const [searchQuery, setSearchQuery] = useState<string>(series.name);
+
   const activatorId = useId();
   const currency = useUserCurrencySetting();
-  const { updateSeries } = useAnalysisActions();
-  const { selectedIndex } = useDropdownUnitFromId(dropdownId);
   const resetDropdown = useDropdownResetFromId(dropdownId);
   const marketData = useMarketQuery(currency, "market_cap", "desc").data?.pages;
-
-  const [searchQuery, setSearchQuery] = useState<string>(series.name);
+  const { updateSeries } = useAnalysisActions();
+  const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
   const currentSeriesIds = useAnalysisSeries().map((s) => s.id);
   const idIsInUse = (maybeNewSeriesId: string) =>
@@ -53,51 +53,52 @@ const AnalysisSeriesSelector = ({
   );
   const currentName = coinNameFromId(series.id, searchTargets);
 
+  const resetDropdownAndQuery = () => {
+    setSearchQuery(currentName);
+    resetDropdown();
+  };
+
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
-    () => {
-      setSearchQuery(currentName);
-      resetDropdown();
-    }
+    () => resetDropdownAndQuery()
   );
 
   const handleMouseEnter = useDropdownMenuMouseEnter(dropdownId);
-  const keyEventHandlers: CustomKeyHandlers = {
+  const customKeyHandlers: CustomKeyHandlers = {
     Enter: (e) => {
       e.preventDefault();
 
       // nothing to do
       if (numResults === 0) {
-        normalize();
+        resetDropdownAndQuery();
         return;
       } else handleUpdate();
     },
-    Escape: (_) => normalize(),
-    Tab: (_) => normalize(),
+    Escape: (_) => resetDropdownAndQuery(),
+    Tab: (_) => resetDropdownAndQuery(),
   };
 
   const handleUpdate = () => {
     // if the user hasn't selected a specific index (i.e. just focuses the input and hits enter)
     // the selectedIndex value will be -1, but need it to behave like 0 to get the relevant id.
-    const adjustedIndex = selectedIndex === -1 ? 0 : selectedIndex;
-    const adjustedId = searchResults[adjustedIndex].id;
+    // const adjustedIndex = selectedIndex === -1 ? 0 : selectedIndex;
+    // const adjustedId = searchResults[adjustedIndex].id;
+    const { adjustedIndex, adjustedId } = getAdjustedIdxAndId(
+      selectedIndex,
+      searchResults
+    );
     const canSelect = adjustedIndex >= 0 && !idIsInUse(adjustedId);
 
     if (canSelect) {
       const newCoinName = coinNameFromId(adjustedId, searchTargets);
       setSearchQuery(newCoinName);
       updateSeries(selectorIndex, adjustedId, newCoinName);
-    } else normalize();
-  };
-
-  const normalize = () => {
-    setSearchQuery(currentName);
-    resetDropdown();
+    } else resetDropdownAndQuery();
   };
 
   const handleKeyDown = useDropdownKeyEvents(
     dropdownId,
     numResults,
-    keyEventHandlers
+    customKeyHandlers
   );
 
   return (
@@ -113,8 +114,8 @@ const AnalysisSeriesSelector = ({
         spellCheck="false"
         searchResults={searchResults}
         className="p-2 text-sm screen-lg:text-base screen-xl:text-lg rounded-lg w-[260px] mr-2 dark:bg-black bg-white"
-        localQuery={searchQuery}
-        setLocalQuery={setSearchQuery}
+        query={searchQuery}
+        setQuery={setSearchQuery}
         onKeyDown={handleKeyDown}
       />
       <DropdownMenu

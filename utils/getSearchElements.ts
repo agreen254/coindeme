@@ -86,3 +86,20 @@ export function processSearch(
     numResults,
   };
 }
+
+/**
+ * Normalize the selected index to 0 if it is -1 and retrieve corresponding id from the results array.
+ *
+ * The selected index will be -1 if user focuses on the activator and does not use the arrow keys or mouse
+ * to highlight anything from the results list.
+ *
+ * This is important becaues pressing enter when the selected index is -1 should trigger behavior on the first result.
+ */
+export function getAdjustedIdxAndId(
+  selectedIndex: number,
+  searchResults: SearchResultWrapper[]
+) {
+  const adjustedIndex = selectedIndex === -1 ? 0 : selectedIndex;
+  const adjustedId = searchResults[adjustedIndex].id;
+  return { adjustedId, adjustedIndex };
+}

@@ -376,8 +376,8 @@ const AssetModalBody = (
                   "h-11 w-full p-2 rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60",
                   !!assetId && "text-muted-foreground"
                 )}
-                localQuery={coinQuery}
-                setLocalQuery={setCoinQuery}
+                query={coinQuery}
+                setQuery={setCoinQuery}
                 onKeyDown={(e) => handleKeyDownSearch(e)}
               />
               <DropdownMenu
