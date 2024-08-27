@@ -39,7 +39,7 @@ import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
 import { convertHistoricalDate } from "@/utils/dateHelpers";
 import { currencyEntries, currencyMap } from "@/utils/maps";
 import { flatMarketRes } from "@/utils/flatMarketRes";
-import { getSearchTargets, getSearchResults } from "@/utils/getSearchElements";
+import { processSearch } from "@/utils/getSearchElements";
 import CloseIcon from "@/Icons/Close";
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
@@ -87,13 +87,13 @@ const AssetModalBody = (
   const restoreModalDefaults = useAssetModalDefault();
 
   // search component initializers
-  const market = useMarketQuery("usd", "market_cap", "desc");
-  const searchTargets = getSearchTargets(market.data?.pages);
-  const searchResults = searchTargets
-    ? getSearchResults(searchTargets, coinQuery)
-    : [];
+  const marketData = useMarketQuery("usd", "market_cap", "desc").data?.pages;
+  const { searchTargets, searchResults, numResults } = processSearch(
+    marketData,
+    coinQuery
+  );
 
-  const coinInfo = flatMarketRes(market.data?.pages)?.find(
+  const coinInfo = flatMarketRes(marketData)?.find(
     (coin) => coin.id === coinId
   );
   const coinName = coinInfo?.name ?? "";
@@ -132,9 +132,7 @@ const AssetModalBody = (
         e.preventDefault();
         setIsUsingMouseSearch(false);
         setSelectedIndexSearch(
-          selectedIndexSearch > 0
-            ? selectedIndexSearch - 1
-            : searchResults.length - 1
+          selectedIndexSearch > 0 ? selectedIndexSearch - 1 : numResults - 1
         );
         break;
       }
@@ -142,9 +140,7 @@ const AssetModalBody = (
         e.preventDefault();
         setIsUsingMouseSearch(false);
         setSelectedIndexSearch(
-          selectedIndexSearch < searchResults.length - 1
-            ? selectedIndexSearch + 1
-            : 0
+          selectedIndexSearch < numResults - 1 ? selectedIndexSearch + 1 : 0
         );
         break;
       }
@@ -156,10 +152,7 @@ const AssetModalBody = (
         }
         // if there are no results nothing will happen,
         // otherwise if user hits enter with nothing selected then default to the first result
-        if (
-          searchResults.length > 0 &&
-          searchResults.length > selectedIndexSearch
-        ) {
+        if (numResults > 0 && numResults > selectedIndexSearch) {
           const id =
             selectedIndexSearch === -1
               ? searchResults[0].id

@@ -38,6 +38,7 @@ const CurrencySelectorActivator = ({ dropdownId }: Props) => {
       } else reset();
     },
     Escape: (_) => reset(),
+    Tab: (_) => reset(),
   };
 
   const handleKeyDown = useDropdownKeyEvents(
