@@ -64,7 +64,7 @@ export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 export type Currency = z.infer<typeof currenciesUnionSchema>;
 
 export type CustomKeyHandlers = {
-  [key: string]: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  [key: string]: (e: React.KeyboardEvent) => void;
 };
 
 export type Dataset = {

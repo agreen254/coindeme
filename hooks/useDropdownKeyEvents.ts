@@ -13,7 +13,7 @@ export const useDropdownKeyEvents = (
   const { selectedIndex } = useDropdownUnitFromId(id);
   const { setIsUsingMouse, setSelectedIndex } = useDropdownSettersFromId(id);
 
-  return function (e: React.KeyboardEvent<HTMLInputElement>) {
+  return function (e: React.KeyboardEvent) {
     if (e.key === "ArrowUp") {
       // stop the default event of jumping to the front/back of input text
       e.preventDefault();
@@ -30,7 +30,7 @@ export const useDropdownKeyEvents = (
     }
 
     // If there is a custom key event in passed `events` prop that matches the current
-    // key, invoke the relate callback.
+    // key, invoke the callback.
     events[e.key]?.(e);
   };
 };
