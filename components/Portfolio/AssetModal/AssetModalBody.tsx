@@ -126,6 +126,17 @@ const AssetModalBody = (
     useDropdownUnitFromId(searchDropdownId);
   const resetSearch = useDropdownResetFromId(searchDropdownId);
 
+  // const searchCustomKeyHandlers: CustomKeyHandlers = {
+  //   Enter: (e) => {
+  //     e.preventDefault();
+  //   },
+  // };
+  // const handleKDSearch = useDropdownKeyEvents(
+  //   searchDropdownId,
+  //   numResults,
+  //   searchCustomKeyHandlers
+  // );
+
   const handleKeyDownSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     switch (e.key) {
       case "ArrowUp": {
@@ -297,7 +308,6 @@ const AssetModalBody = (
     <div
       role="dialog"
       aria-modal="true"
-      aria-hidden={!isOpen}
       ref={modalRef}
       className={cn(
         "h-full w-full hidden justify-center items-center fixed top-0 left-0 backdrop-blur-md z-[100]",
