@@ -3,7 +3,7 @@
 import { TrendingUp as AllTimeHighIcon } from "lucide-react";
 import { TrendingDown as AllTimeLowIcon } from "lucide-react";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { cn } from "@/utils/cn";
 import {
@@ -21,7 +21,7 @@ import TanstackPersistProvider from "@/providers/TanstackPersistProvider";
 import Panel from "../Theme/Panel";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const StackedCaretAndTime = ({ val, time }: { val: number; time: string }) => {

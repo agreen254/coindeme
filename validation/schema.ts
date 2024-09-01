@@ -178,6 +178,21 @@ export const comparisonChartResponseSchema = z.object({
   total_volumes: z.array(z.array(z.number().nullable()).length(2)),
 });
 
+export const coinSearchRequestSchema = z.object({
+  query: z.string(),
+});
+
+export const coinSearchResponseUnitSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  symbol: z.string(),
+  thumb: z.string(),
+});
+
+export const coinSearchResponseSchema = z.object({
+  coins: z.array(coinSearchResponseUnitSchema),
+});
+
 export const globalResponseUnwrappedSchema = z.object({
   active_cryptocurrencies: z.number(),
   markets: z.number(),

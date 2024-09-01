@@ -3,7 +3,7 @@
 import { Infinity as InfinityIcon } from "lucide-react";
 import RoundButtonIcon from "@/Icons/RoundButton";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { cn } from "@/utils/cn";
 import { getOrdinal } from "@/utils/getOrdinal";
@@ -11,7 +11,7 @@ import { getOrdinal } from "@/utils/getOrdinal";
 import Panel from "../Theme/Panel";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewSecondDataPanel = ({ response }: Props) => {

@@ -1,11 +1,11 @@
 "use client";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 
 import CoinOverviewLink from "./CoinOverviewLink";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewLinksPanel = ({ response }: Props) => {
