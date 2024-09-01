@@ -10,18 +10,19 @@ export const useDropdownKeyEvents = (
   dropdownLength: number,
   events: CustomKeyHandlers
 ) => {
-  const { selectedIndex } = useDropdownUnitFromId(id);
+  const { selectedIndex, isVisible } = useDropdownUnitFromId(id);
   const { setIsUsingMouse, setSelectedIndex } = useDropdownSettersFromId(id);
 
   return function (e: React.KeyboardEvent) {
-    if (e.key === "ArrowUp") {
+    if (e.key === "ArrowUp" && isVisible) {
       // stop the default event of jumping to the front/back of input text
       e.preventDefault();
+
       setIsUsingMouse(false);
       setSelectedIndex(
         selectedIndex > 0 ? selectedIndex - 1 : dropdownLength - 1
       );
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === "ArrowDown" && isVisible) {
       e.preventDefault();
       setIsUsingMouse(false);
       setSelectedIndex(

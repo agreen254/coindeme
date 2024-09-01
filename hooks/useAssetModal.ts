@@ -1,7 +1,5 @@
-import type { Currency } from "@/utils/types";
-
 import { create } from "zustand";
-// import { useUserCurrencySetting } from "./useUserSettings";
+import type { Currency } from "@/utils/types";
 
 type AssetModalState = {
   assetId: string;
@@ -33,8 +31,6 @@ export const defaultAssetModalProps: Omit<AssetModalState, "actions"> = {
 };
 
 const useAssetModalStore = create<AssetModalState>((set) => {
-  //   const currency = useUserCurrencySetting();
-
   return {
     ...defaultAssetModalProps,
     actions: {
@@ -66,6 +62,17 @@ export const useAssetModalValue = () => {
 export const useAssetModalValueCurrency = () => {
   return useAssetModalStore().valueCurrency;
 };
+export const useAssetModalValues = () => {
+  const store = useAssetModalStore();
+  return {
+    assetId: store.assetId,
+    coinId: store.coinId,
+    coinQuery: store.coinQuery,
+    date: store.date,
+    value: store.value,
+    valueCurrency: store.valueCurrency,
+  };
+};
 
 export const useAssetModalActions = () => {
   return useAssetModalStore().actions;
@@ -78,6 +85,5 @@ export const useAssetModalDefault = () => {
 };
 export const useAssetModalInjectData = (data: Partial<AssetModalState>) => {
   const store = useAssetModalStore;
-  return () =>
-    store.setState({ ...defaultAssetModalProps, ...data });
+  return () => store.setState({ ...defaultAssetModalProps, ...data });
 };
