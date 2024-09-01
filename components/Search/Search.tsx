@@ -26,7 +26,7 @@ const Search = ({ dropdownId }: Props) => {
   const query = useSearchQuery();
   const { setQuery } = useSearchQueryActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
-  const { searchResults, searchTargets } =
+  const { searchResults, searchTargets, noResults, isLoading } =
     useDebouncedSearch(query);
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
@@ -83,16 +83,16 @@ const Search = ({ dropdownId }: Props) => {
               </Link>
             </DropdownMenuItem>
           ))}
-          {/* {(noTargets || noResults) && (
+          {isLoading && (
             <p className="italic text-muted-foreground font-medium py-1 indent-3">
               Loading results...
             </p>
-          )} */}
-          {/* {noResults && (
+          )}
+          {noResults && (
             <p className="italic text-muted-foreground font-medium py-1 indent-3">
               No results found.
             </p>
-          )} */}
+          )}
         </DropdownMenu>
       </div>
     </div>
