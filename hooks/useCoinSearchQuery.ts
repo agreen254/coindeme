@@ -4,8 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 export const useCoinSearchQuery = (query: string) =>
   useQuery({
     retry: 0,
-    queryKey: [query],
+    queryKey: ["search", query],
     queryFn: async (): Promise<CoinSearchResponseUnit[]> => {
+      // do not waste an API call if there is no query
+      if (query === "") return [];
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/v1/search`,
         {

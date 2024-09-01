@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     return composeFetchUrl({
       head: "   https://api.coingecko.com/api/v3/search               ",
       body: `   ?query=${query}                                       `,
-      tail: `   $x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}   `,
+      tail: `   &x_cg_demo_api_key=${process.env.COINGECKO_API_KEY}   `,
     });
   }
 

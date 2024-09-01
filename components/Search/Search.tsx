@@ -3,9 +3,7 @@
 import Link from "next/link";
 
 import { cn } from "@/utils/cn";
-import { processSearch } from "@/utils/getSearchElements";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useSearchQuery, useSearchQueryActions } from "@/hooks/useSearch";
 import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
 import SearchIcon from "@/Icons/Search";
@@ -13,6 +11,7 @@ import {
   useDropdownResetFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 
 import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
@@ -24,20 +23,18 @@ type Props = {
 };
 
 const Search = ({ dropdownId }: Props) => {
-  // re-using the same query will not cause a double fetch
-  // but need to remember to adjust it once params are stored in local storage
-  const marketData = useMarketQuery("usd", "market_cap", "desc").data?.pages;
   const query = useSearchQuery();
-  const resetDropdown = useDropdownResetFromId(dropdownId);
   const { setQuery } = useSearchQueryActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
+  const { searchResults, searchTargets } =
+    useDebouncedSearch(query);
 
-  const { searchTargets, searchResults } = processSearch(marketData, query);
-
+  const resetDropdown = useDropdownResetFromId(dropdownId);
   const resetDropdownAndQuery = () => {
     resetDropdown();
     setQuery("");
   };
+
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => resetDropdownAndQuery()
   );
@@ -86,11 +83,16 @@ const Search = ({ dropdownId }: Props) => {
               </Link>
             </DropdownMenuItem>
           ))}
-          {searchResults.length === 0 && (
+          {/* {(noTargets || noResults) && (
+            <p className="italic text-muted-foreground font-medium py-1 indent-3">
+              Loading results...
+            </p>
+          )} */}
+          {/* {noResults && (
             <p className="italic text-muted-foreground font-medium py-1 indent-3">
               No results found.
             </p>
-          )}
+          )} */}
         </DropdownMenu>
       </div>
     </div>
