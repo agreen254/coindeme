@@ -1,25 +1,26 @@
 "use client";
 
-import DropdownMenu from "../Dropdown/DropdownMenu";
-import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
-import {
-  HandleNameMatch,
-  HandleSymbolMatch,
-} from "@/components/Search/SearchResultsHelpers";
-import SearchActivator from "../Search/SearchActivator";
+import { useId } from "react";
 
+import { HighlightedSearchResult } from "@/components/Search/SearchResultsHelpers";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import {
   useDropdownResetFromId,
-  useDropdownSettersFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
-import { getSearchResults, getSearchTargets } from "@/utils/getSearchElements";
+import { getAdjustedIdxAndId, processSearch } from "@/utils/getSearchElements";
+import { CustomKeyHandlers, SearchResultWrapper } from "@/utils/types";
+
+import DropdownMenu from "../Dropdown/DropdownMenu";
+import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
+import SearchActivator from "../Search/SearchActivator";
+import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
+import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
 
 type Props = {
   dropdownId: string;
@@ -38,90 +39,79 @@ const ConverterSearchInput = ({
   setQuery,
   activeIdHandler,
 }: Props) => {
+  const activatorId = useId();
   const currency = useUserCurrencySetting();
-  const market = useMarketQuery(currency, "market_cap", "desc");
+  const marketData = useMarketQuery(currency, "market_cap", "desc").data?.pages;
+  const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
-  const { isVisible, selectedIndex } = useDropdownUnitFromId(dropdownId);
-  const { setIsUsingMouse, setSelectedIndex } =
-    useDropdownSettersFromId(dropdownId);
-
-  const targets = getSearchTargets(market.data?.pages);
-  const name = coinNameFromId(coinId, targets);
-  const results = targets ? getSearchResults(targets, query) : [];
+  const { searchTargets, searchResults, numResults } = processSearch(
+    marketData,
+    query
+  );
+  const name = coinNameFromId(coinId, searchTargets);
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
+  const resetDropdownAndQuery = () => {
+    resetDropdown();
+    setQuery(name);
+  };
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
-    () => {
-      setQuery(name);
-      resetDropdown();
-    }
+    () => resetDropdownAndQuery()
+  );
+
+  const customKeyHandlers: CustomKeyHandlers = {
+    Enter: (e) => {
+      e.preventDefault();
+      if (numResults) {
+        const { adjustedId } = getAdjustedIdxAndId(
+          selectedIndex,
+          searchResults
+        );
+        setCoinId(adjustedId);
+        setQuery(coinNameFromId(adjustedId, searchTargets));
+        resetDropdown();
+      } else resetDropdownAndQuery();
+    },
+    Escape: (_) => resetDropdownAndQuery(),
+    Tab: (_) => resetDropdownAndQuery(),
+  };
+
+  const keyHandlers = useDropdownKeyEvents(
+    dropdownId,
+    numResults,
+    customKeyHandlers
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     activeIdHandler();
-    switch (e.key) {
-      case "ArrowUp": {
-        e.preventDefault();
-        setIsUsingMouse(false);
-        setSelectedIndex(
-          selectedIndex > 0 ? selectedIndex - 1 : results.length - 1
-        );
-        break;
-      }
-      case "ArrowDown": {
-        e.preventDefault();
-        setIsUsingMouse(false);
-        setSelectedIndex(
-          selectedIndex < results.length - 1 ? selectedIndex + 1 : 0
-        );
-        break;
-      }
-      case "Enter": {
-        e.preventDefault();
-        if (!isVisible) {
-          break;
-        }
-        // if there are no results nothing will happen,
-        // otherwise if user hits enter with nothing selected then default to the first result
-        if (results.length > 0 && results.length > selectedIndex) {
-          const id =
-            selectedIndex === -1 ? results[0].id : results[selectedIndex].id;
-          setQuery(coinNameFromId(id, targets));
-          setCoinId(id);
-        }
-        resetDropdown();
-        break;
-      }
-      case "Escape": {
-        setQuery(name);
-        resetDropdown();
-        break;
-      }
-      case "Tab": {
-        setQuery(name);
-        if (isVisible) {
-          e.preventDefault();
-          break;
-        }
-      }
-    }
+    keyHandlers(e);
+  };
+
+  const handleMouseEnter = useDropdownMenuMouseEnter(dropdownId);
+
+  const handleClick = (wrapper: SearchResultWrapper) => () => {
+    setCoinId(wrapper.id);
+    setQuery(
+      wrapper.kind === "symbol" ? wrapper.otherText : wrapper.result.target
+    );
+    resetDropdown();
   };
 
   return (
     <>
-      <label htmlFor="coinSearch" className="sr-only">
+      <label htmlFor={activatorId} className="sr-only">
         search coins
       </label>
       <SearchActivator
-        id="coinSearch"
+        id={activatorId}
         type="text"
         dropdownId={dropdownId}
         autoComplete="off"
         spellCheck="false"
-        searchResults={results}
+        searchResults={searchResults}
         className="h-11 w-[50%] text-lg p-2 pb-4 pl-10 rounded-none bg-inherit focus:outline-none border-b border-transparent focus:border-slice focus:border-grad-r-blue"
-        localQuery={query}
-        setLocalQuery={setQuery}
+        query={query}
+        setQuery={setQuery}
         onKeyDown={handleKeyDown}
       />
       <DropdownMenu
@@ -130,7 +120,7 @@ const ConverterSearchInput = ({
         key="searchResults"
         className="w-[320px] max-h-[320px] overflow-y-auto bg-dropdown border border-zinc-300 overscroll-contain font-normal rounded-md text-zinc-800 dark:text-zinc-200 absolute top-[52px]"
       >
-        {results.map((wrapper, idx) => (
+        {searchResults.map((wrapper, idx) => (
           <DropdownMenuItem
             dropdownId={dropdownId}
             index={idx}
@@ -142,27 +132,14 @@ const ConverterSearchInput = ({
                 "indent-3 py-1 block w-full text-start",
                 idx === selectedIndex && "bg-zinc-200 dark:bg-zinc-600"
               )}
-              onClick={() => {
-                setCoinId(wrapper.id);
-                setQuery(
-                  wrapper.kind === "symbol"
-                    ? wrapper.otherText
-                    : wrapper.result.target
-                );
-                resetDropdown();
-              }}
-              onMouseEnter={() => {
-                setIsUsingMouse(true);
-                setSelectedIndex(idx);
-              }}
+              onClick={handleClick(wrapper)}
+              onMouseEnter={handleMouseEnter(idx)}
             >
-              {wrapper.kind === "symbol"
-                ? HandleSymbolMatch(wrapper)
-                : HandleNameMatch(wrapper)}
+              <HighlightedSearchResult wrapper={wrapper} />
             </button>
           </DropdownMenuItem>
         ))}
-        {results.length === 0 && (
+        {searchResults.length === 0 && (
           <p className="italic text-muted-foreground font-medium py-1 indent-3">
             No results found.
           </p>

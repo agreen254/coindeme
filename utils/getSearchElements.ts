@@ -31,9 +31,11 @@ export function parseOnePage(data: MarketResponse) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap#for_adding_and_removing_items_during_a_map
  */
 export function getSearchResults(
-  targets: SearchTargets,
+  targets: SearchTargets | undefined,
   searchText: string
 ): SearchResultWrapper[] {
+  if (!targets) return [];
+
   return targets.flatMap((target) => {
     // specify a fallback score if no match is found that is impossibly low;
     // this way we know it needs to be excluded.
@@ -54,7 +56,7 @@ export function getSearchResults(
       ? [
           {
             result: nameRes,
-            kind: "name",
+            kind: "name" as SearchResultWrapper["kind"],
             otherText: target.symbol,
             id: target.id,
           },
@@ -62,10 +64,42 @@ export function getSearchResults(
       : [
           {
             result: symbolRes,
-            kind: "symbol",
+            kind: "symbol" as SearchResultWrapper["kind"],
             otherText: target.name,
             id: target.id,
           },
         ];
   });
+}
+
+export function processSearch(
+  toSearch: MarketResponsePaginated[] | undefined,
+  searchQuery: string
+) {
+  const searchTargets = getSearchTargets(toSearch);
+  const searchResults = getSearchResults(searchTargets, searchQuery);
+  const numResults = searchResults.length;
+
+  return {
+    searchTargets,
+    searchResults,
+    numResults,
+  };
+}
+
+/**
+ * Normalize the selected index to 0 if it is -1 and retrieve corresponding id from the results array.
+ *
+ * The selected index will be -1 if user focuses on the activator and does not use the arrow keys or mouse
+ * to highlight anything from the results list.
+ *
+ * This is important becaues pressing enter when the selected index is -1 should trigger behavior on the first result.
+ */
+export function getAdjustedIdxAndId(
+  selectedIndex: number,
+  searchResults: SearchResultWrapper[]
+) {
+  const adjustedIndex = selectedIndex === -1 ? 0 : selectedIndex;
+  const adjustedId = searchResults[adjustedIndex].id;
+  return { adjustedId, adjustedIndex };
 }

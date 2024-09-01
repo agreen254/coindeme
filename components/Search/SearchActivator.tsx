@@ -1,23 +1,24 @@
 "use client";
 
-import { ChangeEvent, KeyboardEvent } from "react";
-import type { SearchResultWrapper } from "@/utils/types";
+import { ChangeEvent } from "react";
+import type { CustomKeyHandlers, SearchResultWrapper } from "@/utils/types";
 
 import { forwardRef, type ForwardedRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSearchQueryActions, useSearchQuery } from "@/hooks/useSearch";
 import {
   useDropdownResetFromId,
   useDropdownSettersFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
+import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
+import { getAdjustedIdxAndId } from "@/utils/getSearchElements";
 
 interface SearchActivatorProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   searchResults: SearchResultWrapper[];
   dropdownId: string;
-  localQuery?: string;
-  setLocalQuery?: (_q: string) => void;
+  query: string;
+  setQuery: (_q: string) => void;
 }
 
 /**
@@ -28,83 +29,49 @@ const SearchActivator = forwardRef(
     {
       dropdownId,
       searchResults,
-      localQuery,
-      setLocalQuery,
+      query,
+      setQuery,
       ...props
     }: SearchActivatorProps,
     ref: ForwardedRef<HTMLInputElement>
   ) => {
     const router = useRouter();
 
-    const navQuery = useSearchQuery();
-    const navSetQuery = useSearchQueryActions().setQuery;
+    const resetDropdown = useDropdownResetFromId(dropdownId);
+    const resetDropdownAndQuery = () => {
+      resetDropdown();
+      setQuery("");
+    };
 
-    const isUsingLocal =
-      localQuery !== undefined && setLocalQuery !== undefined;
-    const [query, setQuery] = isUsingLocal
-      ? [localQuery, setLocalQuery]
-      : [navQuery, navSetQuery];
-
-    const { setIsUsingMouse, setIsVisible, setSelectedIndex } =
-      useDropdownSettersFromId(dropdownId);
+    const { setIsVisible } = useDropdownSettersFromId(dropdownId);
     const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
-    const resetDropdown = useDropdownResetFromId(dropdownId);
-    const resetSearch = () => {
-      setQuery("");
-      resetDropdown();
+    const numResults = searchResults.length;
+    const customKeyHandlers: CustomKeyHandlers = {
+      Enter: (e) => {
+        e.preventDefault();
+        if (numResults) {
+          const { adjustedId } = getAdjustedIdxAndId(
+            selectedIndex,
+            searchResults
+          );
+          router.push(`/coin/${adjustedId}`);
+          resetDropdownAndQuery();
+        }
+      },
+      Escape: (_) => resetDropdownAndQuery(),
+      Tab: (_) => resetDropdownAndQuery(),
     };
 
-    const handleSearchKeyEvents = (e: KeyboardEvent<HTMLInputElement>) => {
-      switch (e.key) {
-        case "ArrowUp": {
-          // stop the default event of jumping to the front/back of input text
-          e.preventDefault();
-          setIsUsingMouse(false);
-          setSelectedIndex(
-            selectedIndex > 0 ? selectedIndex - 1 : searchResults.length - 1
-          );
-          break;
-        }
-        case "ArrowDown": {
-          e.preventDefault();
-          setIsUsingMouse(false);
-          setSelectedIndex(
-            selectedIndex < searchResults.length - 1 ? selectedIndex + 1 : 0
-          );
-          break;
-        }
-        case "Enter": {
-          e.preventDefault();
-          // if there are no results nothing will happen,
-          // otherwise if user hits enter with nothing selected then default to the first result
-          if (
-            searchResults.length > 0 &&
-            searchResults.length > selectedIndex
-          ) {
-            router.push(
-              selectedIndex === -1
-                ? `/coin/${searchResults[0].id}`
-                : `/coin/${searchResults[selectedIndex].id}`
-            );
-            resetSearch();
-          }
-          break;
-        }
-        case "Escape": {
-          resetSearch();
-          break;
-        }
-      }
-    };
+    const handleKeyDown = useDropdownKeyEvents(
+      dropdownId,
+      numResults,
+      customKeyHandlers
+    );
 
     const handleUpdateQuery = (e: ChangeEvent<HTMLInputElement>) => {
       setQuery(e.currentTarget.value);
-      if (e.currentTarget.value !== "") {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      setIsVisible(e.currentTarget.value !== "");
     };
 
     return (
@@ -113,8 +80,8 @@ const SearchActivator = forwardRef(
         type="search"
         placeholder={props.disabled ? "" : "Search"}
         value={props.value || query}
-        onChange={(e) => handleUpdateQuery(e)}
-        onKeyDown={(e) => handleSearchKeyEvents(e)}
+        onChange={handleUpdateQuery}
+        onKeyDown={handleKeyDown}
         {...props}
       />
     );

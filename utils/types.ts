@@ -63,6 +63,10 @@ export type AssetCurrent = z.infer<typeof assetCurrentSchema>;
 
 export type Currency = z.infer<typeof currenciesUnionSchema>;
 
+export type CustomKeyHandlers = {
+  [key: string]: (e: React.KeyboardEvent) => void;
+};
+
 export type Dataset = {
   x: number[];
   y: number[];
@@ -89,7 +93,7 @@ export type ChartResponsiveValues = {
   titleFontSize: number;
   tickFontSize: number;
   lineThickness: number;
-}
+};
 
 export type CoinCurrentRequest = z.infer<typeof coinCurrentRequestSchema>;
 export type CoinCurrentResponse = z.infer<typeof coinCurrentResponseSchema>;
@@ -164,7 +168,7 @@ export type SearchTargets = {
 export type SearchResultWrapper = {
   result: Fuzzysort.Result;
   otherText: string; // store the name if the symbol is matched and vice-versa
-  kind: string;
+  kind: "name" | "symbol";
   id: string;
 };
 
