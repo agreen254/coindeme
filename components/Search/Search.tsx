@@ -17,6 +17,7 @@ import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HighlightedSearchResult } from "./SearchResultsHelpers";
 import SearchActivator from "./SearchActivator";
+import SearchStatus from "./SearchStatus";
 
 type Props = {
   dropdownId: string;
@@ -83,16 +84,7 @@ const Search = ({ dropdownId }: Props) => {
               </Link>
             </DropdownMenuItem>
           ))}
-          {isLoading && (
-            <p className="italic text-muted-foreground font-medium py-1 indent-3">
-              Loading results...
-            </p>
-          )}
-          {noResults && (
-            <p className="italic text-muted-foreground font-medium py-1 indent-3">
-              No results found.
-            </p>
-          )}
+          <SearchStatus isLoading={isLoading} noResults={noResults} />
         </DropdownMenu>
       </div>
     </div>
