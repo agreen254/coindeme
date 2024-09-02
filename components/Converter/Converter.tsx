@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { ArrowRightLeft as SwapIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -9,36 +9,36 @@ import { formatPriceValue } from "@/utils/formatHelpers";
 import { getCurrencySymbol } from "@/utils/getCurrencySymbol";
 import { roundDigits } from "@/utils/formatHelpers";
 import { cn } from "@/utils/cn";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
-import type { MarketElementNoIdx } from "@/utils/types";
+import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
+import type { CoinOverviewResponse } from "@/utils/types";
 
 import ConverterSearchInput from "./ConverterSearchInput";
 import Panel from "../Theme/Panel";
-import { useDropdownUnitFromId } from "@/hooks/useDropdownStore";
 
 type Props = {
   converterKeys: string[];
-  response: ReturnType<typeof useMarketQuery>;
   coinOneId: string;
   coinTwoId: string;
-  coinOneData: MarketElementNoIdx | undefined;
-  coinTwoData: MarketElementNoIdx | undefined;
-  setCoinOneId: React.Dispatch<React.SetStateAction<string>>;
-  setCoinTwoId: React.Dispatch<React.SetStateAction<string>>;
+  coinOneInfoQuery: ReturnType<typeof useCoinInfoQuery>;
+  coinTwoInfoQuery: ReturnType<typeof useCoinInfoQuery>;
+  setCoinOneId: Dispatch<SetStateAction<string>>;
+  setCoinTwoId: Dispatch<SetStateAction<string>>;
 };
 
 const Converter = ({
   converterKeys,
   coinOneId,
   coinTwoId,
-  coinOneData,
-  coinTwoData,
+  coinOneInfoQuery,
+  coinTwoInfoQuery,
   setCoinOneId,
   setCoinTwoId,
-  response,
 }: Props) => {
   const currency = useUserCurrencySetting();
+
+  const isFetching = coinOneInfoQuery.isFetching || coinTwoInfoQuery.isFetching;
 
   const [coinOneAmount, setCoinOneAmount] = useState<number>(1);
   const [coinTwoAmount, setCoinTwoAmount] = useState<number>(0);
@@ -53,11 +53,11 @@ const Converter = ({
     converterKeys[0]
   );
 
-  const conversionLabel = (data: MarketElementNoIdx) => {
+  const conversionLabel = (data: CoinOverviewResponse) => {
     return `1 ${data.symbol.toUpperCase()} = ${getCurrencySymbol(
       currency
     )}${formatPriceValue(
-      data.current_price,
+      data.market_data.current_price[currency],
       2,
       "standard"
     )} ${currency.toUpperCase()}`;
@@ -80,18 +80,27 @@ const Converter = ({
 
   // effect for implementing the conversion
   useEffect(() => {
-    if (response.data && coinOneIsActive) {
+    if (coinOneInfoQuery.data && coinOneIsActive) {
       setCoinTwoAmount(
-        convertCoinAmount(coinOneAmount, coinOneData, coinTwoData)
+        convertCoinAmount(
+          coinOneAmount,
+          currency,
+          coinOneInfoQuery.data,
+          coinTwoInfoQuery.data
+        )
       );
     }
-    if (response.data && coinTwoIsActive) {
+    if (coinTwoInfoQuery.data && coinTwoIsActive) {
       setCoinOneAmount(
-        convertCoinAmount(coinTwoAmount, coinTwoData, coinOneData)
+        convertCoinAmount(
+          coinTwoAmount,
+          currency,
+          coinTwoInfoQuery.data,
+          coinOneInfoQuery.data
+        )
       );
     }
   }, [
-    response,
     coinOneAmount,
     coinOneIsActive,
     coinTwoAmount,
@@ -105,19 +114,19 @@ const Converter = ({
       <Panel
         className={cn(
           "flex relative flex-col p-4 w-full rounded-lg z-100",
-          response.isPending && "animate-pulse"
+          isFetching && "animate-pulse"
         )}
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinOneData ? (
+          {coinOneInfoQuery.data ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinOneData.image}
-                alt={`${coinOneData.name} logo`}
+                src={coinOneInfoQuery.data.image.thumb}
+                alt={`${coinOneInfoQuery.data.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[0]}
@@ -152,13 +161,15 @@ const Converter = ({
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinOneData ? conversionLabel(coinOneData) : "Loading..."}
+          {coinOneInfoQuery.data
+            ? conversionLabel(coinOneInfoQuery.data)
+            : "Loading..."}
         </p>
       </Panel>
       <button
         className={cn(
           "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rotate-90 screen-xl:rotate-0 z-10 rounded-full p-1 border border-default focus:outline-menu-highlight/70",
-          response.isPending && "animate-pulse",
+          isFetching && "animate-pulse",
           topMenuIsVisible && "-z-10 screen-xl:z-0"
         )}
         onClick={swapPositions}
@@ -169,19 +180,19 @@ const Converter = ({
         className={cn(
           "flex relative flex-col p-4 w-full z-1",
           topMenuIsVisible && "z-[-1]",
-          response.isPending && "animate-pulse"
+          isFetching && "animate-pulse"
         )}
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinTwoData ? (
+          {coinTwoInfoQuery.data ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinTwoData.image}
-                alt={`${coinTwoData.name} logo`}
+                src={coinTwoInfoQuery.data.image.thumb}
+                alt={`${coinTwoInfoQuery.data.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[1]}
@@ -216,7 +227,9 @@ const Converter = ({
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinTwoData ? conversionLabel(coinTwoData) : "Loading..."}
+          {coinTwoInfoQuery.data
+            ? conversionLabel(coinTwoInfoQuery.data)
+            : "Loading..."}
         </p>
       </Panel>
     </div>

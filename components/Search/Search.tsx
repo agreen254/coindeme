@@ -27,7 +27,7 @@ const Search = ({ dropdownId }: Props) => {
   const query = useSearchQuery();
   const { setQuery } = useSearchQueryActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
-  const { searchResults, searchTargets, noResults, isLoading } =
+  const { searchResults, noResults, isLoading } =
     useDebouncedSearch(query);
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
@@ -51,7 +51,6 @@ const Search = ({ dropdownId }: Props) => {
         <SearchActivator
           dropdownId={dropdownId}
           id="mainSearch"
-          disabled={!searchTargets}
           searchResults={searchResults}
           className="pr-2 pl-12 py-[9px] w-[100%] screen-sm:w-[320px] rounded-md dark:bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
           autoComplete="off"
@@ -68,7 +67,7 @@ const Search = ({ dropdownId }: Props) => {
             <DropdownMenuItem
               dropdownId={dropdownId}
               index={idx}
-              key={wrapper.result.target + "searchResult"}
+              key={wrapper.id + "searchResult"}
             >
               <Link
                 href={`/coin/${wrapper.id}`}

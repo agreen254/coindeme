@@ -120,7 +120,7 @@ const ConverterSearchInput = ({
           <DropdownMenuItem
             dropdownId={dropdownId}
             index={idx}
-            key={wrapper.result.target + "searchResult"}
+            key={wrapper.id + "searchResult"}
           >
             <button
               tabIndex={-1}

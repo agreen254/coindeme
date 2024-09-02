@@ -4,13 +4,13 @@ import { useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 import { cn } from "@/utils/cn";
 
 import DropdownProvider from "@/providers/DropdownProvider";
-import { flatMarketRes } from "@/utils/flatMarketRes";
 import { initializeNewDropdown } from "@/hooks/useDropdownStore";
+
 import ConverterChart from "./ConveterChart";
 import ConverterChartTimeSelector from "./ConverterChartTimeSelector";
 import Converter from "./Converter";
@@ -20,17 +20,12 @@ const ConverterWrapper = () => {
   const [nDays, setNDays] = useState(7);
 
   const currency = useUserCurrencySetting();
-  const marketResponse = useMarketQuery(currency, "market_cap", "desc");
 
   const [coinOneId, setCoinOneId] = useState<string>("bitcoin");
   const [coinTwoId, setCoinTwoId] = useState<string>("ethereum");
 
-  const coinOneData = flatMarketRes(marketResponse.data?.pages)?.find(
-    (coin) => coin.id === coinOneId
-  );
-  const coinTwoData = flatMarketRes(marketResponse.data?.pages)?.find(
-    (coin) => coin.id === coinTwoId
-  );
+  const coinOneInfoQuery = useCoinInfoQuery(coinOneId);
+  const coinTwoInfoQuery = useCoinInfoQuery(coinTwoId);
 
   const [chartDataCoinOne, chartDataCoinTwo] = useComparisonChartQueries({
     ids: [coinOneId, coinTwoId],
@@ -41,8 +36,8 @@ const ConverterWrapper = () => {
   const hasData = !!(
     chartDataCoinOne.data &&
     chartDataCoinTwo.data &&
-    coinOneData &&
-    coinTwoData
+    coinOneInfoQuery.data &&
+    coinTwoInfoQuery.data
   );
 
   const dropdownKeys = ["converterFirst", "converterSecond"];
@@ -53,11 +48,10 @@ const ConverterWrapper = () => {
       <DropdownProvider initialUnits={dropdownUnits}>
         <Converter
           converterKeys={dropdownKeys}
-          response={marketResponse}
           coinOneId={coinOneId}
           coinTwoId={coinTwoId}
-          coinOneData={coinOneData}
-          coinTwoData={coinTwoData}
+          coinOneInfoQuery={coinOneInfoQuery}
+          coinTwoInfoQuery={coinTwoInfoQuery}
           setCoinOneId={setCoinOneId}
           setCoinTwoId={setCoinTwoId}
         />
@@ -74,8 +68,8 @@ const ConverterWrapper = () => {
               <ConverterChart
                 coinOneChartData={chartDataCoinOne.data}
                 coinTwoChartData={chartDataCoinTwo.data}
-                coinOneMarketData={coinOneData}
-                coinTwoMarketData={coinTwoData}
+                coinOneMarketData={coinOneInfoQuery.data}
+                coinTwoMarketData={coinTwoInfoQuery.data}
                 days={nDays}
               />
             </div>

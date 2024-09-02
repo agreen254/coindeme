@@ -3,7 +3,7 @@
 import type { ChartData } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-import type { MarketElementNoIdx } from "@/utils/types";
+import type { CoinOverviewResponse } from "@/utils/types";
 import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
@@ -17,8 +17,8 @@ type ChartDataElement = NonNullable<
 type Props = {
   coinOneChartData: ChartDataElement;
   coinTwoChartData: ChartDataElement;
-  coinOneMarketData: MarketElementNoIdx;
-  coinTwoMarketData: MarketElementNoIdx;
+  coinOneMarketData: CoinOverviewResponse;
+  coinTwoMarketData: CoinOverviewResponse;
   days: number;
 };
 
