@@ -187,6 +187,7 @@ export const coinSearchResponseUnitSchema = z.object({
   name: z.string(),
   symbol: z.string(),
   thumb: z.string(),
+  large: z.string(),
 });
 
 export const coinSearchResponseSchema = z.object({

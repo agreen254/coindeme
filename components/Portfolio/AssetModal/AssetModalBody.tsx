@@ -27,30 +27,27 @@ import {
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
 import { useForwardRef } from "@/hooks/useForwardRef";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useModalListener } from "@/hooks/useModalListener";
 import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
+import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
 import { coinSymbolFromId } from "@/utils/coinSymbolFromId";
 import { convertHistoricalDate } from "@/utils/dateHelpers";
 import { currencyEntries, currencyMap } from "@/utils/maps";
-import { flatMarketRes } from "@/utils/flatMarketRes";
-import { getAdjustedIdxAndId, processSearch } from "@/utils/getSearchElements";
+import { getAdjustedIdxAndId } from "@/utils/getSearchElements";
 import CloseIcon from "@/Icons/Close";
 import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
-import {
-  HandleNameMatch,
-  HandleSymbolMatch,
-} from "@/components/Search/SearchResultsHelpers";
+import { HighlightedSearchResult } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
+import SearchStatus from "@/components/Search/SearchStatus";
 
 import { currencyDropdownId, searchDropdownId } from "./AssetModalWrapper";
 import AssetModalCoinSearch from "./Separators/AssetModalCoinSearch";
 import AssetModalCurrency from "./Separators/AssetModalCurrency";
 import AssetModalDate from "./AssetModalDate";
-import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
 
 type Props = {
   isOpen: boolean;
@@ -78,18 +75,13 @@ const AssetModalBody = (
     useAssetModalActions();
   const restoreModalDefaults = useAssetModalDefault();
 
-  // search component initializers
-  const marketData = useMarketQuery("usd", "market_cap", "desc").data?.pages;
-  const { searchTargets, searchResults, numResults } = processSearch(
-    marketData,
-    coinQuery
-  );
+  // debounced search terms
+  const { searchResults, searchTargets, numResults, isLoading, noResults } =
+    useDebouncedSearch(coinQuery);
 
-  const coinInfo = flatMarketRes(marketData)?.find(
-    (coin) => coin.id === coinId
-  );
+  const coinInfo = searchTargets?.find((res) => res.id === coinId);
   const coinName = coinInfo?.name ?? "";
-  const coinImageUrl = coinInfo?.image ?? "";
+  const coinImageUrl = coinInfo?.large ?? "";
   const coinSymbol = coinInfo?.symbol ?? "";
 
   // refs
@@ -261,7 +253,7 @@ const AssetModalBody = (
         </div>
         <div className="gap-8 mt-8 grid grid-cols-1 screen-sm:grid-cols-2">
           <div className="h-[241px] flex justify-center items-center rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60">
-            {coinId && (
+            {coinId && coinImageUrl && (
               <div>
                 <Image
                   src={coinImageUrl}
@@ -295,7 +287,7 @@ const AssetModalBody = (
                 dropdownId={searchDropdownId}
                 autoComplete="off"
                 spellCheck="false"
-                disabled={!searchTargets || !!assetId}
+                disabled={!!assetId}
                 searchResults={searchResults}
                 className={cn(
                   "h-11 w-full p-2 rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60",
@@ -315,7 +307,7 @@ const AssetModalBody = (
                   <DropdownMenuItem
                     dropdownId="portfolioSearch"
                     index={idx}
-                    key={wrapper.result.target + "searchResult"}
+                    key={wrapper.id + "searchResult"}
                   >
                     <button
                       tabIndex={-1}
@@ -335,17 +327,11 @@ const AssetModalBody = (
                       }}
                       onMouseEnter={handleMouseEnterSearch(selectedIndexSearch)}
                     >
-                      {wrapper.kind === "symbol"
-                        ? HandleSymbolMatch(wrapper)
-                        : HandleNameMatch(wrapper)}
+                      <HighlightedSearchResult wrapper={wrapper} />
                     </button>
                   </DropdownMenuItem>
                 ))}
-                {searchResults.length === 0 && (
-                  <p className="italic text-muted-foreground font-medium py-1 indent-3">
-                    No results found.
-                  </p>
-                )}
+                <SearchStatus isLoading={isLoading} noResults={noResults} />
               </DropdownMenu>
             </AssetModalCoinSearch>
             <AssetModalCurrency
