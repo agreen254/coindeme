@@ -117,9 +117,9 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
           {entries.map((entry) => (
             <li
               key={entry.label}
-              className="grid grid-cols-1 screen-sm:grid-cols-2 items-center text-lg"
+              className="grid grid-cols-1 screen-sm:grid-cols-2 items-baseline text-lg"
             >
-              <span className="font-light -indent-16 ml-16 translate-y-[2px] -mb-2">
+              <span className="font-light -indent-16 ml-16 -mb-2">
                 <LiDataIcon />
                 <span>{entry.label}</span>
               </span>
