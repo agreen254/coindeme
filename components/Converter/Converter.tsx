@@ -20,25 +20,26 @@ import Panel from "../Theme/Panel";
 type Props = {
   converterKeys: string[];
   coinOneId: string;
-  coinTwoId: string;
-  coinOneInfoQuery: ReturnType<typeof useCoinInfoQuery>;
-  coinTwoInfoQuery: ReturnType<typeof useCoinInfoQuery>;
   setCoinOneId: Dispatch<SetStateAction<string>>;
+  coinTwoId: string;
   setCoinTwoId: Dispatch<SetStateAction<string>>;
+  coinOneInfoResponse: ReturnType<typeof useCoinInfoQuery>;
+  coinTwoInfoResponse: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const Converter = ({
   converterKeys,
   coinOneId,
-  coinTwoId,
-  coinOneInfoQuery,
-  coinTwoInfoQuery,
   setCoinOneId,
+  coinTwoId,
   setCoinTwoId,
+  coinOneInfoResponse,
+  coinTwoInfoResponse,
 }: Props) => {
   const currency = useUserCurrencySetting();
 
-  const isFetching = coinOneInfoQuery.isFetching || coinTwoInfoQuery.isFetching;
+  const isFetching =
+    coinOneInfoResponse.isFetching || coinTwoInfoResponse.isFetching;
 
   const [coinOneAmount, setCoinOneAmount] = useState<number>(1);
   const [coinTwoAmount, setCoinTwoAmount] = useState<number>(0);
@@ -80,23 +81,23 @@ const Converter = ({
 
   // effect for implementing the conversion
   useEffect(() => {
-    if (coinOneInfoQuery.data && coinOneIsActive) {
+    if (coinOneInfoResponse.data && coinOneIsActive) {
       setCoinTwoAmount(
         convertCoinAmount(
           coinOneAmount,
           currency,
-          coinOneInfoQuery.data,
-          coinTwoInfoQuery.data
+          coinOneInfoResponse.data,
+          coinTwoInfoResponse.data
         )
       );
     }
-    if (coinTwoInfoQuery.data && coinTwoIsActive) {
+    if (coinTwoInfoResponse.data && coinTwoIsActive) {
       setCoinOneAmount(
         convertCoinAmount(
           coinTwoAmount,
           currency,
-          coinTwoInfoQuery.data,
-          coinOneInfoQuery.data
+          coinTwoInfoResponse.data,
+          coinOneInfoResponse.data
         )
       );
     }
@@ -107,6 +108,8 @@ const Converter = ({
     coinTwoIsActive,
     setCoinOneAmount,
     setCoinTwoAmount,
+    coinOneInfoResponse,
+    coinTwoInfoResponse,
   ]);
 
   return (
@@ -119,14 +122,14 @@ const Converter = ({
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinOneInfoQuery.data ? (
+          {coinOneInfoResponse.data ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinOneInfoQuery.data.image.thumb}
-                alt={`${coinOneInfoQuery.data.name} logo`}
+                src={coinOneInfoResponse.data.image.thumb}
+                alt={`${coinOneInfoResponse.data.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[0]}
@@ -161,8 +164,8 @@ const Converter = ({
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinOneInfoQuery.data
-            ? conversionLabel(coinOneInfoQuery.data)
+          {coinOneInfoResponse.data
+            ? conversionLabel(coinOneInfoResponse.data)
             : "Loading..."}
         </p>
       </Panel>
@@ -185,14 +188,14 @@ const Converter = ({
       >
         <div className="absolute bottom-[40px] h-[1px] w-[calc(100%-2rem)] bg-black/15 dark:bg-white/15"></div>
         <div className="relative flex justify-between items-center">
-          {coinTwoInfoQuery.data ? (
+          {coinTwoInfoResponse.data ? (
             <>
               <Image
                 className="inline absolute left-2 -translate-y-1"
                 width={25}
                 height={25}
-                src={coinTwoInfoQuery.data.image.thumb}
-                alt={`${coinTwoInfoQuery.data.name} logo`}
+                src={coinTwoInfoResponse.data.image.thumb}
+                alt={`${coinTwoInfoResponse.data.name} logo`}
               />
               <ConverterSearchInput
                 dropdownId={converterKeys[1]}
@@ -227,8 +230,8 @@ const Converter = ({
           )}
         </div>
         <p className="mt-1 pl-4 text-sm text-muted-foreground">
-          {coinTwoInfoQuery.data
-            ? conversionLabel(coinTwoInfoQuery.data)
+          {coinTwoInfoResponse.data
+            ? conversionLabel(coinTwoInfoResponse.data)
             : "Loading..."}
         </p>
       </Panel>

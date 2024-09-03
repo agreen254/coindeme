@@ -24,20 +24,23 @@ const ConverterWrapper = () => {
   const [coinOneId, setCoinOneId] = useState<string>("bitcoin");
   const [coinTwoId, setCoinTwoId] = useState<string>("ethereum");
 
-  const coinOneInfoQuery = useCoinInfoQuery(coinOneId);
-  const coinTwoInfoQuery = useCoinInfoQuery(coinTwoId);
+  // the info query retrieves the coin name, id, symbol, and thumb
+  const coinOneInfoResponse = useCoinInfoQuery(coinOneId);
+  const coinTwoInfoResponse = useCoinInfoQuery(coinTwoId);
 
-  const [chartDataCoinOne, chartDataCoinTwo] = useComparisonChartQueries({
-    ids: [coinOneId, coinTwoId],
-    currency: currency,
-    days: nDays.toString(),
-  });
+  // the comparison query retrieves the historical data needed for conversion rates
+  const [coinOneChartResponse, coinTwoChartResponse] =
+    useComparisonChartQueries({
+      ids: [coinOneId, coinTwoId],
+      currency: currency,
+      days: nDays.toString(),
+    });
 
   const hasData = !!(
-    chartDataCoinOne.data &&
-    chartDataCoinTwo.data &&
-    coinOneInfoQuery.data &&
-    coinTwoInfoQuery.data
+    coinOneChartResponse.data &&
+    coinTwoChartResponse.data &&
+    coinOneInfoResponse.data &&
+    coinTwoInfoResponse.data
   );
 
   const dropdownKeys = ["converterFirst", "converterSecond"];
@@ -49,11 +52,11 @@ const ConverterWrapper = () => {
         <Converter
           converterKeys={dropdownKeys}
           coinOneId={coinOneId}
-          coinTwoId={coinTwoId}
-          coinOneInfoQuery={coinOneInfoQuery}
-          coinTwoInfoQuery={coinTwoInfoQuery}
           setCoinOneId={setCoinOneId}
+          coinTwoId={coinTwoId}
           setCoinTwoId={setCoinTwoId}
+          coinOneInfoResponse={coinOneInfoResponse}
+          coinTwoInfoResponse={coinTwoInfoResponse}
         />
       </DropdownProvider>
       <Panel
@@ -66,17 +69,17 @@ const ConverterWrapper = () => {
           <ErrorBoundary fallback={<></>}>
             <div className="h-full">
               <ConverterChart
-                coinOneChartData={chartDataCoinOne.data}
-                coinTwoChartData={chartDataCoinTwo.data}
-                coinOneMarketData={coinOneInfoQuery.data}
-                coinTwoMarketData={coinTwoInfoQuery.data}
+                coinOneChartData={coinOneChartResponse.data}
+                coinTwoChartData={coinTwoChartResponse.data}
+                coinOneInfoData={coinOneInfoResponse.data}
+                coinTwoInfoData={coinTwoInfoResponse.data}
                 days={nDays}
               />
             </div>
           </ErrorBoundary>
         )}
       </Panel>
-      <Panel className="rounded-lg inline-flex flex-wrap  mb-[20vh] p-1 gap-x-1 max-w-[90vw]">
+      <Panel className="rounded-lg inline-flex flex-wrap mb-[20vh] p-1 gap-x-1 max-w-[90vw]">
         <ConverterChartTimeSelector
           nDays={nDays}
           setNDays={setNDays}

@@ -3,30 +3,28 @@
 import type { ChartData } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-import type { CoinOverviewResponse } from "@/utils/types";
-import { useComparisonChartQueries } from "@/hooks/useComparisonChartQueries";
+import type {
+  CoinOverviewResponse,
+  ComparisonChartResponse,
+} from "@/utils/types";
 import { chartColorSets } from "@/utils/comparisonChartHelpers/compareGeneralHelpers";
 import { getOptions } from "@/utils/comparisonChartHelpers/compareExchangeHelpers";
 import { useThemeTyped } from "@/hooks/useThemeTyped";
 import { useResponsiveChart } from "@/hooks/useResponsiveChart";
 
-type ChartDataElement = NonNullable<
-  ReturnType<typeof useComparisonChartQueries>[number]["data"]
->;
-
 type Props = {
-  coinOneChartData: ChartDataElement;
-  coinTwoChartData: ChartDataElement;
-  coinOneMarketData: CoinOverviewResponse;
-  coinTwoMarketData: CoinOverviewResponse;
+  coinOneChartData: ComparisonChartResponse;
+  coinTwoChartData: ComparisonChartResponse;
+  coinOneInfoData: CoinOverviewResponse;
+  coinTwoInfoData: CoinOverviewResponse;
   days: number;
 };
 
 const ConverterChart = ({
   coinOneChartData,
-  coinOneMarketData,
   coinTwoChartData,
-  coinTwoMarketData,
+  coinOneInfoData,
+  coinTwoInfoData,
   days,
 }: Props) => {
   const theme = useThemeTyped();
@@ -59,10 +57,10 @@ const ConverterChart = ({
       data={chartData}
       key={"chart" + days.toString()}
       options={getOptions({
-        coinOneName: coinOneMarketData.name,
-        coinOneSymbol: coinOneMarketData.symbol,
-        coinTwoName: coinTwoMarketData.name,
-        coinTwoSymbol: coinTwoMarketData.symbol,
+        coinOneName: coinOneInfoData.name,
+        coinOneSymbol: coinOneInfoData.symbol,
+        coinTwoName: coinTwoInfoData.name,
+        coinTwoSymbol: coinTwoInfoData.symbol,
         len: coinOneChartData.prices.length,
         days: days,
         theme: theme,
