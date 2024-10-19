@@ -94,7 +94,7 @@ const MarketTableBody = ({ data, initialIdx }: Props) => {
               />
             </TD>
             <TD className="border-r rounded-r-md">
-              <Link href={`/coin/${id}`}>
+              <Link href={`/coin/${id}`} aria-label={`read more about ${name}`}>
                 <MarketTableSparkline
                   data={data_7d}
                   id={id}
