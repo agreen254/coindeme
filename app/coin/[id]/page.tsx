@@ -18,7 +18,7 @@ const CoinPage = ({ params: { id } }: Props) => {
   const response = useCoinInfoQuery(id);
 
   return (
-    <div className="w-full flex justify-center">
+    <main className="w-full flex justify-center">
       <div className="w-[90vw] screen-xl:w-table-xl">
         <div className="w-full grid grid-cols-1 screen-md:grid-cols-2 screen-xl:grid-cols-3 screen-xl:grid-rows-2 gap-6 h-auto screen-xl:h-[450px]">
           <CoinOverviewMainPanel response={response} />
@@ -30,7 +30,7 @@ const CoinPage = ({ params: { id } }: Props) => {
           <CoinOverviewLinksPanel response={response} />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
