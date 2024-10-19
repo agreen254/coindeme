@@ -253,14 +253,16 @@ const AssetModalBody = (
         </div>
         <div className="gap-8 mt-8 grid grid-cols-1 screen-sm:grid-cols-2">
           <div className="h-[241px] flex justify-center items-center rounded-lg dark:bg-zinc-800/60 bg-zinc-200/60">
-            {coinId && coinImageUrl && (
+            {coinId && (
               <div>
-                <Image
-                  src={coinImageUrl}
-                  alt="coin logo"
-                  width={80}
-                  height={80}
-                />
+                {coinImageUrl && (
+                  <Image
+                    src={coinImageUrl}
+                    alt="coin logo"
+                    width={80}
+                    height={80}
+                  />
+                )}
                 <p className="text-center text-lg font-semibold text-muted-foreground uppercase mt-2">
                   {coinSymbol}
                 </p>
