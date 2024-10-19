@@ -19,7 +19,7 @@ const AnalysisWrapper = () => {
   const someLoading = responses.some((r) => r.isPending);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <main className="w-full flex flex-col items-center justify-center">
       <Panel
         className={cn(
           "w-[90vw] screen-xl:w-table-xl relative p-2 pt-4 screen-sm:p-4 screen-md:p-6 mb-[20vh]"
@@ -54,7 +54,7 @@ const AnalysisWrapper = () => {
           </div>
         </ErrorBoundary>
       </Panel>
-    </div>
+    </main>
   );
 };
 

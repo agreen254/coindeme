@@ -16,13 +16,19 @@ const AnalysisExportMenu = ({ downloadCallback }: Props) => {
   return (
     <>
       <DownloadIcon className="absolute w-5 h-5 top-2 left-3 inline" />
+      <label htmlFor="export" className="sr-only">
+        select export format
+      </label>
       <select
         onChange={handleExport}
         name="selectedFormat"
         value="export"
+        id="export"
         className="p-2 pl-8 uppercase text-xs screen-sm:text-sm border border-zinc-200 dark:border-zinc-700 rounded-sm"
       >
-        <option value="export" disabled>export as</option>
+        <option value="export" disabled>
+          export as
+        </option>
         {ANALYSIS_EXPORT_FORMATS.map((f) => (
           <option key={f} value={f}>
             {f}
