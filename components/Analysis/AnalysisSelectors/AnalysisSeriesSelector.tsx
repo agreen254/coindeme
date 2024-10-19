@@ -9,6 +9,7 @@ import SearchActivator from "@/components/Search/SearchActivator";
 import SearchStatus from "@/components/Search/SearchStatus";
 
 import { useAnalysisActions, useAnalysisSeries } from "@/hooks/useAnalysis";
+import { useAnalysisChartIsLoading } from "@/hooks/useAnalysisChartIsLoading";
 import { useClickAway } from "@uidotdev/usehooks";
 import {
   useDropdownResetFromId,
@@ -35,6 +36,7 @@ const AnalysisSeriesSelector = ({
   selectorIndex,
 }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>(series.name);
+  const chartIsLoading = useAnalysisChartIsLoading();
 
   const activatorId = useId();
   const resetDropdown = useDropdownResetFromId(dropdownId);
@@ -45,8 +47,13 @@ const AnalysisSeriesSelector = ({
   const idIsInUse = (maybeNewSeriesId: string) =>
     currentSeriesIds.includes(maybeNewSeriesId);
 
-  const { searchTargets, searchResults, numResults, noResults, isLoading } =
-    useDebouncedSearch(searchQuery);
+  const {
+    searchTargets,
+    searchResults,
+    numResults,
+    noResults,
+    isLoading: searchIsLoading,
+  } = useDebouncedSearch(searchQuery);
   const currentName = series.name;
 
   const resetDropdownAndQuery = () => {
@@ -104,6 +111,7 @@ const AnalysisSeriesSelector = ({
       </label>
       <SearchActivator
         id={activatorId}
+        disabled={chartIsLoading}
         type="text"
         dropdownId={dropdownId}
         autoComplete="off"
@@ -140,7 +148,7 @@ const AnalysisSeriesSelector = ({
             </button>
           </DropdownMenuItem>
         ))}
-        <SearchStatus isLoading={isLoading} noResults={noResults} />
+        <SearchStatus isLoading={searchIsLoading} noResults={noResults} />
       </DropdownMenu>
     </>
   );

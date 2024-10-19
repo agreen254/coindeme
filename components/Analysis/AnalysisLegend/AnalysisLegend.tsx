@@ -21,7 +21,10 @@ const AnalysisLegend = () => {
         const lineColor = chartColorSets[idx].startColor.hex;
 
         return (
-          <div key={id} className="flex flex-wrap items-center ml-2 mb-8 screen-sm:my-4">
+          <div
+            key={id}
+            className="flex flex-wrap items-center ml-2 mb-8 screen-sm:my-4"
+          >
             <div className="-order-1 screen-sm:order-1">
               <AnalysisDeleteButton activeSeriesId={id} />
             </div>
