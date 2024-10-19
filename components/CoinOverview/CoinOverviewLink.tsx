@@ -32,7 +32,7 @@ const CoinOverviewLink = ({ className, link, isLoading }: Props) => {
       <div className="w-full flex justify-center items-center text-sm screen-sm:text-base screen-md:text-lg">
         {link && (
           <>
-            <Link href={link} target="_blank">
+            <Link href={link} target="_blank" aria-label={`go to ${link}`}>
               <LinkIcon className="w-5 h-5 mr-5 inline" />
             </Link>
             <p className="max-w-[calc(100%-120px)] overflow-clip overflow-ellipsis">
