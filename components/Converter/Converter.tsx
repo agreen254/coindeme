@@ -170,6 +170,7 @@ const Converter = ({
         </p>
       </Panel>
       <button
+        aria-label="swap coin positions"
         className={cn(
           "absolute right-[calc(50%-20px)] top-[calc(50%-20px)] rotate-90 screen-xl:rotate-0 z-10 rounded-full p-1 border border-default focus:outline-menu-highlight/70",
           isFetching && "animate-pulse",
