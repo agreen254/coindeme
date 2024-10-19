@@ -47,7 +47,7 @@ const ConverterWrapper = () => {
   const dropdownUnits = dropdownKeys.map((key) => initializeNewDropdown(key));
 
   return (
-    <div>
+    <main>
       <DropdownProvider initialUnits={dropdownUnits}>
         <Converter
           converterKeys={dropdownKeys}
@@ -86,7 +86,7 @@ const ConverterWrapper = () => {
           hasData={hasData}
         />
       </Panel>
-    </div>
+    </main>
   );
 };
 
