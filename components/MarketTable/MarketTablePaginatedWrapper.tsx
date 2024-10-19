@@ -81,6 +81,7 @@ const MarketTablePaginatedWrapper = ({
               handlePreviousPage();
             }}
             disabled={disablePreviousPage}
+            aria-label="go to previous page"
           >
             <ChevronLeftIcon className="w-4 h-4" />
           </button>
@@ -91,6 +92,7 @@ const MarketTablePaginatedWrapper = ({
               handleNextPage();
             }}
             disabled={disableNextPage}
+            aria-label="go to next page"
           >
             <ChevronRightIcon className="w-4 h-4" />
           </button>
