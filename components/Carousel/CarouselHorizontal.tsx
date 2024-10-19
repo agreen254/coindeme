@@ -4,7 +4,7 @@ import {
   ChevronRight as ChevronRightIcon,
   ChevronLeft as ChevronLeftIcon,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
 import { useNumSlidesToScroll } from "@/hooks/useNumSlidesToScroll";
@@ -27,6 +27,9 @@ const CarouselHorizontal = ({
 }: Props) => {
   const slidesToScroll = useNumSlidesToScroll();
   const carouselData = flatMarketRes(data?.pages);
+
+  const scrollPrevLabelId = useId();
+  const scrollNextLabelId = useId();
 
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
@@ -82,11 +85,12 @@ const CarouselHorizontal = ({
   return (
     <div className="flex justify-center relative w-[90vw] screen-xl:w-table-xl">
       <div className="absolute screen-xl:mb-0 left-0 screen-xl:-left-9 top-20 screen-xl:top-[10px] z-1 screen-lg:z-10">
-        <label htmlFor="scrollPrev" className="sr-only">
+        <label id={scrollPrevLabelId} htmlFor="scrollPrev" className="sr-only">
           Scroll carousel backward
         </label>
         <button
           id="scrollPrev"
+          aria-labelledby={scrollPrevLabelId}
           className="w-12 h-12 p-2 rounded-full border dark:border-teal-300 border-teal-600 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollPrev}
           onClick={scrollPrev}
@@ -105,11 +109,12 @@ const CarouselHorizontal = ({
         </div>
       </div>
       <div className="absolute left-14 screen-xl:left-auto screen-xl:-right-9 top-20 screen-xl:top-[10px] z-1 screen-lg:z-10">
-        <label htmlFor="scrollNext" className="sr-only">
+        <label id={scrollNextLabelId} htmlFor="scrollNext" className="sr-only">
           Scroll carousel forward
         </label>
         <button
           id="scrollNext"
+          aria-labelledby={scrollNextLabelId}
           className="w-12 h-12 p-2 rounded-full border dark:border-teal-300 border-teal-600 dark:bg-teal-600 bg-teal-500 dark:hover:bg-teal-500 hover:bg-teal-400 transition-colors disabled:cursor-not-allowed"
           disabled={!data || !canScrollNext}
           onClick={scrollNext}
