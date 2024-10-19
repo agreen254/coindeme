@@ -2,7 +2,7 @@ import { Bitcoin as BitcoinIcon } from "lucide-react";
 import { ErrorBoundary } from "react-error-boundary";
 import Image from "next/image";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 import { cn } from "@/utils/cn";
 
 import CoinOverviewCategoriesCarousel from "./CoinOverviewCategoriesCarousel";
@@ -10,7 +10,7 @@ import CoinOverviewLink from "./CoinOverviewLink";
 import Panel from "../Theme/Panel";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewMainPanel = ({ response }: Props) => {

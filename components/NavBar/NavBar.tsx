@@ -23,7 +23,7 @@ const NavBar = () => {
             <NavButtons />
           </div>
         </div>
-        <div className="flex items-start justify-center w-[90vw] screen-lg:w-auto screen-xl:mb-4 screen-lg:mr-4 gap-x-4 mb-2">
+        <div className="flex items-start justify-center w-[90vw] screen-lg:w-auto screen-xl:mb-4 gap-x-4 mb-2">
           <DropdownProvider initialUnits={dropdownUnits}>
             <Search dropdownId={navSearchId} />
             <div className="inline-flex space-x-4">

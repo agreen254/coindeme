@@ -3,9 +3,7 @@
 import Link from "next/link";
 
 import { cn } from "@/utils/cn";
-import { processSearch } from "@/utils/getSearchElements";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
 import { useSearchQuery, useSearchQueryActions } from "@/hooks/useSearch";
 import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
 import SearchIcon from "@/Icons/Search";
@@ -13,31 +11,31 @@ import {
   useDropdownResetFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 
 import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import { HighlightedSearchResult } from "./SearchResultsHelpers";
 import SearchActivator from "./SearchActivator";
+import SearchStatus from "./SearchStatus";
 
 type Props = {
   dropdownId: string;
 };
 
 const Search = ({ dropdownId }: Props) => {
-  // re-using the same query will not cause a double fetch
-  // but need to remember to adjust it once params are stored in local storage
-  const marketData = useMarketQuery("usd", "market_cap", "desc").data?.pages;
   const query = useSearchQuery();
-  const resetDropdown = useDropdownResetFromId(dropdownId);
   const { setQuery } = useSearchQueryActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
+  const { searchResults, noResults, isLoading } =
+    useDebouncedSearch(query);
 
-  const { searchTargets, searchResults } = processSearch(marketData, query);
-
+  const resetDropdown = useDropdownResetFromId(dropdownId);
   const resetDropdownAndQuery = () => {
     resetDropdown();
     setQuery("");
   };
+
   const clickAwayRef: React.MutableRefObject<HTMLDivElement> = useClickAway(
     () => resetDropdownAndQuery()
   );
@@ -53,7 +51,6 @@ const Search = ({ dropdownId }: Props) => {
         <SearchActivator
           dropdownId={dropdownId}
           id="mainSearch"
-          disabled={!searchTargets}
           searchResults={searchResults}
           className="pr-2 pl-12 py-[9px] w-[100%] screen-sm:w-[320px] rounded-md dark:bg-white/10 focus:outline-none focus:ring-[1.5px] focus:ring-black/50 focus:dark:ring-white/50 shadow-top shadow-zinc-500/60 disabled:cursor-not-allowed"
           autoComplete="off"
@@ -70,7 +67,7 @@ const Search = ({ dropdownId }: Props) => {
             <DropdownMenuItem
               dropdownId={dropdownId}
               index={idx}
-              key={wrapper.result.target + "searchResult"}
+              key={wrapper.id + "searchResult"}
             >
               <Link
                 href={`/coin/${wrapper.id}`}
@@ -86,11 +83,7 @@ const Search = ({ dropdownId }: Props) => {
               </Link>
             </DropdownMenuItem>
           ))}
-          {searchResults.length === 0 && (
-            <p className="italic text-muted-foreground font-medium py-1 indent-3">
-              No results found.
-            </p>
-          )}
+          <SearchStatus isLoading={isLoading} noResults={noResults} />
         </DropdownMenu>
       </div>
     </div>

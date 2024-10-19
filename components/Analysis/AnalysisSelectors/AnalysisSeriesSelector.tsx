@@ -6,11 +6,11 @@ import DropdownMenu from "@/components/Dropdown/DropdownMenu";
 import DropdownMenuItem from "@/components/Dropdown/DropdownMenuItem";
 import { HighlightedSearchResult } from "@/components/Search/SearchResultsHelpers";
 import SearchActivator from "@/components/Search/SearchActivator";
+import SearchStatus from "@/components/Search/SearchStatus";
 
 import { useAnalysisActions, useAnalysisSeries } from "@/hooks/useAnalysis";
+import { useAnalysisChartIsLoading } from "@/hooks/useAnalysisChartIsLoading";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import {
   useDropdownResetFromId,
   useDropdownUnitFromId,
@@ -18,10 +18,11 @@ import {
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
-import { getAdjustedIdxAndId, processSearch } from "@/utils/getSearchElements";
+import { getAdjustedIdxAndId } from "@/utils/getSearchElements";
 import { AnalysisSeries, CustomKeyHandlers } from "@/utils/types";
 import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
 import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 
 type Props = {
   dropdownId: string;
@@ -35,11 +36,10 @@ const AnalysisSeriesSelector = ({
   selectorIndex,
 }: Props) => {
   const [searchQuery, setSearchQuery] = useState<string>(series.name);
+  const chartIsLoading = useAnalysisChartIsLoading();
 
   const activatorId = useId();
-  const currency = useUserCurrencySetting();
   const resetDropdown = useDropdownResetFromId(dropdownId);
-  const marketData = useMarketQuery(currency, "market_cap", "desc").data?.pages;
   const { updateSeries } = useAnalysisActions();
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
@@ -47,11 +47,14 @@ const AnalysisSeriesSelector = ({
   const idIsInUse = (maybeNewSeriesId: string) =>
     currentSeriesIds.includes(maybeNewSeriesId);
 
-  const { searchTargets, searchResults, numResults } = processSearch(
-    marketData,
-    searchQuery
-  );
-  const currentName = coinNameFromId(series.id, searchTargets);
+  const {
+    searchTargets,
+    searchResults,
+    numResults,
+    noResults,
+    isLoading: searchIsLoading,
+  } = useDebouncedSearch(searchQuery);
+  const currentName = series.name;
 
   const resetDropdownAndQuery = () => {
     setSearchQuery(currentName);
@@ -108,6 +111,7 @@ const AnalysisSeriesSelector = ({
       </label>
       <SearchActivator
         id={activatorId}
+        disabled={chartIsLoading}
         type="text"
         dropdownId={dropdownId}
         autoComplete="off"
@@ -128,7 +132,7 @@ const AnalysisSeriesSelector = ({
           <DropdownMenuItem
             dropdownId={dropdownId}
             index={menuItemIdx}
-            key={wrapper.result.target + "searchResult"}
+            key={wrapper.id + "searchResult"}
           >
             <button
               tabIndex={-1}
@@ -144,11 +148,7 @@ const AnalysisSeriesSelector = ({
             </button>
           </DropdownMenuItem>
         ))}
-        {searchResults.length === 0 && (
-          <p className="italic text-muted-foreground font-medium py-1 indent-3">
-            No results found.
-          </p>
-        )}
+        <SearchStatus isLoading={searchIsLoading} noResults={noResults} />
       </DropdownMenu>
     </>
   );

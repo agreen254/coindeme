@@ -1,10 +1,14 @@
-import { MarketElementNoIdx } from "./types";
+import { CoinOverviewResponse, Currency } from "./types";
 
 export function convertCoinAmount(
   amount: number,
-  fromData: MarketElementNoIdx | undefined,
-  toData: MarketElementNoIdx | undefined
+  currency: Currency,
+  fromData: CoinOverviewResponse | undefined,
+  toData: CoinOverviewResponse | undefined
 ) {
   if (!fromData || !toData) return amount;
-  return (fromData.current_price * amount) / toData.current_price;
+  return (
+    (fromData.market_data.current_price[currency] * amount) /
+    toData.market_data.current_price[currency]
+  );
 }

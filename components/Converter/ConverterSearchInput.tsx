@@ -4,23 +4,23 @@ import { useId } from "react";
 
 import { HighlightedSearchResult } from "@/components/Search/SearchResultsHelpers";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useMarketQuery } from "@/hooks/useMarketQuery";
-import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import {
   useDropdownResetFromId,
   useDropdownUnitFromId,
 } from "@/hooks/useDropdownStore";
+import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
+import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
+import { useDebouncedSearch } from "@/hooks/useDebouncedSearch";
 
 import { cn } from "@/utils/cn";
 import { coinNameFromId } from "@/utils/coinNameFromId";
-import { getAdjustedIdxAndId, processSearch } from "@/utils/getSearchElements";
+import { getAdjustedIdxAndId } from "@/utils/getSearchElements";
 import { CustomKeyHandlers, SearchResultWrapper } from "@/utils/types";
 
 import DropdownMenu from "../Dropdown/DropdownMenu";
 import DropdownMenuItem from "../Dropdown/DropdownMenuItem";
 import SearchActivator from "../Search/SearchActivator";
-import { useDropdownKeyEvents } from "@/hooks/useDropdownKeyEvents";
-import { useDropdownMenuMouseEnter } from "@/hooks/useDropdownMenuMouseEnter";
+import SearchStatus from "../Search/SearchStatus";
 
 type Props = {
   dropdownId: string;
@@ -40,14 +40,10 @@ const ConverterSearchInput = ({
   activeIdHandler,
 }: Props) => {
   const activatorId = useId();
-  const currency = useUserCurrencySetting();
-  const marketData = useMarketQuery(currency, "market_cap", "desc").data?.pages;
   const { selectedIndex } = useDropdownUnitFromId(dropdownId);
 
-  const { searchTargets, searchResults, numResults } = processSearch(
-    marketData,
-    query
-  );
+  const { searchTargets, searchResults, numResults, noResults, isLoading } =
+    useDebouncedSearch(query);
   const name = coinNameFromId(coinId, searchTargets);
 
   const resetDropdown = useDropdownResetFromId(dropdownId);
@@ -124,7 +120,7 @@ const ConverterSearchInput = ({
           <DropdownMenuItem
             dropdownId={dropdownId}
             index={idx}
-            key={wrapper.result.target + "searchResult"}
+            key={wrapper.id + "searchResult"}
           >
             <button
               tabIndex={-1}
@@ -139,11 +135,7 @@ const ConverterSearchInput = ({
             </button>
           </DropdownMenuItem>
         ))}
-        {searchResults.length === 0 && (
-          <p className="italic text-muted-foreground font-medium py-1 indent-3">
-            No results found.
-          </p>
-        )}
+        <SearchStatus isLoading={isLoading} noResults={noResults} />
       </DropdownMenu>
     </>
   );

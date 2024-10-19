@@ -3,7 +3,7 @@
 import { Infinity as InfinityIcon } from "lucide-react";
 import RoundButtonIcon from "@/Icons/RoundButton";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 import { useUserCurrencySetting } from "@/hooks/useUserSettings";
 import { cn } from "@/utils/cn";
 import { getOrdinal } from "@/utils/getOrdinal";
@@ -11,7 +11,7 @@ import { getOrdinal } from "@/utils/getOrdinal";
 import Panel from "../Theme/Panel";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewSecondDataPanel = ({ response }: Props) => {
@@ -117,9 +117,9 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
           {entries.map((entry) => (
             <li
               key={entry.label}
-              className="grid grid-cols-1 screen-sm:grid-cols-2 items-center text-lg"
+              className="grid grid-cols-1 screen-sm:grid-cols-2 items-baseline text-lg"
             >
-              <span className="font-light -indent-16 ml-16 translate-y-[2px] -mb-2">
+              <span className="font-light -indent-16 ml-16 -mb-2">
                 <LiDataIcon />
                 <span>{entry.label}</span>
               </span>

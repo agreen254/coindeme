@@ -1,6 +1,6 @@
 "use client";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 
 import CoinOverviewDescription from "@/components/CoinOverview/CoinOverviewDescription";
 import CoinOverviewMainPanel from "@/components/CoinOverview/CoinOverviewMainPanel";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const CoinPage = ({ params: { id } }: Props) => {
-  const response = useCoinQuery(id);
+  const response = useCoinInfoQuery(id);
 
   return (
     <div className="w-full flex justify-center">

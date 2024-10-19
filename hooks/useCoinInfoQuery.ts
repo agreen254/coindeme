@@ -2,7 +2,7 @@ import type { CoinOverviewResponse } from "@/utils/types";
 
 import { useQuery } from "@tanstack/react-query";
 
-export const useCoinQuery = (id: string) => {
+export const useCoinInfoQuery = (id: string) => {
   return useQuery({
     queryKey: ["overview", id],
     queryFn: async (): Promise<CoinOverviewResponse> => {

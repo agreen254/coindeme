@@ -5,10 +5,10 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
 import useEmblaCarousel from "embla-carousel-react";
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewCategoriesCarousel = ({ response }: Props) => {

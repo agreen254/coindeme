@@ -3,10 +3,10 @@
 import { HTMLReactParserOptions, Element } from "html-react-parser";
 import parse from "html-react-parser";
 
-import { useCoinQuery } from "@/hooks/useCoinQuery";
+import { useCoinInfoQuery } from "@/hooks/useCoinInfoQuery";
 
 type Props = {
-  response: ReturnType<typeof useCoinQuery>;
+  response: ReturnType<typeof useCoinInfoQuery>;
 };
 
 const CoinOverviewDescription = ({ response }: Props) => {

@@ -14,6 +14,9 @@ import {
   coinCurrentResponseSchema,
   coinOverviewRequestSchema,
   coinOverviewResponseSchema,
+  coinSearchRequestSchema,
+  coinSearchResponseSchema,
+  coinSearchResponseUnitSchema,
   comparisonChartQueriesSchema,
   comparisonChartRequestSchema,
   comparisonChartResponseSchema,
@@ -24,13 +27,13 @@ import {
   globalResponseSchema,
   marketResponseSchema,
   marketResponsePaginatedSchema,
-  marketRequest,
   marketElementNoIdxSchema,
   marketElementWithIdxSchema,
   marketFetchFieldSchema,
   marketFetchOrderSchema,
   marketFetchOrderBySchema,
   marketTableModeSchema,
+  marketRequest,
 } from "@/validation/schema";
 
 import {
@@ -101,6 +104,12 @@ export type CoinCurrentQuery = ReturnType<typeof useAssetCurrentQueries>;
 
 export type CoinOverviewRequest = z.infer<typeof coinOverviewRequestSchema>;
 export type CoinOverviewResponse = z.infer<typeof coinOverviewResponseSchema>;
+
+export type CoinSearchRequest = z.infer<typeof coinSearchRequestSchema>;
+export type CoinSearchResponseUnit = z.infer<
+  typeof coinSearchResponseUnitSchema
+>;
+export type CoinSearchResponse = z.infer<typeof coinSearchResponseSchema>;
 
 export type ComparisonChartQueries = z.infer<
   typeof comparisonChartQueriesSchema

@@ -1,5 +1,6 @@
 import { comparisonChartsTimeSelectorsMap } from "@/utils/maps";
 import { useAnalysisActions, useAnalysisTimeLength } from "@/hooks/useAnalysis";
+import { useAnalysisChartIsLoading } from "@/hooks/useAnalysisChartIsLoading";
 
 type TimesWrapper = {
   label: string;
@@ -7,6 +8,8 @@ type TimesWrapper = {
 };
 
 const AnalysisTimeSelector = () => {
+  const isLoading = useAnalysisChartIsLoading();
+
   const timeLength = useAnalysisTimeLength();
   const { setTimeLength } = useAnalysisActions();
   const times = Array.from(comparisonChartsTimeSelectorsMap).reduce<
@@ -28,6 +31,7 @@ const AnalysisTimeSelector = () => {
           <input
             type="radio"
             id={time.label}
+            disabled={isLoading}
             value={time.value}
             className="mr-1 disabled:hover:cursor-not-allowed"
             checked={timeLength === time.value}
