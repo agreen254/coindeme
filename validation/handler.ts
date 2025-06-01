@@ -51,6 +51,12 @@ export async function postValidationHandler<T, U, V = any>(
   const data = await response.json();
   const dataValidation = responseValidator.safeParse(data);
   if (!dataValidation.success) {
+    console.log(
+      "=============\n",
+      `Failed to fetch:\n${fetchURL}\n`,
+      dataValidation.error.message,
+      "\n=============\n"
+    );
     return NextResponse.json(
       {
         message: "Failed to validate response.",

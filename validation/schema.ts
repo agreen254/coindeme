@@ -135,7 +135,13 @@ export const coinOverviewResponseSchema = z.object({
     fully_diluted_valuation: currenciesObjectNumberSchema.partial(),
     market_cap: currenciesObjectNumberSchema,
     market_cap_rank: z.number(),
-    total_volume: currenciesObjectNumberSchema,
+    total_volume: z.object({
+      btc: z.number().optional(),
+      eth: z.number().optional(),
+      eur: z.number().optional(),
+      gbp: z.number().optional(),
+      usd: z.number().optional(),
+    }),
 
     price_change_percentage_24h_in_currency: currenciesObjectNumberSchema,
     price_change_percentage_7d_in_currency: currenciesObjectNumberSchema,
@@ -253,7 +259,7 @@ export const marketElementNoIdxSchema = z.object({
   market_cap: z.number(),
   market_cap_rank: z.number().nullable(),
   fully_diluted_valuation: z.number().nullable(),
-  total_volume: z.number(),
+  total_volume: z.number().nullable(),
   high_24h: z.number(),
   low_24h: z.number(),
   price_change_24h: z.number(),
