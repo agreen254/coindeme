@@ -95,7 +95,11 @@ const CoinOverviewSecondDataPanel = ({ response }: Props) => {
     { value: rank, label: rankLabel, useSymbol: false },
     { value: marketCap, label: marketCapLabel, useSymbol: false },
     { value: fdv, label: fdvLabel, useSymbol: false },
-    { value: totalVolume, label: totalVolumeLabel, useSymbol: false },
+    {
+      value: totalVolume ?? <span className="text-muted-foreground">N/A</span>,
+      label: totalVolumeLabel,
+      useSymbol: false,
+    },
     {
       value: circulatingSupply,
       label: circulatingSupplyLabel,
